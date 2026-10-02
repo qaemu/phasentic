@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phasentic.local/schemas/wp5-ablation-suite.schema.json",
+  "title": "Phasentic WP-5 paired ablation suite",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version", "status", "protocol_id", "protocol_sha256", "bundle_id",
+    "split", "variant", "reference_source", "baseline", "ablations",
+    "case_count", "limitations", "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "wp5-ablation-suite-0.1"},
+    "status": {"enum": ["complete", "partial", "failed"]},
+    "protocol_id": {"$ref": "#/$defs/identifier"},
+    "protocol_sha256": {"$ref": "#/$defs/sha256"},
+    "bundle_id": {"$ref": "#/$defs/sha256"},
+    "split": {"enum": ["development", "calibration", "test", "all"]},
+    "variant": {"enum": ["screening", "joint_no_requery", "full_mixture"]},
+    "reference_source": {"enum": ["demo", "pow_cod", "cod"]},
+    "reference_index_sha256": {"$ref": "#/$defs/sha256"},
+    "baseline": {"type": "object", "required": ["run_path", "result_sha256", "case_count"]},
+    "ablations": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "factor", "changes", "run_path", "result_sha256", "metric_deltas"]}},
+    "case_count": {"type": "integer", "minimum": 0},
+    "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "content_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "wp5-precursor-target-1",
+  "declared_at": "2026-10-01T01:53:20Z",
+  "declared_by": "project owner (chat decision 2026-09-30: final validation of the post-fix version); same thresholds as v1, declared before the cohort is run",
+  "evaluation_cohort": {
+    "bundle": "data/benchmarks/wp5/precursor-campaign-v1/heldout-200-v2/frozen",
+    "bundle_json_sha256": "e38ddbc757500e837a2630fd24d6334f003036e8c19078b0c602203474a7ad11",
+    "selection_manifest_sha256": "499698b9cfe0f2f3eed43b0328a398b78fa618e643a9a809b028dc6b3d4b6b27",
+    "sample_context_sha256": "ade3502506e8a1fff9d027127b26d8be3b33e2e46c0c624624072b491f267d1e",
+    "case_count": 200,
+    "split": "test",
+    "selection": "seed 20261001, proportional phase-count strata, human quality score 1, accepted active refinement; development (intake-100-v3) and consumed held-out (heldout-200-v1) samples excluded"
+  },
+  "targets": {
+    "family_pass_rate_min": 0.45,
+    "family_pass_count_min": 90,
+    "strict_pass_rate_min": 0.35,
+    "strict_pass_count_min": 70,
+    "denominator": "all 200 cases; abstentions and failures count as not passed",
+    "scoring": "validation/wp5/phase_scoring levels 'family' and 'strict' as used by run_bundle (recall and precision thresholds from the frozen evaluation policy)",
+    "reporting": "point rates with Wilson 95% intervals, per phase-count stratum, abstention count"
+  },
+  "rules": [
+    "The held-out cohort is not run, scored or inspected until parameters and code are frozen and hashed.",
+    "It is evaluated once. Any change made after seeing its results requires a new held-out cohort.",
+    "All tuning and development use the 100-case development bundle (frozen-100-v3), which is fully label-exposed.",
+    "DARA never controls parameter selection."
+  ],
+  "development_baseline": {
+    "run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step5-sweep-G4",
+    "all_100": {
+      "strict_pass": 40,
+      "family_pass": 55
+    }
+  },
+  "supersedes": "configs/wp5-precursor-target-v1.json (cohort heldout-200-v1 consumed)",
+  "content_sha256": "9a3083ac75274979e7a6d4bdeea9d39c4dabc0e3aba788050eb7350ea39a7e73"
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "wp5-equivalence-receipt-1",
+  "recorded_at": "2026-10-02T03:40:59Z",
+  "purpose": "Windows file-locking fix (SQLite connections closed before file replacement): confirm frozen-v5 reproduces frozen-v4 outputs exactly; not a re-evaluation",
+  "frozen_config_v5_content_sha256": "c2e6fadede6d31314d55284d76128fbd09a2566565c8576fb209c36250f3efa9",
+  "code_sha256_v5": "a5acca80e33d3fbbda1e3a1cb11163cfaf4db99cdde2004c2499098f297f539f",
+  "frozen_config_v4_content_sha256": "88ed56e3b750c5d791aa4e8712df8f84ca6bb1fef1f77fd66bf31ace7d722e2d",
+  "checks": [
+    {
+      "bundle": "frozen-100-v3",
+      "baseline_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step7-rename-eq-dev",
+      "new_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step8-winfix-eq-dev",
+      "cases": 100,
+      "differing": 0,
+      "strict": 40,
+      "family": 55
+    },
+    {
+      "bundle": "heldout-200-v2",
+      "baseline_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step7-rename-eq-heldout",
+      "new_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step8-winfix-eq-heldout",
+      "cases": 200,
+      "differing": 0,
+      "strict": 74,
+      "family": 99
+    },
+    {
+      "bundle": "heldout-200-v2",
+      "baseline_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step5-heldout-v2-oneshot",
+      "new_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step8-winfix-eq-heldout",
+      "cases": 200,
+      "differing": 0,
+      "strict": 74,
+      "family": 99,
+      "note": "direct comparison with the original one-shot held-out run"
+    }
+  ],
+  "compared_fields": [
+    "selected component reference_ids",
+    "selected objective (1e-10)",
+    "all hypothesis ids and objectives",
+    "strict pass",
+    "family pass"
+  ],
+  "outcome_unchanged": "validation/outcome-v2.json",
+  "content_sha256": "1888d98593872711075fcb1cabe41ea237bf20a19f8dce87b10f0d45155d7474"
+}

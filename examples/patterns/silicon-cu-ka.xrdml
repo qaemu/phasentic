@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xrdMeasurements xmlns="http://www.xrdml.com/XRDMeasurement/1.5">
+  <scan>
+    <dataPoints>5</dataPoints>
+    <positions axis="2Theta"><startPosition>20</startPosition><endPosition>28.4</endPosition></positions>
+    <intensities unit="counts">2.2 2.2 2.2 2.2 95.0</intensities>
+  </scan>
+</xrdMeasurements>

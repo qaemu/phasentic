@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.2",
+  "standards": [
+    {
+      "standard_id": "silicon_srm_640g",
+      "name": "NIST SRM 640g silicon line-position and line-shape standard",
+      "status": "certified",
+      "material_formula": "Si",
+      "certificate_id": "NIST SRM 640g",
+      "source_reference": "NIST SP 260-245",
+      "source_url": "https://doi.org/10.6028/NIST.SP.260-245",
+      "source_note": "Certified lattice parameter at 22.5 °C; the manifest stores derived reflection spacings and does not replace the physical NIST certificate or an uncertainty budget for a particular diffractometer.",
+      "license_note": "NIST Special Publication data are cited for scientific traceability. Consult the publication's Copyright, Use, and Licensing Statements before redistribution of the publication itself.",
+      "line_derivation": "Cubic silicon d(hkl) = a / sqrt(h²+k²+l²), using the certified lattice parameter; reference positions use Cu Kα1 λ = 1.5405929 Å.",
+      "reference_radiation": "Cu Kα1",
+      "reference_wavelength_angstrom": 1.5405929,
+      "lattice_parameter_angstrom": 5.431109,
+      "lattice_parameter_temperature_c": 22.5,
+      "lattice_parameter_uncertainty_angstrom": 0.00008,
+      "expanded_uncertainty_k": 2,
+      "lines": [
+        {"label": "111", "hkl": [1, 1, 1], "d_spacing_angstrom": 3.135652243, "reference_two_theta_deg": 28.441},
+        {"label": "220", "hkl": [2, 2, 0], "d_spacing_angstrom": 1.920187002, "reference_two_theta_deg": 47.301},
+        {"label": "311", "hkl": [3, 1, 1], "d_spacing_angstrom": 1.637540977, "reference_two_theta_deg": 56.120},
+        {"label": "400", "hkl": [4, 0, 0], "d_spacing_angstrom": 1.357777250, "reference_two_theta_deg": 69.127},
+        {"label": "331", "hkl": [3, 3, 1], "d_spacing_angstrom": 1.245981857, "reference_two_theta_deg": 76.373},
+        {"label": "422", "hkl": [4, 2, 2], "d_spacing_angstrom": 1.108620482, "reference_two_theta_deg": 88.026},
+        {"label": "511", "hkl": [5, 1, 1], "d_spacing_angstrom": 1.045217414, "reference_two_theta_deg": 94.948},
+        {"label": "440", "hkl": [4, 4, 0], "d_spacing_angstrom": 0.960093501, "reference_two_theta_deg": 106.703},
+        {"label": "531", "hkl": [5, 3, 1], "d_spacing_angstrom": 0.918024976, "reference_two_theta_deg": 114.086},
+        {"label": "620", "hkl": [6, 2, 0], "d_spacing_angstrom": 0.858733733, "reference_two_theta_deg": 127.537},
+        {"label": "533", "hkl": [5, 3, 3], "d_spacing_angstrom": 0.828236358, "reference_two_theta_deg": 136.883}
+      ]
+    }
+  ]
+}

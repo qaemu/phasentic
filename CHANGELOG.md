@@ -1,0 +1,23 @@
+# Changelog
+
+All notable changes are listed here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
+[semantic versioning](https://semver.org/).
+
+## [0.1.0] - 2026-10-01
+
+First public release. The project was developed privately as "XRD Workbench".
+
+### Added
+- `phasentic setup-powcod`: installs POW_COD 2205 from the downloaded zip in one step.
+- Validated preset (`--preset validated` / *Use the validated method*) and
+  sample chemistry input (`--chemistry` / *Sample chemistry*).
+- Validation receipts and cohort case lists in `validation/`.
+
+### Validated
+- Frozen method tested once on 200 sealed held-out Precursor Genome scans:
+  37.0% exact, 49.5% family (docs/validation.md).
+
+### Removed (before release)
+- GSAS-II whole-pattern diagnostic, COD index source, sample-context
+  assistant, in-app code-review pipeline, DARA comparison and WP-4 tooling.

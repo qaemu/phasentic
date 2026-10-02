@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POW_COD equivalence curation input",
+  "type": "object",
+  "required": ["schema_version", "curation_policy", "groups", "members"],
+  "properties": {
+    "schema_version": {"const": "powcod-equivalence-input-1"},
+    "curation_policy": {"const": "curated-only"},
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["group_id", "preferred_name"],
+        "properties": {
+          "group_id": {"type": "string", "minLength": 1},
+          "preferred_name": {"type": "string", "minLength": 1},
+          "parent_family_group_id": {"type": ["string", "null"]},
+          "equivalence_kind": {"type": "string"},
+          "confidence": {"type": "string"},
+          "curation_status": {"enum": ["active", "suggestion", "retired"]},
+          "evidence": {"type": "object"}
+        }
+      }
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["reference_id", "group_id"],
+        "properties": {
+          "reference_id": {"type": "string", "minLength": 1},
+          "cod_id": {"type": ["string", "null"]},
+          "group_id": {"type": "string", "minLength": 1},
+          "member_kind": {"type": "string"},
+          "mapping_status": {"type": "string"}
+        }
+      }
+    }
+  }
+}

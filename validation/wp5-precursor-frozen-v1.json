@@ -1,0 +1,36 @@
+{
+  "schema": "wp5-frozen-config-1",
+  "frozen_at": "2026-09-30T18:09:14Z",
+  "code_sha256": "7c06330ee8b0b53c2563101c50b8ad8d22080624f19974f1efbef207a6356223",
+  "algorithm_versions": {
+    "service": "research-alpha-0.9-noise-aware-peaks-displacement-element-filter",
+    "mixture": "mixture-screening-0.15-optional-abstention",
+    "scoring": "precursor-chemistry-scoring-2"
+  },
+  "reference": {
+    "powcod_cache": "data/references/powcod/powcod-2205.xrd.sqlite",
+    "powcod_cache_sha256": {
+      "[\"/sessions/rcw-012nfzy5p4yxahjbandpjaze/mnt/CNEA FINAL/data/references/powcod/raw/cod2205.sq\", 39, 553, 4084192256, 1790117583383330804, 1790117583383330804]": "67d2a2788e36b435254d60fa0ee01fc07c224ced3bf18316a1cc5c662b27e0b2",
+      "[\"/sessions/rcw-012nfzy5p4yxahjbandpjaze/mnt/CNEA FINAL/data/references/powcod/powcod-2205.xrd.sqlite\", 39, 554, 2413891584, 1790132853631151504, 1790132853641796938]": "1576670b353737a0ac8689e19e4ba23f08584d1d9fece7cba19dab4d179e3eba"
+    }
+  },
+  "variant": "full_mixture",
+  "sample_context": "per-bundle sample-context-v1.json (precursor + target elements, label-free)",
+  "overrides": {
+    "candidate_lookup_budget": 20000,
+    "candidate_pool": 100,
+    "matching_two_theta_max_deg": 100.0,
+    "max_fit_attempts": 300,
+    "max_phases": 5,
+    "swap_fit_attempt_budget": 25,
+    "peak_tolerance_deg": 0.1,
+    "complexity_penalty": 0.02,
+    "ambiguity_margin": 0.05,
+    "abstain_when_ambiguous": false,
+    "oxidizing_synthesis": true,
+    "min_objective_improvement": 0.05
+  },
+  "selected_from": "experiments/step5-sweep-imp05 (tune split 70, seed 20260930)",
+  "target": "configs/wp5-precursor-target-v1.json",
+  "content_sha256": "af9828fdad90d48fca44a37c9e12d99d1dc6c04bdd46580b5fac915e286f33f5"
+}

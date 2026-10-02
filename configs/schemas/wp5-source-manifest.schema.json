@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phasentic.local/schemas/wp5-source-manifest.schema.json",
+  "title": "Phasentic WP-5 source inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_id", "status", "created_at", "data_root", "sources"],
+  "properties": {
+    "schema_version": {"const": "wp5-source-manifest-0.1"},
+    "manifest_id": {"$ref": "#/$defs/identifier"},
+    "status": {"enum": ["draft", "inventory", "frozen", "validated", "blocked"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "data_root": {"$ref": "#/$defs/relativePath"},
+    "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+    "metadata": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*(^|/)\\.\\.(?:/|$))(?!^[A-Za-z]:)(?!^\\.$)"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id", "kind", "original_filename", "license_status",
+        "local_use_status", "redistribution_status", "status", "reason",
+        "label_status", "label_evidence"
+      ],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/identifier"},
+        "kind": {"type": "string", "minLength": 1},
+        "source_url": {"type": ["string", "null"], "minLength": 1},
+        "doi": {"type": ["string", "null"], "minLength": 1},
+        "original_filename": {"type": "string", "minLength": 1},
+        "local_path": {"anyOf": [{"$ref": "#/$defs/relativePath"}, {"type": "null"}]},
+        "raw_local_path": {"anyOf": [{"$ref": "#/$defs/relativePath"}, {"type": "null"}]},
+        "raw_size_bytes": {"type": ["integer", "null"], "minimum": 0},
+        "raw_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "size_bytes": {"type": ["integer", "null"], "minimum": 0},
+        "sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "accessed_at": {"type": ["string", "null"], "format": "date-time"},
+        "license_status": {"enum": ["open", "permission_granted", "private_only", "pending", "denied", "unknown", "not_applicable"]},
+        "license_evidence_url": {"type": ["string", "null"], "minLength": 1},
+        "attribution": {"type": ["string", "null"], "minLength": 1},
+        "local_use_status": {"enum": ["allowed", "pending", "denied", "unknown", "not_applicable"]},
+        "redistribution_status": {"enum": ["allowed", "pending", "denied", "unknown", "not_applicable"]},
+        "instrument_metadata_source": {"type": ["string", "null"], "minLength": 1},
+        "normalization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["version", "sha256"],
+          "properties": {"version": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}
+        },
+        "status": {"enum": ["eligible", "excluded", "pending_rights", "missing_metadata", "unavailable"]},
+        "reason": {"type": "string", "minLength": 1},
+        "label_status": {"enum": ["complete", "incomplete", "unknown", "not_applicable"]},
+        "label_evidence": {"type": "array", "items": {"type": ["string", "object"]}},
+        "metadata": {"type": "object", "additionalProperties": true}
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {"required": ["raw_local_path", "raw_size_bytes", "raw_sha256"]},
+            {"not": {"anyOf": [{"required": ["raw_local_path"]}, {"required": ["raw_size_bytes"]}, {"required": ["raw_sha256"]}]}}
+          ]
+        },
+        {
+          "anyOf": [
+        {"required": ["source_url"], "properties": {"source_url": {"type": "string", "minLength": 1}}},
+        {"required": ["doi"], "properties": {"doi": {"type": "string", "minLength": 1}}}
+          ]
+        }
+      ]
+    }
+  }
+}

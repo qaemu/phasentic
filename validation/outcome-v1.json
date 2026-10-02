@@ -1,0 +1,58 @@
+{
+  "schema": "wp5-heldout-outcome-1",
+  "recorded_at": "2026-09-30T18:49:20Z",
+  "run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step5-heldout-200-oneshot",
+  "bundle_json_sha256": "c57f71f0e60070129dfc7e9a728eead4b15a7df19787c65f95f7a954e98d609e",
+  "frozen_config_content_sha256": "af9828fdad90d48fca44a37c9e12d99d1dc6c04bdd46580b5fac915e286f33f5",
+  "code_sha256": "7c06330ee8b0b53c2563101c50b8ad8d22080624f19974f1efbef207a6356223",
+  "target_content_sha256": "17e711711432ed00fc53b8c89057d3e108b96054a54ba95c72eec489af098ce3",
+  "case_count": 200,
+  "runtime_failures": 0,
+  "abstained": 0,
+  "strict": {
+    "passed": 64,
+    "rate": 0.32,
+    "wilson95": [
+      0.259,
+      0.388
+    ],
+    "target_min": 0.35,
+    "met": false
+  },
+  "family": {
+    "passed": 84,
+    "rate": 0.42,
+    "wilson95": [
+      0.354,
+      0.489
+    ],
+    "target_min": 0.45,
+    "met": false
+  },
+  "by_phase_count": {
+    "1": {
+      "n": 4,
+      "strict": 1,
+      "family": 1
+    },
+    "2": {
+      "n": 128,
+      "strict": 60,
+      "family": 73
+    },
+    "3": {
+      "n": 45,
+      "strict": 3,
+      "family": 10
+    },
+    "4+": {
+      "n": 23,
+      "strict": 0,
+      "family": 0
+    }
+  },
+  "mean_strict_recall": 0.64,
+  "mean_strict_precision": 0.74,
+  "status": "cohort_consumed: these results may not be used for tuning; a changed method needs a new sealed cohort",
+  "content_sha256": "e0dfd1d2b360bb01c5b809bef20d6368865a2c7522002b94d5b2a4a51a6c6cd8"
+}

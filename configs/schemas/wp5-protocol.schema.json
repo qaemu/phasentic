@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phasentic.local/schemas/wp5-protocol.schema.json",
+  "title": "Phasentic WP-5 evaluation protocol",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "protocol_id", "status", "created_at", "source_manifest_id", "case_manifest_id",
+    "angle_unit", "geometry", "radiations", "reference_snapshot", "variants", "preprocessing", "query",
+    "split_policy", "ablations", "resource_budgets", "bootstrap", "implementation"
+  ],
+  "properties": {
+    "schema_version": {"const": "wp5-protocol-0.1"},
+    "protocol_id": {"$ref": "#/$defs/identifier"},
+    "status": {"enum": ["draft", "inventory", "frozen", "validated", "blocked"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "source_manifest_id": {"$ref": "#/$defs/identifier"},
+    "case_manifest_id": {"$ref": "#/$defs/identifier"},
+    "angle_unit": {"const": "two_theta"},
+    "geometry": {"const": "reflection_bragg_brentano"},
+    "radiations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "reference_snapshot": {"type": "string", "minLength": 1},
+    "variants": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"enum": ["screening", "joint_no_requery", "full_mixture"]}
+    },
+    "preprocessing": {"type": "object", "additionalProperties": true},
+    "query": {"type": "object", "additionalProperties": true},
+    "split_policy": {"type": "object", "additionalProperties": true},
+    "ablations": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "resource_budgets": {"type": "object", "additionalProperties": true},
+    "bootstrap": {
+      "type": "object", "additionalProperties": true,
+      "required": ["method", "seed", "resamples"],
+      "properties": {
+        "method": {"const": "cluster"},
+        "seed": {"type": "integer", "minimum": 0},
+        "resamples": {"type": "integer", "minimum": 100, "maximum": 100000}
+      }
+    },
+    "implementation": {"type": "object", "additionalProperties": true},
+    "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "metadata": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {"identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"}}
+}

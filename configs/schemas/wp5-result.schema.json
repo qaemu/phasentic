@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phasentic.local/schemas/wp5-result.schema.json",
+  "title": "Phasentic WP-5 evaluation result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "result_id", "status", "protocol_id", "case_manifest_id", "split", "variant", "implementation", "summary", "cases", "metrics", "provenance"],
+  "properties": {
+    "schema_version": {"const": "wp5-result-0.1"},
+    "result_id": {"$ref": "#/$defs/identifier"},
+    "status": {"enum": ["draft", "running", "complete", "failed", "blocked", "unavailable"]},
+    "protocol_id": {"$ref": "#/$defs/identifier"},
+    "case_manifest_id": {"$ref": "#/$defs/identifier"},
+    "split": {"enum": ["development", "calibration", "test", "all"]},
+    "variant": {"enum": ["screening", "joint_no_requery", "full_mixture"]},
+    "implementation": {"type": "object", "additionalProperties": true},
+    "summary": {"type": "object", "additionalProperties": true},
+    "cases": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "metrics": {"type": "object", "additionalProperties": true},
+    "provenance": {"type": "object", "additionalProperties": true},
+    "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "errors": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "metadata": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {"identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"}}
+}

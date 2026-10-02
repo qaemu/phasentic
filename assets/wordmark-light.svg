@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 64" role="img" aria-label="Phasentic">
+  <defs><clipPath id="band"><rect x="0" y="24" width="64" height="16"/></clipPath></defs>
+  <g fill="none" stroke="#1f4e79" stroke-width="5">
+    <g opacity=".25"><circle cx="32" cy="32" r="14"/><circle cx="32" cy="32" r="26"/></g>
+    <g clip-path="url(#band)"><circle cx="32" cy="32" r="14"/><circle cx="32" cy="32" r="26"/></g>
+  </g>
+  <circle cx="32" cy="32" r="4.5" fill="#e07a1f"/>
+  <text x="80" y="44" font-family="Inter, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="38" font-weight="600" letter-spacing="-0.5" fill="#16212b">phasentic</text>
+</svg>

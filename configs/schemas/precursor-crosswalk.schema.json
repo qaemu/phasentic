@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phasentic.local/schemas/precursor-powcod-crosswalk-1.json",
+  "title": "Precursor Genome to POW_COD review-boundary crosswalk",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "method_version",
+    "status",
+    "source_manifest_sha256",
+    "powcod_cache_sha256",
+    "entries",
+    "limitations",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": "precursor-powcod-crosswalk-1"},
+    "method_version": {"type": "string", "minLength": 1},
+    "status": {"enum": ["draft", "frozen", "validated", "blocked"]},
+    "source_manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "powcod_cache_sha256": {"$ref": "#/$defs/sha256"},
+    "entries": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/entry"}},
+    "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "content_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_label", "mapping_status", "candidate_reference_ids", "selected_reference_ids"],
+      "properties": {
+        "source_label": {"type": "string", "minLength": 1},
+        "formula": {"type": ["string", "null"]},
+        "normalized_formula": {"type": ["string", "null"]},
+        "space_group_number": {"type": ["integer", "null"], "minimum": 1, "maximum": 230},
+        "icsd_id": {"type": ["string", "null"]},
+        "variant": {"type": ["string", "null"]},
+        "mapping_status": {"enum": ["reviewed_exact", "reviewed_family", "ambiguous", "unresolved"]},
+        "canonical_group_id": {"anyOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "parent_family_group_id": {"anyOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "candidate_reference_ids": {"type": "array", "items": {"$ref": "#/$defs/identifier"}},
+        "selected_reference_ids": {"type": "array", "items": {"$ref": "#/$defs/identifier"}},
+        "evidence": {"type": "array", "items": {"type": "object"}},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}

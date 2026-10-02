@@ -1,0 +1,38 @@
+{
+  "schema": "wp5-frozen-config-1",
+  "frozen_at": "2026-10-01T18:50:53Z",
+  "code_sha256": "75aa8819ab277635d112a2902883484a07f8bf8b445f379f391420700bdc0a5c",
+  "algorithm_versions": {
+    "service": "research-alpha-0.9-noise-aware-peaks-displacement-element-filter",
+    "mixture": "mixture-screening-0.17-balanced-entry-preference",
+    "scoring": "precursor-chemistry-scoring-2"
+  },
+  "reference": {
+    "powcod_cache": "data/references/powcod/powcod-2205.xrd.sqlite",
+    "powcod_cache_sha256": {
+      "[\"/sessions/rcw-012nfzy5p4yxahjbandpjaze/mnt/CNEA FINAL/data/references/powcod/raw/cod2205.sq\", 39, 553, 4084192256, 1790117583383330804, 1790117583383330804]": "67d2a2788e36b435254d60fa0ee01fc07c224ced3bf18316a1cc5c662b27e0b2",
+      "[\"/sessions/rcw-012nfzy5p4yxahjbandpjaze/mnt/CNEA FINAL/data/references/powcod/powcod-2205.xrd.sqlite\", 39, 554, 2413891584, 1790132853631151504, 1790132853641796938]": "1576670b353737a0ac8689e19e4ba23f08584d1d9fece7cba19dab4d179e3eba"
+    }
+  },
+  "variant": "full_mixture",
+  "sample_context": "per-bundle sample-context-v1.json (precursor + target elements, label-free)",
+  "overrides": {
+    "candidate_lookup_budget": 20000,
+    "candidate_pool": 100,
+    "matching_two_theta_max_deg": 100.0,
+    "max_fit_attempts": 300,
+    "max_phases": 5,
+    "swap_fit_attempt_budget": 25,
+    "peak_tolerance_deg": 0.1,
+    "complexity_penalty": 0.02,
+    "ambiguity_margin": 0.05,
+    "abstain_when_ambiguous": false,
+    "oxidizing_synthesis": true,
+    "min_objective_improvement": 0.05,
+    "missing_intensity_max": 0.2
+  },
+  "selected_from": "validation/wp5-precursor-frozen-v3.json (content 7bcf0c092d9d): identical settings; code re-hashed after the rename to Phasentic and packaging, which must reproduce every v3 development and held-out selection",
+  "target": "validation/wp5-precursor-target-v2.json",
+  "supersedes": "validation/wp5-precursor-frozen-v3.json",
+  "content_sha256": "88ed56e3b750c5d791aa4e8712df8f84ca6bb1fef1f77fd66bf31ace7d722e2d"
+}

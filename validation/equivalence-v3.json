@@ -1,0 +1,37 @@
+{
+  "schema": "wp5-equivalence-receipt-1",
+  "recorded_at": "2026-10-01T04:56:25Z",
+  "purpose": "code cleanup re-freeze: confirm frozen-v3 reproduces frozen-v2 outputs exactly; not a re-evaluation",
+  "frozen_config_v3_content_sha256": "7bcf0c092d9da11850d8ccb44bb74ab203908bd20069083c6dec151045fcec88",
+  "code_sha256_v3": "331f565789f3fa3df8733333b6c81e7e358b54049e164436c550a23f1839a794",
+  "frozen_config_v2_content_sha256": "09798c88fe243359cc8122c5576222df9deb5f851b3a718c3aca57e85ccc5930",
+  "checks": [
+    {
+      "bundle": "frozen-100-v3",
+      "baseline_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step5-frozen-v2-replay-dev",
+      "new_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step6-cleanup-eq-dev",
+      "cases": 100,
+      "differing": 0,
+      "strict": 40,
+      "family": 55
+    },
+    {
+      "bundle": "heldout-200-v2",
+      "baseline_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step5-heldout-v2-oneshot",
+      "new_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step6-cleanup-eq-heldout",
+      "cases": 200,
+      "differing": 0,
+      "strict": 74,
+      "family": 99
+    }
+  ],
+  "compared_fields": [
+    "selected component reference_ids",
+    "selected objective (1e-10)",
+    "all hypothesis ids and objectives",
+    "strict pass",
+    "family pass"
+  ],
+  "outcome_unchanged": "heldout-200-v2/outcome-v2.json",
+  "content_sha256": "5575e8c440a86e42c0fed02cae8adc695ae20261f39b2a8a6fb09e431693b5e4"
+}

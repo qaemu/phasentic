@@ -1,0 +1,3034 @@
+{
+  "case_manifest_sha256": "f775296e5b8c2c7665bb02543d701551b18c711544798e7ee28088ff53a02ac3",
+  "cases": {
+    "precursor-pg_0104": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ag",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "Ag2O",
+        "BaCO3"
+      ],
+      "target_compound": "Ba2Ag2C2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0108": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Co",
+        "Ag"
+      ],
+      "precursor_formulas": [
+        "Ag2O",
+        "CoO"
+      ],
+      "target_compound": "Co2Ag2O3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0117": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ag",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "Ag2O",
+        "HfO2"
+      ],
+      "target_compound": "Hf2Ag2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0122": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Ag"
+      ],
+      "precursor_formulas": [
+        "Ag2O",
+        "Li2CO3"
+      ],
+      "target_compound": "Li2Ag2CO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0127": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Ag"
+      ],
+      "precursor_formulas": [
+        "Ag2O",
+        "Mn3O4"
+      ],
+      "target_compound": "Mn6Ag6O11",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0128": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Ag"
+      ],
+      "precursor_formulas": [
+        "Ag2O",
+        "Mn2O3"
+      ],
+      "target_compound": "MnAgO2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0130": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mo",
+        "Ag"
+      ],
+      "precursor_formulas": [
+        "Ag2O",
+        "MoO3"
+      ],
+      "target_compound": "Ag2Mo2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0139": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ni",
+        "Ag"
+      ],
+      "precursor_formulas": [
+        "Ag2O",
+        "NiO"
+      ],
+      "target_compound": "Ni2Ag2O3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0210": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Al",
+        "Cr"
+      ],
+      "precursor_formulas": [
+        "Al(HO)3",
+        "Cr2O3"
+      ],
+      "target_compound": "Al2Cr2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0222": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Al"
+      ],
+      "precursor_formulas": [
+        "Al(HO)3",
+        "Li2CO3"
+      ],
+      "target_compound": "Li2Al2H6CO9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0230": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Al",
+        "Mo"
+      ],
+      "precursor_formulas": [
+        "Al(HO)3",
+        "MoO3"
+      ],
+      "target_compound": "AlMo(HO2)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0239": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Al",
+        "Ni"
+      ],
+      "precursor_formulas": [
+        "Al(HO)3",
+        "NiO"
+      ],
+      "target_compound": "AlNiH3O4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0244": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Al",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "Al(HO)3",
+        "SnO2"
+      ],
+      "target_compound": "AlSnH3O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0247": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Al",
+        "V"
+      ],
+      "precursor_formulas": [
+        "Al(HO)3",
+        "V2O3"
+      ],
+      "target_compound": "Al2V2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0252": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Al",
+        "Zr"
+      ],
+      "precursor_formulas": [
+        "Al(HO)3",
+        "ZrO2"
+      ],
+      "target_compound": "ZrAlH3O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0304": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "BaCO3"
+      ],
+      "target_compound": "BaBH3CO6",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0310": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "Cr"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "Cr2O3"
+      ],
+      "target_compound": "Cr2B2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0311": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "Cu"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "CuO"
+      ],
+      "target_compound": "CuBH3O4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0312": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "Fe"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "Fe3O4"
+      ],
+      "target_compound": "Fe3B3H9O13",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0317": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "HfO2"
+      ],
+      "target_compound": "HfBH3O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0318": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "In"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "In2O3"
+      ],
+      "target_compound": "In2B2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0325": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "Mg"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "MgO"
+      ],
+      "target_compound": "MgBH3O4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0327": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "Mn3O4"
+      ],
+      "target_compound": "Mn3B3H9O13",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0338": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "Nb"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "Nb2O5"
+      ],
+      "target_compound": "Nb2B2H6O11",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0341": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "Sb"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "Sb2O3"
+      ],
+      "target_compound": "B2Sb2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0349": {
+      "allowed_elements": [
+        "H",
+        "B",
+        "C",
+        "O",
+        "W"
+      ],
+      "precursor_formulas": [
+        "B(HO)3",
+        "WO3"
+      ],
+      "target_compound": "BH3WO6",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0405": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "BaO2"
+      ],
+      "target_compound": "Ba2CO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0410": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Cr",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "Cr2O3"
+      ],
+      "target_compound": "Ba2Cr2C2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0413": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "Fe2O3"
+      ],
+      "target_compound": "Ba2Fe2C2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0414": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "FeH4(CO3)2"
+      ],
+      "target_compound": "BaFeH4(CO3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0415": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ga",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "Ga2O3"
+      ],
+      "target_compound": "Ba2Ga2C2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0416": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ge",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "GeO2"
+      ],
+      "target_compound": "BaGeCO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0422": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "Li2CO3"
+      ],
+      "target_compound": "Ba2Li2(CO3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0443": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Si",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "SiO2"
+      ],
+      "target_compound": "BaSiCO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0445": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Sr",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "SrCO3"
+      ],
+      "target_compound": "BaSr(CO3)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0448": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "V2O5"
+      ],
+      "target_compound": "Ba2V2C2O11",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0452": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Zr",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaCO3",
+        "ZrO2"
+      ],
+      "target_compound": "BaZrCO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0513": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaO2",
+        "Fe2O3"
+      ],
+      "target_compound": "Ba2Fe2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0517": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ba",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "BaO2",
+        "HfO2"
+      ],
+      "target_compound": "BaHfO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0518": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "In",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaO2",
+        "In2O3"
+      ],
+      "target_compound": "Ba2In2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0525": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mg",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaO2",
+        "MgO"
+      ],
+      "target_compound": "BaMgO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0526": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaO2",
+        "MnO"
+      ],
+      "target_compound": "BaMnO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0546": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ti",
+        "Ba"
+      ],
+      "precursor_formulas": [
+        "BaO2",
+        "TiO2"
+      ],
+      "target_compound": "BaTiO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0549": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ba",
+        "W"
+      ],
+      "precursor_formulas": [
+        "BaO2",
+        "WO3"
+      ],
+      "target_compound": "BaWO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0607": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ca",
+        "Bi"
+      ],
+      "precursor_formulas": [
+        "Bi2O3",
+        "CaCO3"
+      ],
+      "target_compound": "Ca2Bi2C2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0615": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ga",
+        "Bi"
+      ],
+      "precursor_formulas": [
+        "Bi2O3",
+        "Ga2O3"
+      ],
+      "target_compound": "GaBiO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0643": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Si",
+        "Bi"
+      ],
+      "precursor_formulas": [
+        "Bi2O3",
+        "SiO2"
+      ],
+      "target_compound": "Si2Bi2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0644": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Sn",
+        "Bi"
+      ],
+      "precursor_formulas": [
+        "Bi2O3",
+        "SnO2"
+      ],
+      "target_compound": "Sn2Bi2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0715": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ca",
+        "Ga"
+      ],
+      "precursor_formulas": [
+        "CaCO3",
+        "Ga2O3"
+      ],
+      "target_compound": "Ca2Ga2C2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0719": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "K",
+        "Ca"
+      ],
+      "precursor_formulas": [
+        "CaCO3",
+        "K4H6C2O9"
+      ],
+      "target_compound": "K4Ca4H6(C2O7)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0720": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Ca"
+      ],
+      "precursor_formulas": [
+        "CaCO3",
+        "KP(HO2)2"
+      ],
+      "target_compound": "KCaPH2CO7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0721": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ca",
+        "La"
+      ],
+      "precursor_formulas": [
+        "CaCO3",
+        "La(HO)3"
+      ],
+      "target_compound": "CaLaH3CO6",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0730": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ca",
+        "Mo"
+      ],
+      "precursor_formulas": [
+        "CaCO3",
+        "MoO3"
+      ],
+      "target_compound": "CaMoCO6",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0744": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ca",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "CaCO3",
+        "SnO2"
+      ],
+      "target_compound": "CaSnCO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0747": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ca",
+        "V"
+      ],
+      "precursor_formulas": [
+        "CaCO3",
+        "V2O3"
+      ],
+      "target_compound": "Ca2V2C2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0750": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ca",
+        "Y"
+      ],
+      "precursor_formulas": [
+        "CaCO3",
+        "Y2O3"
+      ],
+      "target_compound": "Ca2Y2C2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0751": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ca",
+        "Zn"
+      ],
+      "precursor_formulas": [
+        "CaCO3",
+        "ZnO"
+      ],
+      "target_compound": "CaZnCO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0810": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Cr",
+        "Co"
+      ],
+      "precursor_formulas": [
+        "CoO",
+        "Cr2O3"
+      ],
+      "target_compound": "Cr2Co2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0812": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Co"
+      ],
+      "precursor_formulas": [
+        "CoO",
+        "Fe3O4"
+      ],
+      "target_compound": "Fe3Co3O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0820": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Co"
+      ],
+      "precursor_formulas": [
+        "CoO",
+        "KP(HO2)2"
+      ],
+      "target_compound": "KCoPH2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0821": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Co",
+        "La"
+      ],
+      "precursor_formulas": [
+        "CoO",
+        "La(HO)3"
+      ],
+      "target_compound": "LaCoH3O4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0840": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Co",
+        "Pb"
+      ],
+      "precursor_formulas": [
+        "CoO",
+        "PbO"
+      ],
+      "target_compound": "CoPbO2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0846": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ti",
+        "Co"
+      ],
+      "precursor_formulas": [
+        "CoO",
+        "TiO2"
+      ],
+      "target_compound": "TiCoO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0910": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Cr",
+        "Co"
+      ],
+      "precursor_formulas": [
+        "Co3O4",
+        "Cr2O3"
+      ],
+      "target_compound": "Cr6Co6O17",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0915": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Co",
+        "Ga"
+      ],
+      "precursor_formulas": [
+        "Co3O4",
+        "Ga2O3"
+      ],
+      "target_compound": "Ga6Co6O17",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0920": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Co"
+      ],
+      "precursor_formulas": [
+        "Co3O4",
+        "KP(HO2)2"
+      ],
+      "target_compound": "K3Co3P3(H3O8)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0926": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Co"
+      ],
+      "precursor_formulas": [
+        "Co3O4",
+        "MnO"
+      ],
+      "target_compound": "Mn3Co3O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0927": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Co"
+      ],
+      "precursor_formulas": [
+        "Co3O4",
+        "Mn3O4"
+      ],
+      "target_compound": "Mn3Co3O8",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0949": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Co",
+        "W"
+      ],
+      "precursor_formulas": [
+        "Co3O4",
+        "WO3"
+      ],
+      "target_compound": "Co3W3O13",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_0952": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Co",
+        "Zr"
+      ],
+      "precursor_formulas": [
+        "Co3O4",
+        "ZrO2"
+      ],
+      "target_compound": "Zr3Co3O10",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1019": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "K",
+        "Cr"
+      ],
+      "precursor_formulas": [
+        "Cr2O3",
+        "K4H6C2O9"
+      ],
+      "target_compound": "K4Cr4H6C2O15",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1029": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Cr",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "Cr2O3",
+        "MnO2"
+      ],
+      "target_compound": "Mn2Cr2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1120": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Cu"
+      ],
+      "precursor_formulas": [
+        "CuO",
+        "KP(HO2)2"
+      ],
+      "target_compound": "KCuPH2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1126": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Cu"
+      ],
+      "precursor_formulas": [
+        "CuO",
+        "MnO"
+      ],
+      "target_compound": "MnCuO2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1129": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Cu"
+      ],
+      "precursor_formulas": [
+        "CuO",
+        "MnO2"
+      ],
+      "target_compound": "MnCuO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1140": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Cu",
+        "Pb"
+      ],
+      "precursor_formulas": [
+        "CuO",
+        "PbO"
+      ],
+      "target_compound": "CuPbO2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1143": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Si",
+        "Cu"
+      ],
+      "precursor_formulas": [
+        "CuO",
+        "SiO2"
+      ],
+      "target_compound": "CuSiO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1146": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ti",
+        "Cu"
+      ],
+      "precursor_formulas": [
+        "CuO",
+        "TiO2"
+      ],
+      "target_compound": "TiCuO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1224": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Fe"
+      ],
+      "precursor_formulas": [
+        "Fe3O4",
+        "LiH3O2"
+      ],
+      "target_compound": "Li3Fe3H9O10",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1235": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Na",
+        "Fe"
+      ],
+      "precursor_formulas": [
+        "Fe3O4",
+        "Na2CO3"
+      ],
+      "target_compound": "Na6Fe6C3O17",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1244": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "Fe3O4",
+        "SnO2"
+      ],
+      "target_compound": "Fe3Sn3O10",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1246": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ti",
+        "Fe"
+      ],
+      "precursor_formulas": [
+        "Fe3O4",
+        "TiO2"
+      ],
+      "target_compound": "Ti3Fe3O10",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1248": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Fe"
+      ],
+      "precursor_formulas": [
+        "Fe3O4",
+        "V2O5"
+      ],
+      "target_compound": "V6Fe6O23",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1250": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Y"
+      ],
+      "precursor_formulas": [
+        "Fe3O4",
+        "Y2O3"
+      ],
+      "target_compound": "Y6Fe6O17",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1317": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "Fe2O3",
+        "HfO2"
+      ],
+      "target_compound": "Hf2Fe2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1321": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "La"
+      ],
+      "precursor_formulas": [
+        "Fe2O3",
+        "La(HO)3"
+      ],
+      "target_compound": "La2Fe2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1325": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mg",
+        "Fe"
+      ],
+      "precursor_formulas": [
+        "Fe2O3",
+        "MgO"
+      ],
+      "target_compound": "Mg2Fe2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1343": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Si",
+        "Fe"
+      ],
+      "precursor_formulas": [
+        "Fe2O3",
+        "SiO2"
+      ],
+      "target_compound": "Fe2Si2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1350": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Y"
+      ],
+      "precursor_formulas": [
+        "Fe2O3",
+        "Y2O3"
+      ],
+      "target_compound": "YFeO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1352": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Zr"
+      ],
+      "precursor_formulas": [
+        "Fe2O3",
+        "ZrO2"
+      ],
+      "target_compound": "Zr2Fe2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1416": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Ge"
+      ],
+      "precursor_formulas": [
+        "FeH4(CO3)2",
+        "GeO2"
+      ],
+      "target_compound": "FeGeH4(CO4)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1452": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Fe",
+        "Zr"
+      ],
+      "precursor_formulas": [
+        "FeH4(CO3)2",
+        "ZrO2"
+      ],
+      "target_compound": "ZrFeH4(CO4)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1517": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ga",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "Ga2O3",
+        "HfO2"
+      ],
+      "target_compound": "Hf2Ga2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1520": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Ga"
+      ],
+      "precursor_formulas": [
+        "Ga2O3",
+        "KP(HO2)2"
+      ],
+      "target_compound": "K2Ga2P2H4O11",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1521": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ga",
+        "La"
+      ],
+      "precursor_formulas": [
+        "Ga2O3",
+        "La(HO)3"
+      ],
+      "target_compound": "La2Ga2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1522": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Ga"
+      ],
+      "precursor_formulas": [
+        "Ga2O3",
+        "Li2CO3"
+      ],
+      "target_compound": "Li2Ga2CO6",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1525": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mg",
+        "Ga"
+      ],
+      "precursor_formulas": [
+        "Ga2O3",
+        "MgO"
+      ],
+      "target_compound": "Mg2Ga2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1529": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Ga"
+      ],
+      "precursor_formulas": [
+        "Ga2O3",
+        "MnO2"
+      ],
+      "target_compound": "Mn2Ga2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1535": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Na",
+        "Ga"
+      ],
+      "precursor_formulas": [
+        "Ga2O3",
+        "Na2CO3"
+      ],
+      "target_compound": "Na2Ga2CO6",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1618": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ge",
+        "In"
+      ],
+      "precursor_formulas": [
+        "GeO2",
+        "In2O3"
+      ],
+      "target_compound": "In2Ge2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1620": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Ge"
+      ],
+      "precursor_formulas": [
+        "GeO2",
+        "KP(HO2)2"
+      ],
+      "target_compound": "KGeP(HO3)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1627": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Ge"
+      ],
+      "precursor_formulas": [
+        "GeO2",
+        "Mn3O4"
+      ],
+      "target_compound": "Mn3Ge3O10",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1629": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Ge"
+      ],
+      "precursor_formulas": [
+        "GeO2",
+        "MnO2"
+      ],
+      "target_compound": "MnGeO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1631": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "P",
+        "Ge"
+      ],
+      "precursor_formulas": [
+        "GeO2",
+        "PH9(NO2)2"
+      ],
+      "target_compound": "GePH9(NO3)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1644": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ge",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "GeO2",
+        "SnO2"
+      ],
+      "target_compound": "SnGeO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1650": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ge",
+        "Y"
+      ],
+      "precursor_formulas": [
+        "GeO2",
+        "Y2O3"
+      ],
+      "target_compound": "Y2Ge2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1652": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ge",
+        "Zr"
+      ],
+      "precursor_formulas": [
+        "GeO2",
+        "ZrO2"
+      ],
+      "target_compound": "ZrGeO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1720": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "KP(HO2)2"
+      ],
+      "target_compound": "KHfP(HO3)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1724": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "LiH3O2"
+      ],
+      "target_compound": "LiHfH3O4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1728": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "Mn2O3"
+      ],
+      "target_compound": "Hf2Mn2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1729": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "MnO2"
+      ],
+      "target_compound": "HfMnO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1730": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mo",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "MoO3"
+      ],
+      "target_compound": "HfMoO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1731": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "P",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "PH9(NO2)2"
+      ],
+      "target_compound": "HfPH9(NO3)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1740": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Hf",
+        "Pb"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "PbO"
+      ],
+      "target_compound": "HfPbO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1748": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "V2O5"
+      ],
+      "target_compound": "Hf2V2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1750": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Y",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "Y2O3"
+      ],
+      "target_compound": "Y2Hf2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1752": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Zr",
+        "Hf"
+      ],
+      "precursor_formulas": [
+        "HfO2",
+        "ZrO2"
+      ],
+      "target_compound": "HfZrO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1824": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "In"
+      ],
+      "precursor_formulas": [
+        "In2O3",
+        "LiH3O2"
+      ],
+      "target_compound": "Li2In2H6O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1825": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mg",
+        "In"
+      ],
+      "precursor_formulas": [
+        "In2O3",
+        "MgO"
+      ],
+      "target_compound": "Mg2In2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1827": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "In"
+      ],
+      "precursor_formulas": [
+        "In2O3",
+        "Mn3O4"
+      ],
+      "target_compound": "Mn6In6O17",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1831": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "P",
+        "In"
+      ],
+      "precursor_formulas": [
+        "In2O3",
+        "PH9(NO2)2"
+      ],
+      "target_compound": "In2PH9N2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1839": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ni",
+        "In"
+      ],
+      "precursor_formulas": [
+        "In2O3",
+        "NiO"
+      ],
+      "target_compound": "In2Ni2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1843": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Si",
+        "In"
+      ],
+      "precursor_formulas": [
+        "In2O3",
+        "SiO2"
+      ],
+      "target_compound": "In2Si2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1847": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "In"
+      ],
+      "precursor_formulas": [
+        "In2O3",
+        "V2O3"
+      ],
+      "target_compound": "VInO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1848": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "In"
+      ],
+      "precursor_formulas": [
+        "In2O3",
+        "V2O5"
+      ],
+      "target_compound": "VInO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1849": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "In",
+        "W"
+      ],
+      "precursor_formulas": [
+        "In2O3",
+        "WO3"
+      ],
+      "target_compound": "In2W2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1924": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "K"
+      ],
+      "precursor_formulas": [
+        "K4H6C2O9",
+        "LiH3O2"
+      ],
+      "target_compound": "K4Li4H18C2O17",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_1944": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "K",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "K4H6C2O9",
+        "SnO2"
+      ],
+      "target_compound": "K4Sn4H6C2O17",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2021": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "La"
+      ],
+      "precursor_formulas": [
+        "KP(HO2)2",
+        "La(HO)3"
+      ],
+      "target_compound": "KLaPH5O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2026": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "KP(HO2)2",
+        "MnO"
+      ],
+      "target_compound": "KMnPH2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2030": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Mo"
+      ],
+      "precursor_formulas": [
+        "KP(HO2)2",
+        "MoO3"
+      ],
+      "target_compound": "KMoPH2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2031": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "P",
+        "K"
+      ],
+      "precursor_formulas": [
+        "KP(HO2)2",
+        "PH9(NO2)2"
+      ],
+      "target_compound": "KP2H11(NO4)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2038": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Nb"
+      ],
+      "precursor_formulas": [
+        "KP(HO2)2",
+        "Nb2O5"
+      ],
+      "target_compound": "K2Nb2P2H4O13",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2044": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "KP(HO2)2",
+        "SnO2"
+      ],
+      "target_compound": "KSnP(HO3)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2050": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Y"
+      ],
+      "precursor_formulas": [
+        "KP(HO2)2",
+        "Y2O3"
+      ],
+      "target_compound": "K2Y2P2H4O11",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2052": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "P",
+        "K",
+        "Zr"
+      ],
+      "precursor_formulas": [
+        "KP(HO2)2",
+        "ZrO2"
+      ],
+      "target_compound": "KZrP(HO3)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2122": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "La"
+      ],
+      "precursor_formulas": [
+        "La(HO)3",
+        "Li2CO3"
+      ],
+      "target_compound": "Li2La2H6CO9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2128": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "La"
+      ],
+      "precursor_formulas": [
+        "La(HO)3",
+        "Mn2O3"
+      ],
+      "target_compound": "La2Mn2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2135": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Na",
+        "La"
+      ],
+      "precursor_formulas": [
+        "La(HO)3",
+        "Na2CO3"
+      ],
+      "target_compound": "Na2La2H6CO9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2139": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ni",
+        "La"
+      ],
+      "precursor_formulas": [
+        "La(HO)3",
+        "NiO"
+      ],
+      "target_compound": "LaNiH3O4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2141": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Sb",
+        "La"
+      ],
+      "precursor_formulas": [
+        "La(HO)3",
+        "Sb2O3"
+      ],
+      "target_compound": "La2Sb2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2148": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "La"
+      ],
+      "precursor_formulas": [
+        "La(HO)3",
+        "V2O5"
+      ],
+      "target_compound": "La2V2H6O11",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2150": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Y",
+        "La"
+      ],
+      "precursor_formulas": [
+        "La(HO)3",
+        "Y2O3"
+      ],
+      "target_compound": "La2Y2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2226": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "Li2CO3",
+        "MnO"
+      ],
+      "target_compound": "Li2Mn2CO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2229": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "Li2CO3",
+        "MnO2"
+      ],
+      "target_compound": "Li2Mn2CO7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2243": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Si"
+      ],
+      "precursor_formulas": [
+        "Li2CO3",
+        "SiO2"
+      ],
+      "target_compound": "Li2Si2CO7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2244": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "Li2CO3",
+        "SnO2"
+      ],
+      "target_compound": "Li2Sn2CO7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2426": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "LiH3O2",
+        "MnO"
+      ],
+      "target_compound": "LiMn(HO)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2428": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "LiH3O2",
+        "Mn2O3"
+      ],
+      "target_compound": "Li2Mn2H6O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2429": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "LiH3O2",
+        "MnO2"
+      ],
+      "target_compound": "LiMnH3O4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2441": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Sb"
+      ],
+      "precursor_formulas": [
+        "LiH3O2",
+        "Sb2O3"
+      ],
+      "target_compound": "Li2Sb2H6O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2445": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Sr"
+      ],
+      "precursor_formulas": [
+        "LiH3O2",
+        "SrCO3"
+      ],
+      "target_compound": "SrLiH3CO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2446": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Ti"
+      ],
+      "precursor_formulas": [
+        "LiH3O2",
+        "TiO2"
+      ],
+      "target_compound": "LiTiH3O4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2448": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "V"
+      ],
+      "precursor_formulas": [
+        "LiH3O2",
+        "V2O5"
+      ],
+      "target_compound": "Li2V2(H2O3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2450": {
+      "allowed_elements": [
+        "H",
+        "Li",
+        "C",
+        "O",
+        "Y"
+      ],
+      "precursor_formulas": [
+        "LiH3O2",
+        "Y2O3"
+      ],
+      "target_compound": "Li2Y2H6O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2529": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mg",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "MgO",
+        "MnO2"
+      ],
+      "target_compound": "MgMnO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2530": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mg",
+        "Mo"
+      ],
+      "precursor_formulas": [
+        "MgO",
+        "MoO3"
+      ],
+      "target_compound": "MgMoO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2534": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "Mg",
+        "P"
+      ],
+      "precursor_formulas": [
+        "MgO",
+        "PH6NO4"
+      ],
+      "target_compound": "MgPH6NO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2539": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mg",
+        "Ni"
+      ],
+      "precursor_formulas": [
+        "MgO",
+        "NiO"
+      ],
+      "target_compound": "MgNiO2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2630": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Mo"
+      ],
+      "precursor_formulas": [
+        "MnO",
+        "MoO3"
+      ],
+      "target_compound": "MnMoO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2638": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Nb"
+      ],
+      "precursor_formulas": [
+        "MnO",
+        "Nb2O5"
+      ],
+      "target_compound": "Mn2Nb2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2743": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Si",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "Mn3O4",
+        "SiO2"
+      ],
+      "target_compound": "Mn3Si3O10",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2746": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ti",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "Mn3O4",
+        "TiO2"
+      ],
+      "target_compound": "Ti3Mn3O10",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2847": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "Mn2O3",
+        "V2O3"
+      ],
+      "target_compound": "MnVO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2850": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Y"
+      ],
+      "precursor_formulas": [
+        "Mn2O3",
+        "Y2O3"
+      ],
+      "target_compound": "YMnO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2852": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Zr"
+      ],
+      "precursor_formulas": [
+        "Mn2O3",
+        "ZrO2"
+      ],
+      "target_compound": "Zr2Mn2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2931": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "P",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "MnO2",
+        "PH9(NO2)2"
+      ],
+      "target_compound": "MnPH9(NO3)2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2944": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "MnO2",
+        "SnO2"
+      ],
+      "target_compound": "MnSnO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2947": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "MnO2",
+        "V2O3"
+      ],
+      "target_compound": "Mn2V2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2948": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Mn"
+      ],
+      "precursor_formulas": [
+        "MnO2",
+        "V2O5"
+      ],
+      "target_compound": "Mn2V2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_2952": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mn",
+        "Zr"
+      ],
+      "precursor_formulas": [
+        "MnO2",
+        "ZrO2"
+      ],
+      "target_compound": "ZrMnO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3041": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mo",
+        "Sb"
+      ],
+      "precursor_formulas": [
+        "MoO3",
+        "Sb2O3"
+      ],
+      "target_compound": "Sb2Mo2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3043": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Si",
+        "Mo"
+      ],
+      "precursor_formulas": [
+        "MoO3",
+        "SiO2"
+      ],
+      "target_compound": "SiMoO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3044": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Mo",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "MoO3",
+        "SnO2"
+      ],
+      "target_compound": "SnMoO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3141": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "P",
+        "Sb"
+      ],
+      "precursor_formulas": [
+        "PH9(NO2)2",
+        "Sb2O3"
+      ],
+      "target_compound": "Sb2PH9N2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3147": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "P",
+        "V"
+      ],
+      "precursor_formulas": [
+        "PH9(NO2)2",
+        "V2O3"
+      ],
+      "target_compound": "V2PH9N2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3149": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "P",
+        "W"
+      ],
+      "precursor_formulas": [
+        "PH9(NO2)2",
+        "WO3"
+      ],
+      "target_compound": "PH9WN2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3447": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "N",
+        "O",
+        "P",
+        "V"
+      ],
+      "precursor_formulas": [
+        "PH6NO4",
+        "V2O3"
+      ],
+      "target_compound": "V2PH6NO7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3541": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Na",
+        "Sb"
+      ],
+      "precursor_formulas": [
+        "Na2CO3",
+        "Sb2O3"
+      ],
+      "target_compound": "Na2Sb2CO6",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3545": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Na",
+        "Sr"
+      ],
+      "precursor_formulas": [
+        "Na2CO3",
+        "SrCO3"
+      ],
+      "target_compound": "Na2Sr2(CO3)3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3846": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ti",
+        "Nb"
+      ],
+      "precursor_formulas": [
+        "Nb2O5",
+        "TiO2"
+      ],
+      "target_compound": "Ti2Nb2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3847": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Nb"
+      ],
+      "precursor_formulas": [
+        "Nb2O5",
+        "V2O3"
+      ],
+      "target_compound": "NbVO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3849": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Nb",
+        "W"
+      ],
+      "precursor_formulas": [
+        "Nb2O5",
+        "WO3"
+      ],
+      "target_compound": "Nb2W2O11",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3940": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ni",
+        "Pb"
+      ],
+      "precursor_formulas": [
+        "NiO",
+        "PbO"
+      ],
+      "target_compound": "NiPbO2",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3944": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ni",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "NiO",
+        "SnO2"
+      ],
+      "target_compound": "NiSnO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_3949": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ni",
+        "W"
+      ],
+      "precursor_formulas": [
+        "NiO",
+        "WO3"
+      ],
+      "target_compound": "NiWO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4049": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "W",
+        "Pb"
+      ],
+      "precursor_formulas": [
+        "PbO",
+        "WO3"
+      ],
+      "target_compound": "PbWO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4050": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Y",
+        "Pb"
+      ],
+      "precursor_formulas": [
+        "PbO",
+        "Y2O3"
+      ],
+      "target_compound": "Y2Pb2O5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4348": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Si",
+        "V"
+      ],
+      "precursor_formulas": [
+        "SiO2",
+        "V2O5"
+      ],
+      "target_compound": "V2Si2O9",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4445": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Sr",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "SnO2",
+        "SrCO3"
+      ],
+      "target_compound": "SrSnCO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4447": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "SnO2",
+        "V2O3"
+      ],
+      "target_compound": "V2Sn2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4450": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Y",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "SnO2",
+        "Y2O3"
+      ],
+      "target_compound": "Y2Sn2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4452": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Zr",
+        "Sn"
+      ],
+      "precursor_formulas": [
+        "SnO2",
+        "ZrO2"
+      ],
+      "target_compound": "ZrSnO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4549": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Sr",
+        "W"
+      ],
+      "precursor_formulas": [
+        "SrCO3",
+        "WO3"
+      ],
+      "target_compound": "SrWCO6",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4552": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Sr",
+        "Zr"
+      ],
+      "precursor_formulas": [
+        "SrCO3",
+        "ZrO2"
+      ],
+      "target_compound": "SrZrCO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4649": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ti",
+        "W"
+      ],
+      "precursor_formulas": [
+        "TiO2",
+        "WO3"
+      ],
+      "target_compound": "TiWO5",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4651": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Ti",
+        "Zn"
+      ],
+      "precursor_formulas": [
+        "TiO2",
+        "ZnO"
+      ],
+      "target_compound": "TiZnO3",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4850": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Y"
+      ],
+      "precursor_formulas": [
+        "V2O5",
+        "Y2O3"
+      ],
+      "target_compound": "YVO4",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_4851": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "V",
+        "Zn"
+      ],
+      "precursor_formulas": [
+        "V2O5",
+        "ZnO"
+      ],
+      "target_compound": "V2Zn2O7",
+      "unparsed_precursor_formulas": []
+    },
+    "precursor-pg_5051": {
+      "allowed_elements": [
+        "H",
+        "C",
+        "O",
+        "Zn",
+        "Y"
+      ],
+      "precursor_formulas": [
+        "Y2O3",
+        "ZnO"
+      ],
+      "target_compound": "Y2Zn2O5",
+      "unparsed_precursor_formulas": []
+    }
+  },
+  "cases_missing_from_ledger": [],
+  "content_sha256": "a9fc11b554575dd1724bfd19a07e6bf451c4f38f4f2aff746264765e8ed9f609",
+  "ledger_sha256": "f8b8aabb5b8718ad912075b9aa10373a5e81659b496348f14c926e432eb42dac",
+  "rule": "elements(precursors) | elements(target_compound) | {O, H, C}; molecular organics excluded at retrieval",
+  "schema_version": "precursor-sample-context-1",
+  "uses_labels": false
+}

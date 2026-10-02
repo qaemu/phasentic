@@ -1,0 +1,33 @@
+{
+  "schema_version": "0.1",
+  "mappings": [
+    {
+      "mapping_id": "bruker_raw_v2_v3_v4",
+      "vendor": "Bruker/Siemens",
+      "format": "Bruker RAW v2/v3/v4",
+      "extensions": [".raw"],
+      "header_signatures": ["RAW ", "RAW2", "RAW1.01", "RAW4.00"],
+      "gsas2_module": "G2pwd_BrukerRAW",
+      "gsas2_format_hint": "Bruker RAW",
+      "angle_unit": "two_theta",
+      "allowed_scan_types": ["Locked Coupled", "Unlocked Coupled", "Detector Scan"],
+      "documentation_url": "https://gsas-ii.readthedocs.io/en/latest/GSASIIscriptable.html",
+      "fixture_ids": ["geddes_bruker4_diffrac_eva_raw"],
+      "validation_note": "Validated against the public RAW4 fixture using the official GSAS-II powder importer and normalized to the Pattern contract. RAW v2/v3 share the importer family but require separate fixtures before a publication claim."
+    },
+    {
+      "mapping_id": "panalytical_xrdml",
+      "vendor": "Malvern Panalytical",
+      "format": "Panalytical XRDML",
+      "extensions": [".xrdml"],
+      "header_signatures": ["xrdMeasurements"],
+      "gsas2_module": "G2pwd_Panalytical",
+      "gsas2_format_hint": "Panalytical xrdml",
+      "angle_unit": "two_theta",
+      "allowed_scan_types": ["Scan"],
+      "documentation_url": "https://gsas-ii.readthedocs.io/en/latest/GSASIIscriptable.html",
+      "fixture_ids": ["geddes_panalytical_xrdml"],
+      "validation_note": "The alpha uses the native XML parser for XRDML and retains vendor metadata; GSAS-II parity remains an optional cross-check."
+    }
+  ]
+}

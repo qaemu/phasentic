@@ -1,0 +1,46 @@
+{
+  "schema_version": "powcod-equivalence-input-1",
+  "curation_policy": "curated-only",
+  "groups": [
+    {
+      "group_id": "phase:corundum",
+      "preferred_name": "Corundum",
+      "equivalence_kind": "exact_phase",
+      "confidence": "reviewed",
+      "curation_status": "active",
+      "evidence": {"basis": "same phase identity; duplicate POW_COD entries"}
+    },
+    {
+      "group_id": "phase:fluorite",
+      "preferred_name": "Fluorite",
+      "equivalence_kind": "exact_phase",
+      "confidence": "reviewed",
+      "curation_status": "active",
+      "evidence": {"basis": "same phase identity; duplicate POW_COD entries"}
+    },
+    {
+      "group_id": "phase:hematite",
+      "preferred_name": "Hematite",
+      "equivalence_kind": "exact_phase",
+      "confidence": "reviewed",
+      "curation_status": "active",
+      "evidence": {"basis": "same phase identity; duplicate POW_COD entries"}
+    },
+    {
+      "group_id": "phase:magnetite",
+      "preferred_name": "Magnetite",
+      "equivalence_kind": "exact_phase",
+      "confidence": "reviewed",
+      "curation_status": "active",
+      "evidence": {"basis": "same phase identity; duplicate POW_COD entries"}
+    }
+  ],
+  "members": [
+    {"reference_id": "powcod:1000017", "cod_id": "1000017", "group_id": "phase:corundum"},
+    {"reference_id": "powcod:9007496", "cod_id": "9007496", "group_id": "phase:corundum"},
+    {"reference_id": "powcod:1000043", "cod_id": "1000043", "group_id": "phase:fluorite"},
+    {"reference_id": "powcod:9009005", "cod_id": "9009005", "group_id": "phase:fluorite"},
+    {"reference_id": "powcod:2101167", "cod_id": "2101167", "group_id": "phase:hematite"},
+    {"reference_id": "powcod:9000926", "cod_id": "9000926", "group_id": "phase:magnetite"}
+  ]
+}

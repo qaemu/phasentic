@@ -1,0 +1,43 @@
+{
+  "schema_version": "wp5-precursor-target-1",
+  "declared_at": "2026-09-30T14:44:03Z",
+  "declared_by": "project owner (chat decision 2026-09-30), recorded before any step-5 tuning",
+  "evaluation_cohort": {
+    "bundle": "data/benchmarks/wp5/precursor-campaign-v1/heldout-200-v1/frozen",
+    "bundle_json_sha256": "c57f71f0e60070129dfc7e9a728eead4b15a7df19787c65f95f7a954e98d609e",
+    "selection_manifest_sha256": "4240c249f1b4b7b04697c3943c3ee3d6b0d5baa541a4a96434840fe14519ff4c",
+    "sample_context_sha256": "a257b30d97387eef8aff1f7d6f8251ae8306c624091da876fdf6eafdc0422a3e",
+    "case_count": 200,
+    "split": "test",
+    "selection": "seed 20260930, proportional phase-count strata, human quality score 1, accepted active refinement, development samples excluded"
+  },
+  "targets": {
+    "family_pass_rate_min": 0.45,
+    "family_pass_count_min": 90,
+    "strict_pass_rate_min": 0.35,
+    "strict_pass_count_min": 70,
+    "denominator": "all 200 cases; abstentions and failures count as not passed",
+    "scoring": "validation/wp5/phase_scoring levels 'family' and 'strict' as used by run_bundle (recall and precision thresholds from the frozen evaluation policy)",
+    "reporting": "point rates with Wilson 95% intervals, per phase-count stratum, abstention count"
+  },
+  "rules": [
+    "The held-out cohort is not run, scored or inspected until parameters and code are frozen and hashed.",
+    "It is evaluated once. Any change made after seeing its results requires a new held-out cohort.",
+    "All tuning and development use the 100-case development bundle (frozen-100-v3), which is fully label-exposed.",
+    "DARA never controls parameter selection."
+  ],
+  "development_baseline": {
+    "run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step4-precursor-100-parallel-v1",
+    "all_100": {
+      "strict_pass": 29,
+      "family_pass": 38,
+      "abstained": 30
+    },
+    "outside_tuning_15": {
+      "n": 85,
+      "strict_pass": 22,
+      "family_pass": 29
+    }
+  },
+  "content_sha256": "17e711711432ed00fc53b8c89057d3e108b96054a54ba95c72eec489af098ce3"
+}

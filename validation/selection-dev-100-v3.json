@@ -1,0 +1,4154 @@
+{
+  "eligible_count": 685,
+  "excluded_counts": {
+    "active_refinement_missing": 3,
+    "active_scan_missing": 2,
+    "human_quality_above_limit": 320,
+    "refinement_not_accepted": 25
+  },
+  "manifest_sha256": "a9d393f925e0129939c7e9a7cab9613a06ed3d7a52ca772bdf654036f93d5383",
+  "schema_version": "wp5-precursor-campaign-selection-1",
+  "selected_cases": [
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0844",
+      "expected_phase_weights": {
+        "Co15.99445545Sn8.00554455O32_227_(icsd_24119)-None": 0.5799,
+        "Sn1.808O4_136_(icsd_90610)-None": 0.4201
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0844-1_3_7f2a6ccd-c62c-45e9-ba33-9ad7ab9f73c1.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0844.xrdml",
+      "raw_sha256": "ebf3cebb054608ec267089deee90cecfa9b97b3eea3a126d32d7c0f012086ef2",
+      "raw_size_bytes": 45193,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 4.44,
+      "sample_id": "PG_0844",
+      "scan_id": "PG_0844-1_3_7f2a6ccd-c62c-45e9-ba33-9ad7ab9f73c1",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 1,
+      "source_phase_labels": [
+        "Co15.99445545Sn8.00554455O32_227_(icsd_24119)-None",
+        "Sn1.808O4_136_(icsd_90610)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1326",
+      "expected_phase_weights": {
+        "Mn2O3_61_(icsd_24342)-0": 0.752,
+        "MnFeO3_199_(icsd_31112)-None": 0.248
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1326_1_Fe2O3-2MnO_Mn2Fe2O5_1000C_60min_685319b3-6f5d-4a8e-9589-e9118cbecf02.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1326.xrdml",
+      "raw_sha256": "7994e6e5ff8c9e99c5163993dd69de163c02a667cbfebb5612b56023dc02447b",
+      "raw_size_bytes": 45500,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.07,
+      "sample_id": "PG_1326",
+      "scan_id": "PG_1326_1_Fe2O3-2MnO_Mn2Fe2O5_1000C_60min_685319b3-6f5d-4a8e-9589-e9118cbecf02",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 2,
+      "source_phase_labels": [
+        "MnFeO3_199_(icsd_31112)-None",
+        "Mn2O3_61_(icsd_24342)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2734",
+      "expected_phase_weights": {
+        "Mn3O4_141_(icsd_8355)-0": 0.7627,
+        "PH6NO4_122_(icsd_246299)-2": 0.2373
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2734-1_3_ae1b24d5-e14e-4559-8811-f875285cc1d5.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2734.xrdml",
+      "raw_sha256": "c637122ef6c1f533c679a2951f9c6bcd111820c27774079c7df6b5b98d482786",
+      "raw_size_bytes": 45488,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 1.9,
+      "sample_id": "PG_2734",
+      "scan_id": "PG_2734-1_3_ae1b24d5-e14e-4559-8811-f875285cc1d5",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 3,
+      "source_phase_labels": [
+        "Mn3O4_141_(icsd_8355)-0",
+        "PH6NO4_122_(icsd_246299)-2"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1624",
+      "expected_phase_weights": {
+        "Ge7(H2O11)2_215_(icsd_240328)-None": 0.26151680487714524,
+        "GeO2_152_(icsd_59624)-0": 0.47499422285491516,
+        "Li2CO3_15_(icsd_16713)-0": 0.2634889722679396
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1624-1_e5a850e8-e91b-4150-b883-6656ef26c1a3.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1624.xrdml",
+      "raw_sha256": "1f7756f8a3a3b829bbfb0507433cbbb6ee0bda94715be7f9b7f8fdbce536d204",
+      "raw_size_bytes": 42464,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 9.2,
+      "sample_id": "PG_1624",
+      "scan_id": "PG_1624-1_e5a850e8-e91b-4150-b883-6656ef26c1a3",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 4,
+      "source_phase_labels": [
+        "Ge7(H2O11)2_215_(icsd_240328)-None",
+        "GeO2_152_(icsd_59624)-0",
+        "Li2CO3_15_(icsd_16713)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1835",
+      "expected_phase_weights": {
+        "In2O3_206_(icsd_190344)-0": 0.7713,
+        "Na7.786C4O12_12_(icsd_168130)-None": 0.2287
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1835-1_c6eb5235-82f1-46e2-af58-73fa31f1fbfc.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1835.xrdml",
+      "raw_sha256": "74f5c09a89d20344f58a9581a4ed1eaddc85633c4f6529149926850f94d3bc97",
+      "raw_size_bytes": 39962,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 4.12,
+      "sample_id": "PG_1835",
+      "scan_id": "PG_1835-1_c6eb5235-82f1-46e2-af58-73fa31f1fbfc",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 5,
+      "source_phase_labels": [
+        "In2O3_206_(icsd_190344)-0",
+        "Na7.786C4O12_12_(icsd_168130)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2143",
+      "expected_phase_weights": {
+        "La(HO)3_176_(icsd_167480)-0": 0.9750679120306627,
+        "SiO2_180_(icsd_26430)-9": 0.02493208796933725
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2143-1_6f550abe-3bae-468c-bf66-3c73fd4448a8.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2143.xrdml",
+      "raw_sha256": "c2f2338eeeeb54b3491d9c4921d1d22a0b24c408b7af8b2ca7eabcbb77ac553a",
+      "raw_size_bytes": 39573,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 7.79,
+      "sample_id": "PG_2143",
+      "scan_id": "PG_2143-1_6f550abe-3bae-468c-bf66-3c73fd4448a8",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 6,
+      "source_phase_labels": [
+        "La(HO)3_176_(icsd_167480)-0",
+        "SiO2_180_(icsd_26430)-9"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_4147",
+      "expected_phase_weights": {
+        "Sb2O3_227_(icsd_1944)-5": 0.5736929080680404,
+        "SbO2_15_(icsd_63272)-0": 0.03127018809133952,
+        "SbO2_33_(icsd_919)-0": 0.07369595787650869,
+        "V2O3_167_(icsd_1869)-0": 0.3213409459641112
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        2,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_4147_1_Sb2O3-V2O3_VSbO3_300C_60min_f1f6c739-0f39-4d5d-9bfc-b6bf5add0afb.xrdml",
+      "phase_count": 4,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_4147.xrdml",
+      "raw_sha256": "68ff2e93da5b3b3fa4564fceb8ece2a931f97138097187a17ae2ce7595a587de",
+      "raw_size_bytes": 39114,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 8.08,
+      "sample_id": "PG_4147",
+      "scan_id": "PG_4147_1_Sb2O3-V2O3_VSbO3_300C_60min_f1f6c739-0f39-4d5d-9bfc-b6bf5add0afb",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 7,
+      "source_phase_labels": [
+        "Sb2O3_227_(icsd_1944)-5",
+        "SbO2_15_(icsd_63272)-0",
+        "SbO2_33_(icsd_919)-0",
+        "V2O3_167_(icsd_1869)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1617",
+      "expected_phase_weights": {
+        "GeO2_152_(icsd_59624)-0": 0.3146,
+        "HfO2_14_(icsd_142791)-0": 0.6854
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1617-1_ac6e88bf-3a0d-4a9c-b3b3-0078a10d2c2f.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1617.xrdml",
+      "raw_sha256": "739cbb5825cc89d8263aa206e9a5e5c86bd9df9dc78ab4198373ab89ba062421",
+      "raw_size_bytes": 42547,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.93,
+      "sample_id": "PG_1617",
+      "scan_id": "PG_1617-1_ac6e88bf-3a0d-4a9c-b3b3-0078a10d2c2f",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 8,
+      "source_phase_labels": [
+        "HfO2_14_(icsd_142791)-0",
+        "GeO2_152_(icsd_59624)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0543",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.08546033311569562,
+        "BaO2_139_(icsd_80750)-0": 0.9115937999670398,
+        "SiO2_154_(icsd_155252)-1": 0.002945866917264541
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0543_1_BaO2-SiO2_BaSiO4_200C_60min_79768df8-9a6d-4157-80c8-efa1d045a736.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0543.xrdml",
+      "raw_sha256": "1fbc3776241b464ff945e077807ac148d18cd8f8e99b1a7ef46bc16b9ec69ebf",
+      "raw_size_bytes": 39447,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 5.48,
+      "sample_id": "PG_0543",
+      "scan_id": "PG_0543_1_BaO2-SiO2_BaSiO4_200C_60min_79768df8-9a6d-4157-80c8-efa1d045a736",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 9,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "BaO2_139_(icsd_80750)-0",
+        "SiO2_154_(icsd_155252)-1"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0121",
+      "expected_phase_weights": {
+        "La(HO)3_176_(icsd_167480)-0": 0.69247,
+        "La0.002Ag3.998_225_(icsd_197747)-None": 0.30753
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0121_1_1_944e9b6b-383a-47dc-b9e1-7b9968ce8138.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0121.xrdml",
+      "raw_sha256": "823333b12692333130bfe8636ff1ac0489c71edf8ef50950126ae87542904eae",
+      "raw_size_bytes": 39898,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.6,
+      "sample_id": "PG_0121",
+      "scan_id": "PG_0121_1_1_944e9b6b-383a-47dc-b9e1-7b9968ce8138",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 10,
+      "source_phase_labels": [
+        "La(HO)3_176_(icsd_167480)-0",
+        "La0.002Ag3.998_225_(icsd_197747)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0913",
+      "expected_phase_weights": {
+        "Co3O4_227_(icsd_69374)-0": 0.472,
+        "Fe11.9208O18_167_(icsd_164010)-None": 0.528
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0913-1_3d785ea8-ee4d-4999-a9be-14e897e9caf3.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0913.xrdml",
+      "raw_sha256": "a6360f3cf94b8a9e1081295b7742559e9767593623e6e7046f98d0a08d249ed6",
+      "raw_size_bytes": 45226,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 1.19,
+      "sample_id": "PG_0913",
+      "scan_id": "PG_0913-1_3d785ea8-ee4d-4999-a9be-14e897e9caf3",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 11,
+      "source_phase_labels": [
+        "Fe11.9208O18_167_(icsd_164010)-None",
+        "Co3O4_227_(icsd_69374)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1152",
+      "expected_phase_weights": {
+        "CuO_9_(icsd_69758)-None": 0.3843,
+        "ZrO2_14_(icsd_157403)-0": 0.6157
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1152_1_c6c6b6a1-0ad2-4b18-b8f6-cbfc1ebb9f8b.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1152.xrdml",
+      "raw_sha256": "b3bd43a7a2899e7d4aa2638d779b62f7857bc01a42e8301da6e2f13c2bbb3a5e",
+      "raw_size_bytes": 45484,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.15,
+      "sample_id": "PG_1152",
+      "scan_id": "PG_1152_1_c6c6b6a1-0ad2-4b18-b8f6-cbfc1ebb9f8b",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 12,
+      "source_phase_labels": [
+        "ZrO2_14_(icsd_157403)-0",
+        "CuO_9_(icsd_69758)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1334",
+      "expected_phase_weights": {
+        "Fe11.9208O18_167_(icsd_164010)-None": 0.6135,
+        "PH6NO4_122_(icsd_246299)-2": 0.3865
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1334_1_01e8ecdf-80b7-4940-a566-6e8f58041a03.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1334.xrdml",
+      "raw_sha256": "7c41d6c285f065467454fe156c1b87813e6b547253afb632b67537bf62671ca0",
+      "raw_size_bytes": 45516,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 1.39,
+      "sample_id": "PG_1334",
+      "scan_id": "PG_1334_1_01e8ecdf-80b7-4940-a566-6e8f58041a03",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 13,
+      "source_phase_labels": [
+        "Fe11.9208O18_167_(icsd_164010)-None",
+        "PH6NO4_122_(icsd_246299)-2"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0506",
+      "expected_phase_weights": {
+        "BaO2_139_(icsd_80750)-0": 0.4098,
+        "Bi2O3_14_(icsd_15752)-0": 0.5902
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0506_1_2BaO2-Bi2O3_Ba2Bi2O7_200C_60min_2b324ad3-9279-4d7e-8cd8-30875bba6cce.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0506.xrdml",
+      "raw_sha256": "e86fed9a11451f3c10854045ac205bed06b3f96c878e83349ce8494e9104ce62",
+      "raw_size_bytes": 38743,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 7.7,
+      "sample_id": "PG_0506",
+      "scan_id": "PG_0506_1_2BaO2-Bi2O3_Ba2Bi2O7_200C_60min_2b324ad3-9279-4d7e-8cd8-30875bba6cce",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 14,
+      "source_phase_labels": [
+        "Bi2O3_14_(icsd_15752)-0",
+        "BaO2_139_(icsd_80750)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0447",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.8711065867243655,
+        "V2O5_11_(icsd_59960)-11": 0.08244533641955,
+        "VO2_14_(icsd_602360)-1": 0.0464480768560845
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0447-8_7c36fc45-f364-431d-ac8b-bb3d0783c32d.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0447.xrdml",
+      "raw_sha256": "18d70ca6ca58861d75c51249535d3b15e316de18ac459948e828efbdba156400",
+      "raw_size_bytes": 37896,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 7.44,
+      "sample_id": "PG_0447",
+      "scan_id": "PG_0447-8_7c36fc45-f364-431d-ac8b-bb3d0783c32d",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 15,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "V2O5_11_(icsd_59960)-11",
+        "VO2_14_(icsd_602360)-1"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0938",
+      "expected_phase_weights": {
+        "Co11O16_227_(icsd_173814)-None": 0.3751,
+        "Nb16.8O42_55_(icsd_1840)-None": 0.6249
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0938_1_6ab529e9-50ad-4cf6-ac4c-67113a10a908.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0938.xrdml",
+      "raw_sha256": "1d05688fc3015ea5f081ab6abbd19b1df5bbf38246835a60e09d98435d287cc5",
+      "raw_size_bytes": 45517,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 1.91,
+      "sample_id": "PG_0938",
+      "scan_id": "PG_0938_1_6ab529e9-50ad-4cf6-ac4c-67113a10a908",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 16,
+      "source_phase_labels": [
+        "Nb16.8O42_55_(icsd_1840)-None",
+        "Co11O16_227_(icsd_173814)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1449",
+      "expected_phase_weights": {
+        "FeH4(CO3)2_15_(icsd_161344)-28": 0.2598,
+        "WO3_2_(icsd_1620)-1": 0.7402
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1449_1_b6be2e76-33fb-4dbd-ae65-c82f561b8048.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1449.xrdml",
+      "raw_sha256": "e5e1a0196c18836e4e461a88576ad58c3d95382dedb85a8caa4da73cac19485d",
+      "raw_size_bytes": 45541,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.85,
+      "sample_id": "PG_1449",
+      "scan_id": "PG_1449_1_b6be2e76-33fb-4dbd-ae65-c82f561b8048",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 17,
+      "source_phase_labels": [
+        "WO3_2_(icsd_1620)-1",
+        "FeH4(CO3)2_15_(icsd_161344)-28"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2629",
+      "expected_phase_weights": {
+        "MnO2_136_(icsd_643186)-6": 0.5235,
+        "MnO_225_(icsd_643195)-0": 0.4765
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2629-1_be5505f8-a467-4ef3-b3cf-79cc650603d2.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2629.xrdml",
+      "raw_sha256": "106f930c59e4e28b66aa60986f3f0669cbfd631cae225a4a87e95072a611f426",
+      "raw_size_bytes": 45191,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.27,
+      "sample_id": "PG_2629",
+      "scan_id": "PG_2629-1_be5505f8-a467-4ef3-b3cf-79cc650603d2",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 18,
+      "source_phase_labels": [
+        "MnO2_136_(icsd_643186)-6",
+        "MnO_225_(icsd_643195)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2538",
+      "expected_phase_weights": {
+        "Mg4Nb2O9_165_(icsd_91748)-0": 0.0635,
+        "MgNb2O6_60_(icsd_85008)-0": 0.4081,
+        "MgO_225_(icsd_104844)-0": 0.1733,
+        "Nb16.8O42_55_(icsd_1840)-None": 0.355
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2538-1_109a1143-ebc6-4fc0-9653-d62c90d4dd7e.xrdml",
+      "phase_count": 4,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2538.xrdml",
+      "raw_sha256": "0ee5e5e7c192278f77c9df98adbbb2669971f16fa4a417053cdadac4d41919a8",
+      "raw_size_bytes": 45224,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 4.08,
+      "sample_id": "PG_2538",
+      "scan_id": "PG_2538-1_109a1143-ebc6-4fc0-9653-d62c90d4dd7e",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 19,
+      "source_phase_labels": [
+        "MgNb2O6_60_(icsd_85008)-0",
+        "Nb16.8O42_55_(icsd_1840)-None",
+        "Mg4Nb2O9_165_(icsd_91748)-0",
+        "MgO_225_(icsd_104844)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0435",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.7670709022782802,
+        "Na2CO3_12_(icsd_16024)-0": 0.2329290977217197
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        2,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0435_1_2BaCO3-Na2CO3_Ba2Na2(CO3)3_400C_60min_2123962b-76df-448b-a265-c992cdaef159.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0435.xrdml",
+      "raw_sha256": "5fbbf35eb00f34edeaafcf89c0e71b6537c085c397158ff51f7d9fdd18250cc4",
+      "raw_size_bytes": 38870,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 8.82,
+      "sample_id": "PG_0435",
+      "scan_id": "PG_0435_1_2BaCO3-Na2CO3_Ba2Na2(CO3)3_400C_60min_2123962b-76df-448b-a265-c992cdaef159",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 20,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "Na2CO3_12_(icsd_16024)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1345",
+      "expected_phase_weights": {
+        "Sr3Fe2O7_123_(icsd_2648)-None": 0.1338,
+        "Sr8Fe8O23_139_(icsd_8618)-1": 0.8662
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1345_1_Fe2O3-2SrCO3_Sr2Fe2C2O9_900C_60min_6c185d99-eb1d-40b8-9436-634516ee1796.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1345.xrdml",
+      "raw_sha256": "de3e35008a76ed75ad088fb3f8f3c81e792d29a64b4e2713933ebf15e61a83e3",
+      "raw_size_bytes": 45581,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.24,
+      "sample_id": "PG_1345",
+      "scan_id": "PG_1345_1_Fe2O3-2SrCO3_Sr2Fe2C2O9_900C_60min_6c185d99-eb1d-40b8-9436-634516ee1796",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 21,
+      "source_phase_labels": [
+        "Sr8Fe8O23_139_(icsd_8618)-1",
+        "Sr3Fe2O7_123_(icsd_2648)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1047",
+      "expected_phase_weights": {
+        "Cr2O3_167_(icsd_290234)-0": 0.5177,
+        "V4Cr0.22O10.32_59_(icsd_86180)-None": 0.4435,
+        "V4Cr0.26O10.39_59_(icsd_158190)-None": 0.0388
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1047_1_Cr2O3-V2O3_VCrO3_1100C_60min_54c0a36d-83c7-4478-a9b4-3cfb5cedf97a.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1047.xrdml",
+      "raw_sha256": "2d90580a1dc8e96217c85b52c049af9006bb8951090f55f049d851300ff71730",
+      "raw_size_bytes": 39002,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 4.88,
+      "sample_id": "PG_1047",
+      "scan_id": "PG_1047_1_Cr2O3-V2O3_VCrO3_1100C_60min_54c0a36d-83c7-4478-a9b4-3cfb5cedf97a",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 22,
+      "source_phase_labels": [
+        "V4Cr0.22O10.32_59_(icsd_86180)-None",
+        "Cr2O3_167_(icsd_290234)-0",
+        "V4Cr0.26O10.39_59_(icsd_158190)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2146",
+      "expected_phase_weights": {
+        "La(HO)3_176_(icsd_167480)-0": 0.642,
+        "Ti3.5804O8_141_(icsd_142779)-None": 0.358
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2146-1_1f95ab0a-f34e-4b54-8c85-4fdc742eb3e2.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2146.xrdml",
+      "raw_sha256": "98f9250cf0a1b153b441239a56fcc9e0f1de74d4c67fb6f9d59536eb80414880",
+      "raw_size_bytes": 39115,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.15,
+      "sample_id": "PG_2146",
+      "scan_id": "PG_2146-1_1f95ab0a-f34e-4b54-8c85-4fdc742eb3e2",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 23,
+      "source_phase_labels": [
+        "La(HO)3_176_(icsd_167480)-0",
+        "Ti3.5804O8_141_(icsd_142779)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2938",
+      "expected_phase_weights": {
+        "MnO2_194_(icsd_76430)-15": 0.3313,
+        "Nb16.8O42_55_(icsd_1840)-None": 0.6687
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        2,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2938-1_e2507aa4-90bf-4fa0-abe2-b726b96e76ee.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2938.xrdml",
+      "raw_sha256": "538c90d4eb2fc05f1fdc1859e3e103ee2949818c8297d1291f2ce2ef4a897306",
+      "raw_size_bytes": 45509,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 8.27,
+      "sample_id": "PG_2938",
+      "scan_id": "PG_2938-1_e2507aa4-90bf-4fa0-abe2-b726b96e76ee",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 24,
+      "source_phase_labels": [
+        "Nb16.8O42_55_(icsd_1840)-None",
+        "MnO2_194_(icsd_76430)-15"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1234",
+      "expected_phase_weights": {
+        "Fe23.176O32_227_(icsd_82431)-None": 0.7055,
+        "PH6NO4_122_(icsd_246299)-2": 0.2945
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1234_1_f52096cd-c93b-4c3d-b6d9-2c9601dec6ad.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1234.xrdml",
+      "raw_sha256": "990d0f1c1e23201cbc9b1f1b803c1ea59c8a6e7460917ac3604dad5ab020230c",
+      "raw_size_bytes": 45516,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 1.31,
+      "sample_id": "PG_1234",
+      "scan_id": "PG_1234_1_f52096cd-c93b-4c3d-b6d9-2c9601dec6ad",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 25,
+      "source_phase_labels": [
+        "Fe23.176O32_227_(icsd_82431)-None",
+        "PH6NO4_122_(icsd_246299)-2"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2750",
+      "expected_phase_weights": {
+        "Mn3O4_141_(icsd_167411)-0": 0.1265,
+        "Y2O3_206_(icsd_192862)-0": 0.3867,
+        "Y6Mn6O17.704_185_(icsd_165155)-None": 0.1896,
+        "YMn2O5_55_(icsd_159271)-0": 0.2973
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2750-1_4f52cb61-2718-4d96-92d6-b7e5b1a164f1.xrdml",
+      "phase_count": 4,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2750.xrdml",
+      "raw_sha256": "645012f39d84222f40dd17e6f0797c931de69794660866313ba51a2cf7a08e6f",
+      "raw_size_bytes": 45207,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.15,
+      "sample_id": "PG_2750",
+      "scan_id": "PG_2750-1_4f52cb61-2718-4d96-92d6-b7e5b1a164f1",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 26,
+      "source_phase_labels": [
+        "Y2O3_206_(icsd_192862)-0",
+        "YMn2O5_55_(icsd_159271)-0",
+        "Y6Mn6O17.704_185_(icsd_165155)-None",
+        "Mn3O4_141_(icsd_167411)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0350",
+      "expected_phase_weights": {
+        "B(HO)3_2_(icsd_61354)-0": 0.14044680811220764,
+        "Y2O3_206_(icsd_192862)-0": 0.8595531918877923
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0350_1_88931cef-778a-46b0-8f63-cf11570c3af3.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0350.xrdml",
+      "raw_sha256": "b7f58a915a0d3eb41fa8dc10f44954d39cb8ade0430164d57d753d202d3d4f71",
+      "raw_size_bytes": 45561,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 8.15,
+      "sample_id": "PG_0350",
+      "scan_id": "PG_0350_1_88931cef-778a-46b0-8f63-cf11570c3af3",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 27,
+      "source_phase_labels": [
+        "B(HO)3_2_(icsd_61354)-0",
+        "Y2O3_206_(icsd_192862)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1727",
+      "expected_phase_weights": {
+        "Hf3.9848O8_14_(icsd_142790)-None": 0.7357,
+        "Mn3O4_141_(icsd_8355)-0": 0.2643
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1727_1_798a2efd-290b-4f97-b64f-e7b1760e40cd.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1727.xrdml",
+      "raw_sha256": "9de2ec44257b4677830b8c67012c7987fff258fadc3ca54ce67d5107b3c0824e",
+      "raw_size_bytes": 40571,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.7,
+      "sample_id": "PG_1727",
+      "scan_id": "PG_1727_1_798a2efd-290b-4f97-b64f-e7b1760e40cd",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 28,
+      "source_phase_labels": [
+        "Hf3.9848O8_14_(icsd_142790)-None",
+        "Mn3O4_141_(icsd_8355)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2726",
+      "expected_phase_weights": {
+        "Mn2O3_206_(icsd_9091)-0": 1.0
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2726_1_3MnO-Mn3O4_Mn6O7_1000C_60min_523950c2-1231-4597-a1b9-05be4395b0df.xrdml",
+      "phase_count": 1,
+      "phase_stratum": "single",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2726.xrdml",
+      "raw_sha256": "bc84572f76174e2a6e64c1bbdaebdd6257e3c1616758a76d2d30349b10d024f8",
+      "raw_size_bytes": 45507,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.14,
+      "sample_id": "PG_2726",
+      "scan_id": "PG_2726_1_3MnO-Mn3O4_Mn6O7_1000C_60min_523950c2-1231-4597-a1b9-05be4395b0df",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 29,
+      "source_phase_labels": [
+        "Mn2O3_206_(icsd_9091)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1549",
+      "expected_phase_weights": {
+        "Ga7.92O12_12_(icsd_63907)-None": 0.305,
+        "WO3_2_(icsd_1620)-1": 0.695
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1549_1_ae10c976-55b2-4628-8ce5-515192ae53b3.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1549.xrdml",
+      "raw_sha256": "d7e58b135a867958e75ab6ed281b826517931244644680f7c842d39792dcee1f",
+      "raw_size_bytes": 40733,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 9.83,
+      "sample_id": "PG_1549",
+      "scan_id": "PG_1549_1_ae10c976-55b2-4628-8ce5-515192ae53b3",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 30,
+      "source_phase_labels": [
+        "WO3_2_(icsd_1620)-1",
+        "Ga7.92O12_12_(icsd_63907)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2452",
+      "expected_phase_weights": {
+        "Li2CO3_15_(icsd_16713)-0": 0.0912515163077734,
+        "LiOH(H2O)(9138)": 0.15636387722407954,
+        "ZrO2_14_(icsd_157403)-0": 0.752384606468147
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2452-1_3687db87-d49a-4e71-99f2-9dbb2d56b58b.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2452.xrdml",
+      "raw_sha256": "b1c1acbf7794bd910778ea0b0a822a0ee2ab7337436d029e6d6eda1698aebd7f",
+      "raw_size_bytes": 45230,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 5.65,
+      "sample_id": "PG_2452",
+      "scan_id": "PG_2452-1_3687db87-d49a-4e71-99f2-9dbb2d56b58b",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 31,
+      "source_phase_labels": [
+        "Li2CO3_15_(icsd_16713)-0",
+        "LiOH(H2O)(9138)",
+        "ZrO2_14_(icsd_157403)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_3150",
+      "expected_phase_weights": {
+        "PH5NO4_122_(icsd_174051)-None": 0.2486,
+        "Y2O3_206_(icsd_192862)-0": 0.7514
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_3150-1_1_2ada9189-1d27-49fc-b751-4a8756afd5cb.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_3150.xrdml",
+      "raw_sha256": "661e8e7dbe5fe06f44d34d16621ac015c5ff53194e2674be504029880e7d2ec9",
+      "raw_size_bytes": 45573,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.66,
+      "sample_id": "PG_3150",
+      "scan_id": "PG_3150-1_1_2ada9189-1d27-49fc-b751-4a8756afd5cb",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 32,
+      "source_phase_labels": [
+        "Y2O3_206_(icsd_192862)-0",
+        "PH5NO4_122_(icsd_174051)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1630",
+      "expected_phase_weights": {
+        "GeO2_152_(icsd_59624)-0": 0.478,
+        "MoO3_62_(icsd_166362)-28": 0.522
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1630_1_GeO2-MoO3_GeMoO5_400C_60min_85b5ce44-32de-4089-9279-bfd75b49b337.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1630.xrdml",
+      "raw_sha256": "a0c44b04d104a42ca3bba8a28c031cd59d7dd15d99b1f7c50230ea5a66e9e00b",
+      "raw_size_bytes": 44741,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.56,
+      "sample_id": "PG_1630",
+      "scan_id": "PG_1630_1_GeO2-MoO3_GeMoO5_400C_60min_85b5ce44-32de-4089-9279-bfd75b49b337",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 33,
+      "source_phase_labels": [
+        "MoO3_62_(icsd_166362)-28",
+        "GeO2_152_(icsd_59624)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0918",
+      "expected_phase_weights": {
+        "Co11O16_227_(icsd_173814)-None": 0.4225,
+        "In31.648Co0.352O48_206_(icsd_8620)-None": 0.5775
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0918-1_a8db30d4-487c-4149-b11b-540d391a1132.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0918.xrdml",
+      "raw_sha256": "fad1b35de960608212c5d1ad7c755c1fa71418dfcff298d8b49424a3f3329e55",
+      "raw_size_bytes": 45191,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.9,
+      "sample_id": "PG_0918",
+      "scan_id": "PG_0918-1_a8db30d4-487c-4149-b11b-540d391a1132",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 34,
+      "source_phase_labels": [
+        "In31.648Co0.352O48_206_(icsd_8620)-None",
+        "Co11O16_227_(icsd_173814)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0817",
+      "expected_phase_weights": {
+        "Co11O16_227_(icsd_173814)-None": 0.3657,
+        "Hf3.9848O8_14_(icsd_142790)-None": 0.6343
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0817-1_b1c58963-1ae0-4d89-b421-c0e8ac0ef96e.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0817.xrdml",
+      "raw_sha256": "1af8d2b8083b7b52fbaa55b7f29ec43d05bfd3fa30c81c7c7c1fe8b5dc381598",
+      "raw_size_bytes": 45191,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.63,
+      "sample_id": "PG_0817",
+      "scan_id": "PG_0817-1_b1c58963-1ae0-4d89-b421-c0e8ac0ef96e",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 35,
+      "source_phase_labels": [
+        "Hf3.9848O8_14_(icsd_142790)-None",
+        "Co11O16_227_(icsd_173814)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1851",
+      "expected_phase_weights": {
+        "In2O3_206_(icsd_190344)-0": 0.498,
+        "Zn1.97O2_186_(icsd_13951)-None": 0.2151,
+        "Zn14.9994In6.0006O24_166_(icsd_162452)-None": 0.2869
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1851-1_1d6e8f56-66b4-4d7d-98ca-7f4a3f858b8a.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1851.xrdml",
+      "raw_sha256": "f0b5ae3e1aa683c117e1bd0ebd2ce2cb80ec9539946b3f16b9fad997e5000f27",
+      "raw_size_bytes": 38861,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 8.84,
+      "sample_id": "PG_1851",
+      "scan_id": "PG_1851-1_1d6e8f56-66b4-4d7d-98ca-7f4a3f858b8a",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 36,
+      "source_phase_labels": [
+        "In2O3_206_(icsd_190344)-0",
+        "Zn14.9994In6.0006O24_166_(icsd_162452)-None",
+        "Zn1.97O2_186_(icsd_13951)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0547",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.0853,
+        "BaO2_139_(icsd_80750)-0": 0.5274,
+        "V2O3_167_(icsd_1869)-0": 0.3873
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0547_1_2BaO2-V2O3_Ba2V2O7_200C_60min_6e6d3c7e-f19e-46df-92d1-fbcaddccbf94.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0547.xrdml",
+      "raw_sha256": "b343e9a398435a4f59c8bd497d25d86b326da4960d29143aa88722adc3560eb6",
+      "raw_size_bytes": 39334,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 4.83,
+      "sample_id": "PG_0547",
+      "scan_id": "PG_0547_1_2BaO2-V2O3_Ba2V2O7_200C_60min_6e6d3c7e-f19e-46df-92d1-fbcaddccbf94",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 37,
+      "source_phase_labels": [
+        "BaO2_139_(icsd_80750)-0",
+        "V2O3_167_(icsd_1869)-0",
+        "BaCO3_62_(icsd_166091)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2639",
+      "expected_phase_weights": {
+        "Mn2O3_206_(icsd_9091)-0": 0.0583,
+        "Mn8.0004Ni3.9996O16_227_(icsd_95232)-None": 0.3963,
+        "Ni15O16_227_(icsd_109351)-None": 0.5455
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2639-1_9bf0422d-c8a6-4df8-99e8-5330056d64c6.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2639.xrdml",
+      "raw_sha256": "d44caee179d9b5bdcdf3e6f585aab2122bd79d4e58c7af5246c4ea83922bfa68",
+      "raw_size_bytes": 45201,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.29,
+      "sample_id": "PG_2639",
+      "scan_id": "PG_2639-1_9bf0422d-c8a6-4df8-99e8-5330056d64c6",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 38,
+      "source_phase_labels": [
+        "Ni15O16_227_(icsd_109351)-None",
+        "Mn8.0004Ni3.9996O16_227_(icsd_95232)-None",
+        "Mn2O3_206_(icsd_9091)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0250",
+      "expected_phase_weights": {
+        "Al(HO)3_14_(icsd_184003)-17": 0.3228,
+        "Y2O3_206_(icsd_192862)-0": 0.6772
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0250_1_ee72b1f9-8d61-47ae-9a35-6c5d73cac004.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0250.xrdml",
+      "raw_sha256": "4e29cc31c6e8a64bfca9da6c08e7b6db1475f4a36eeb03b9e23e744d5d23b398",
+      "raw_size_bytes": 45578,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.89,
+      "sample_id": "PG_0250",
+      "scan_id": "PG_0250_1_ee72b1f9-8d61-47ae-9a35-6c5d73cac004",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 39,
+      "source_phase_labels": [
+        "Y2O3_206_(icsd_192862)-0",
+        "Al(HO)3_14_(icsd_184003)-17"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0113",
+      "expected_phase_weights": {
+        "Ag2O_224_(icsd_173984)-0": 0.0745,
+        "Ag_225_(icsd_604631)-2": 0.3695,
+        "Fe11.1O18_167_(icsd_56370)-None": 0.556
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0113_1_Ag2O-Fe2O3_FeAgO2_200C_60min_eddae4a4-f5ad-412b-ba35-459b3eabe82e.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0113.xrdml",
+      "raw_sha256": "9bb845e2785e9e5bac465a3d90e33320e9b5c66c47b116aee180e814f2bf27fa",
+      "raw_size_bytes": 45497,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.53,
+      "sample_id": "PG_0113",
+      "scan_id": "PG_0113_1_Ag2O-Fe2O3_FeAgO2_200C_60min_eddae4a4-f5ad-412b-ba35-459b3eabe82e",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 40,
+      "source_phase_labels": [
+        "Ag_225_(icsd_604631)-2",
+        "Fe11.1O18_167_(icsd_56370)-None",
+        "Ag2O_224_(icsd_173984)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2138",
+      "expected_phase_weights": {
+        "La(HO)3_176_(icsd_167480)-0": 0.5907,
+        "Nb16.8O42_55_(icsd_1840)-None": 0.4093
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2138-1_bc34d06a-2863-461d-9d0d-cbe1f4a438a0.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2138.xrdml",
+      "raw_sha256": "9dbde0fa278c94f2a82e9156657bf0f24c7e192a03f7fe9f422cde82737d4a77",
+      "raw_size_bytes": 41498,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 4.16,
+      "sample_id": "PG_2138",
+      "scan_id": "PG_2138-1_bc34d06a-2863-461d-9d0d-cbe1f4a438a0",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 41,
+      "source_phase_labels": [
+        "La(HO)3_176_(icsd_167480)-0",
+        "Nb16.8O42_55_(icsd_1840)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0511",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.15318728099271095,
+        "BaO2_139_(icsd_80750)-0": 0.503429638884706,
+        "CuO_9_(icsd_69758)-None": 0.34338308012258306
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0511_1_BaO2-CuO_BaCuO3_200C_60min_4d2e7aaa-c7a1-423b-b120-efd39627b755.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0511.xrdml",
+      "raw_sha256": "1cb0f35ffdbd2b6f200f8e7f8fd0e033df9416420c0f324a4aa816c56045da03",
+      "raw_size_bytes": 40493,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 4.49,
+      "sample_id": "PG_0511",
+      "scan_id": "PG_0511_1_BaO2-CuO_BaCuO3_200C_60min_4d2e7aaa-c7a1-423b-b120-efd39627b755",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 42,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "BaO2_139_(icsd_80750)-0",
+        "CuO_9_(icsd_69758)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2943",
+      "expected_phase_weights": {
+        "MnO2_136_(icsd_643186)-6": 0.9840055684317313,
+        "SiO2_154_(icsd_155252)-1": 0.015994431568268824
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2943-1_ef5d4a43-b458-455d-b156-3afde147c9c1.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2943.xrdml",
+      "raw_sha256": "ab3c9c46a9048f41ee0fb7b4261a7137b6a02301d2eea735609284dc9ff77790",
+      "raw_size_bytes": 45494,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 2.7,
+      "sample_id": "PG_2943",
+      "scan_id": "PG_2943-1_ef5d4a43-b458-455d-b156-3afde147c9c1",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 43,
+      "source_phase_labels": [
+        "MnO2_136_(icsd_643186)-6",
+        "SiO2_154_(icsd_155252)-1"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2440",
+      "expected_phase_weights": {
+        "Li2CO3_15_(icsd_16713)-0": 0.06667262882410369,
+        "LiOH(H2O)(9138)": 0.2936451791583683,
+        "Pb2O3_14_(icsd_23760)-5": 0.0365048262236391,
+        "Pb3O4_55_(icsd_9753)-0": 0.033570873539963145,
+        "PbO_129_(icsd_62842)-None": 0.18038025354877785,
+        "PbO_29_(icsd_36250)-20": 0.191552158434873,
+        "PbO_57_(icsd_15402)-0": 0.19767408027027497
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2440-1_c6792048-7601-43a8-a950-c7763792219a.xrdml",
+      "phase_count": 7,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2440.xrdml",
+      "raw_sha256": "73161c89c14172357788d1eca8719759b7fed64c5ef10d378b56fe4715f39b20",
+      "raw_size_bytes": 39586,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 8.24,
+      "sample_id": "PG_2440",
+      "scan_id": "PG_2440-1_c6792048-7601-43a8-a950-c7763792219a",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 44,
+      "source_phase_labels": [
+        "Li2CO3_15_(icsd_16713)-0",
+        "LiOH(H2O)(9138)",
+        "Pb2O3_14_(icsd_23760)-5",
+        "Pb3O4_55_(icsd_9753)-0",
+        "PbO_129_(icsd_62842)-None",
+        "PbO_29_(icsd_36250)-20",
+        "PbO_57_(icsd_15402)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1026",
+      "expected_phase_weights": {
+        "MnCr2O4_227_(icsd_167400)-0": 1.0
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1026_1_Cr2O3-2MnO_Mn2Cr2O5_1100C_60min_7b22fcd2-eeec-4f56-b9b6-24b5e37aa0c3.xrdml",
+      "phase_count": 1,
+      "phase_stratum": "single",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1026.xrdml",
+      "raw_sha256": "78a9f76737b1982165d89ac1c162a5e1b3d15ed9af9ee059753722c4a930be91",
+      "raw_size_bytes": 45518,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.49,
+      "sample_id": "PG_1026",
+      "scan_id": "PG_1026_1_Cr2O3-2MnO_Mn2Cr2O5_1100C_60min_7b22fcd2-eeec-4f56-b9b6-24b5e37aa0c3",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 45,
+      "source_phase_labels": [
+        "MnCr2O4_227_(icsd_167400)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2225",
+      "expected_phase_weights": {
+        "Li2CO3_15_(icsd_16713)-0": 0.4223083720351528,
+        "MgO_225_(icsd_104844)-0": 0.5776916279648471
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2225_1_1_ac13cd4a-514a-43b7-b65a-9792a6de7fc4.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2225.xrdml",
+      "raw_sha256": "f36977282fd65ff75a55f0f14e2d80074314bc368a9d375cba1dd9423329a0c8",
+      "raw_size_bytes": 39881,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 8.98,
+      "sample_id": "PG_2225",
+      "scan_id": "PG_2225_1_1_ac13cd4a-514a-43b7-b65a-9792a6de7fc4",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 46,
+      "source_phase_labels": [
+        "Li2CO3_15_(icsd_16713)-0",
+        "MgO_225_(icsd_104844)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0639",
+      "expected_phase_weights": {
+        "Bi2O3_14_(icsd_190461)-0": 0.6431,
+        "NiO_225_(icsd_76959)-0": 0.3569
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        2,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0639_1_Bi2O3-2NiO_Ni2Bi2O5_500C_60min_0f5c8ef4-aa10-4684-bc16-83a0de2dcf77.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0639.xrdml",
+      "raw_sha256": "c01e2914f4cbf25ce20e105265560004f4c922ee5281d183fa26cfbe420d48df",
+      "raw_size_bytes": 42018,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.26,
+      "sample_id": "PG_0639",
+      "scan_id": "PG_0639_1_Bi2O3-2NiO_Ni2Bi2O5_500C_60min_0f5c8ef4-aa10-4684-bc16-83a0de2dcf77",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 47,
+      "source_phase_labels": [
+        "Bi2O3_14_(icsd_190461)-0",
+        "NiO_225_(icsd_76959)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0411",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.7361,
+        "CuO_9_(icsd_69758)-None": 0.2639
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0411_1_BaCO3-CuO_BaCuCO4_400C_60min_7acc7450-b4b0-4550-b5f2-1fcdb75a844c.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0411.xrdml",
+      "raw_sha256": "495d0c4822d8f1513068d11435bdb43684f4bcb5b5e869e58203ac0757ff8013",
+      "raw_size_bytes": 40752,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.25,
+      "sample_id": "PG_0411",
+      "scan_id": "PG_0411_1_BaCO3-CuO_BaCuCO4_400C_60min_7acc7450-b4b0-4550-b5f2-1fcdb75a844c",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 48,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "CuO_9_(icsd_69758)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2644",
+      "expected_phase_weights": {
+        "Mn3O4_141_(icsd_8355)-0": 0.2761,
+        "Sn1.808O4_136_(icsd_90610)-None": 0.7239
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2644-1_85e25a11-1c64-4a47-a1df-a5a916acaa8c.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2644.xrdml",
+      "raw_sha256": "7a6ef02551826216ab1794028c6193ff202b4fc56e135034b2900ff79b973fde",
+      "raw_size_bytes": 39137,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 7.6,
+      "sample_id": "PG_2644",
+      "scan_id": "PG_2644-1_85e25a11-1c64-4a47-a1df-a5a916acaa8c",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 49,
+      "source_phase_labels": [
+        "Sn1.808O4_136_(icsd_90610)-None",
+        "Mn3O4_141_(icsd_8355)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2540",
+      "expected_phase_weights": {
+        "MgO_225_(icsd_104844)-0": 0.3126,
+        "Pb3O4_55_(icsd_9753)-0": 0.6874
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2540-1_1_92943bd4-89ce-4d1d-95a0-59507df3da9b.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2540.xrdml",
+      "raw_sha256": "80f1c0c938eb2b95f67eb70823ecc265475620e156be6e55f9c3a7577ab08386",
+      "raw_size_bytes": 39194,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 7.61,
+      "sample_id": "PG_2540",
+      "scan_id": "PG_2540-1_1_92943bd4-89ce-4d1d-95a0-59507df3da9b",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 50,
+      "source_phase_labels": [
+        "Pb3O4_55_(icsd_9753)-0",
+        "MgO_225_(icsd_104844)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1044",
+      "expected_phase_weights": {
+        "Cr2O3_167_(icsd_290234)-0": 0.335,
+        "Sn1.808O4_136_(icsd_90610)-None": 0.665
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1044_1_Cr2O3-2SnO2_Cr2Sn2O7_1000C_60min_b5fdd336-0a9c-43df-87be-e22ca0aa459f.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1044.xrdml",
+      "raw_sha256": "95cd0aed5b7e7f200af35ff771922c6e75c089a279ced6e5135ba9d1751509cf",
+      "raw_size_bytes": 39153,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 8.24,
+      "sample_id": "PG_1044",
+      "scan_id": "PG_1044_1_Cr2O3-2SnO2_Cr2Sn2O7_1000C_60min_b5fdd336-0a9c-43df-87be-e22ca0aa459f",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 51,
+      "source_phase_labels": [
+        "Sn1.808O4_136_(icsd_90610)-None",
+        "Cr2O3_167_(icsd_290234)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0524",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.13266376287429546,
+        "BaO2_139_(icsd_80750)-0": 0.739396491582368,
+        "Li2CO3_15_(icsd_16713)-0": 0.039816225743083224,
+        "Li2O_225_(icsd_182027)-0": 0.02076869411959096,
+        "LiOH(H2O)(9138)": 0.0673548256806624
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0524_1_1_a555b4b4-0038-4dc4-825a-dc6b6e3b3b16.xrdml",
+      "phase_count": 5,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0524.xrdml",
+      "raw_sha256": "74cceca88e98e5485102771750d7c3e8f090ac26ba243339f49c6b11764cc65f",
+      "raw_size_bytes": 38839,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 7.91,
+      "sample_id": "PG_0524",
+      "scan_id": "PG_0524_1_1_a555b4b4-0038-4dc4-825a-dc6b6e3b3b16",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 52,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "BaO2_139_(icsd_80750)-0",
+        "Li2CO3_15_(icsd_16713)-0",
+        "Li2O_225_(icsd_182027)-0",
+        "LiOH(H2O)(9138)"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1719",
+      "expected_phase_weights": {
+        "Hf3.9848O8_14_(icsd_142790)-None": 0.8147,
+        "KHCO3_12_(icsd_81619)-None": 0.1853
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1719_1_6af1569d-a54d-41e7-bf01-082c5c4f78ad.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1719.xrdml",
+      "raw_sha256": "fc7c8b2694f0797605fbf97b9a3d5098732993c77edddd707285527bf0139ef2",
+      "raw_size_bytes": 43213,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.34,
+      "sample_id": "PG_1719",
+      "scan_id": "PG_1719_1_6af1569d-a54d-41e7-bf01-082c5c4f78ad",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 53,
+      "source_phase_labels": [
+        "Hf3.9848O8_14_(icsd_142790)-None",
+        "KHCO3_12_(icsd_81619)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2040",
+      "expected_phase_weights": {
+        "K2.02350495P6Pb7.97649505O24_176_(icsd_16351)-None": 0.7737,
+        "KPb2C2O7_194_(icsd_432587)-None": 0.2263
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2040-1_b2b9fb75-4893-4032-8dd8-d8f8752dbbcf.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2040.xrdml",
+      "raw_sha256": "78ddc663bfd10652e98d7bd755f4144c7936a49103a9eac283e76765d65a1b97",
+      "raw_size_bytes": 38950,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 8.82,
+      "sample_id": "PG_2040",
+      "scan_id": "PG_2040-1_b2b9fb75-4893-4032-8dd8-d8f8752dbbcf",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 54,
+      "source_phase_labels": [
+        "K2.02350495P6Pb7.97649505O24_176_(icsd_16351)-None",
+        "KPb2C2O7_194_(icsd_432587)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1939",
+      "expected_phase_weights": {
+        "C_64_(icsd_127115)-None": 0.0,
+        "K4C3O10_55_(icsd_401721)-None": 0.238,
+        "K4H6C2O9_15_(icsd_280789)-0": 0.3555,
+        "Ni31.84O32_225_(icsd_87108)-None": 0.4065
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1939-1_1800fde3-53ce-4117-becb-7350c265b740.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1939.xrdml",
+      "raw_sha256": "6f8118dc7f0b5ef61296171b287a84a70ba930fc630f807be1631acf0989262f",
+      "raw_size_bytes": 45490,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.88,
+      "sample_id": "PG_1939",
+      "scan_id": "PG_1939-1_1800fde3-53ce-4117-becb-7350c265b740",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 55,
+      "source_phase_labels": [
+        "Ni31.84O32_225_(icsd_87108)-None",
+        "K4H6C2O9_15_(icsd_280789)-0",
+        "K4C3O10_55_(icsd_401721)-None",
+        "C_64_(icsd_127115)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0519",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.4400341070262726,
+        "BaO2_139_(icsd_80750)-0": 0.3736717395709044,
+        "K2CO3_sesquihydrate(22257)": 0.14323825390035796,
+        "KHCO3_2074": 0.04305589950246516
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0519-1_aec9cc26-1e2c-459e-8c4c-e5d18a1f16d8.xrdml",
+      "phase_count": 4,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0519.xrdml",
+      "raw_sha256": "17f866210e50eba26aa1a9b6c7a0cce74b4cb1a39373176a0a55f7cde1658d57",
+      "raw_size_bytes": 37902,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 6.61,
+      "sample_id": "PG_0519",
+      "scan_id": "PG_0519-1_aec9cc26-1e2c-459e-8c4c-e5d18a1f16d8",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 56,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "BaO2_139_(icsd_80750)-0",
+        "K2CO3_sesquihydrate(22257)",
+        "KHCO3_2074"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2526",
+      "expected_phase_weights": {
+        "Mg6MnO8_225_(icsd_24710)-0": 0.5775730386220987,
+        "Mn2O3_148_(icsd_113664)-76": 0.006364665985593008,
+        "Mn2O3_61_(icsd_24342)-0": 0.008894212723456895,
+        "Mn3O4_141_(icsd_167411)-0": 0.26629272894029943,
+        "Mn3O4_141_(icsd_8355)-0": 0.0968122815206003,
+        "Mn3O4_57_(icsd_113668)-52": 0.044063072207951595
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2526_1_MgO-MnO_MgMnO2_1100C_60min_77768df5-9da9-4591-8f4f-0e18bd0d2d8a.xrdml",
+      "phase_count": 6,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2526.xrdml",
+      "raw_sha256": "97077a79e0d69a933e7a94885c24dadfbea6631723eee00b36fff14c82baad52",
+      "raw_size_bytes": 45513,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 2.77,
+      "sample_id": "PG_2526",
+      "scan_id": "PG_2526_1_MgO-MnO_MgMnO2_1100C_60min_77768df5-9da9-4591-8f4f-0e18bd0d2d8a",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 57,
+      "source_phase_labels": [
+        "Mg6MnO8_225_(icsd_24710)-0",
+        "Mn2O3_148_(icsd_113664)-76",
+        "Mn2O3_61_(icsd_24342)-0",
+        "Mn3O4_141_(icsd_167411)-0",
+        "Mn3O4_141_(icsd_8355)-0",
+        "Mn3O4_57_(icsd_113668)-52"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_4352",
+      "expected_phase_weights": {
+        "SiO2_154_(icsd_155252)-1": 0.0007913002193032036,
+        "ZrO2_14_(icsd_157403)-0": 0.9992086997806968
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_4352_1_5ba9cbf6-47fe-41ac-b0c9-0d8e4b1df2fa.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_4352.xrdml",
+      "raw_sha256": "052cc0149db484df96bf6dc0a9ddbcb838937e50928b75ea05f63f19a7e9eb8b",
+      "raw_size_bytes": 45518,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 4.68,
+      "sample_id": "PG_4352",
+      "scan_id": "PG_4352_1_5ba9cbf6-47fe-41ac-b0c9-0d8e4b1df2fa",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 58,
+      "source_phase_labels": [
+        "SiO2_154_(icsd_155252)-1",
+        "ZrO2_14_(icsd_157403)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0112",
+      "expected_phase_weights": {
+        "Ag2O_224_(icsd_173984)-0": 0.1288,
+        "Ag_225_(icsd_604631)-2": 0.3305,
+        "Fe5O8_227_(icsd_247034)-None": 0.5407
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0112_1_3Ag2O-2Fe3O4_Fe6Ag6O11_200C_60min_21df05e2-9d1f-489b-ab00-510325badf8c.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0112.xrdml",
+      "raw_sha256": "6a315f471180d523e58c8d1fdaa8e9c1d36d46e4d0cb35e247fa62bfd379eb93",
+      "raw_size_bytes": 45506,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.01,
+      "sample_id": "PG_0112",
+      "scan_id": "PG_0112_1_3Ag2O-2Fe3O4_Fe6Ag6O11_200C_60min_21df05e2-9d1f-489b-ab00-510325badf8c",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 59,
+      "source_phase_labels": [
+        "Ag_225_(icsd_604631)-2",
+        "Ag2O_224_(icsd_173984)-0",
+        "Fe5O8_227_(icsd_247034)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2543",
+      "expected_phase_weights": {
+        "Mg2SiO4_62_(icsd_9685)-0": 0.08942369000547974,
+        "MgO_225_(icsd_104844)-0": 0.9105763099945202
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2543-1_94d8f854-3d6b-4859-812f-f856f5988903.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2543.xrdml",
+      "raw_sha256": "be1b420a6b60444869ccc9846bb1714a830f654ccc7647571ab6aca437179662",
+      "raw_size_bytes": 40191,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 7.31,
+      "sample_id": "PG_2543",
+      "scan_id": "PG_2543-1_94d8f854-3d6b-4859-812f-f856f5988903",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 60,
+      "source_phase_labels": [
+        "Mg2SiO4_62_(icsd_9685)-0",
+        "MgO_225_(icsd_104844)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1216",
+      "expected_phase_weights": {
+        "Fe11.88O18_167_(icsd_56371)-None": 0.2962,
+        "Ge2.6823O6_152_(icsd_38642)-None": 0.7038
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1216-1_a9b60be9-f934-4e21-973a-a9e280e3b3ea.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1216.xrdml",
+      "raw_sha256": "f83e2730160c46d8a4ccb2261dd73c0b98d539a7718473ad7ab9538e636425a1",
+      "raw_size_bytes": 45200,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.76,
+      "sample_id": "PG_1216",
+      "scan_id": "PG_1216-1_a9b60be9-f934-4e21-973a-a9e280e3b3ea",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 61,
+      "source_phase_labels": [
+        "Ge2.6823O6_152_(icsd_38642)-None",
+        "Fe11.88O18_167_(icsd_56371)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_3050",
+      "expected_phase_weights": {
+        "MoO2_14_(icsd_23722)-0": 0.013002187834806335,
+        "MoO3_62_(icsd_166362)-28": 0.5659835028240752,
+        "Y2O3_206_(icsd_192862)-0": 0.42101430934111844
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_3050-1.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_3050.xrdml",
+      "raw_sha256": "fc2a4304d0980532fb3d729d6ddac13bce7b28b939e6e090054a1e5b9bd47cc8",
+      "raw_size_bytes": 45530,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 8.01,
+      "sample_id": "PG_3050",
+      "scan_id": "PG_3050-1",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 62,
+      "source_phase_labels": [
+        "MoO2_14_(icsd_23722)-0",
+        "MoO3_62_(icsd_166362)-28",
+        "Y2O3_206_(icsd_192862)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2551",
+      "expected_phase_weights": {
+        "Mg3ZnO4_225_(icsd_77066)-None": 0.3017,
+        "MgO_225_(icsd_104844)-0": 0.1437,
+        "Zn1.965O1.98_156_(icsd_290322)-None": 0.5546
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2551-1_1_ba20ef57-1361-487a-be0d-0032abaa9aa4.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2551.xrdml",
+      "raw_sha256": "0db9ad2c9c1add0d838c74d43b6995bc8e5b1e7f980ab3bf8e9516523c48a569",
+      "raw_size_bytes": 39619,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.45,
+      "sample_id": "PG_2551",
+      "scan_id": "PG_2551-1_1_ba20ef57-1361-487a-be0d-0032abaa9aa4",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 63,
+      "source_phase_labels": [
+        "Zn1.965O1.98_156_(icsd_290322)-None",
+        "Mg3ZnO4_225_(icsd_77066)-None",
+        "MgO_225_(icsd_104844)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0710",
+      "expected_phase_weights": {
+        "CaCO3_167_(icsd_166364)-0": 0.4607,
+        "CaCrO4_141_(icsd_83387)-0": 0.1363,
+        "Cr2O3_167_(icsd_290234)-0": 0.403
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0710_1_2CaCO3-Cr2O3_Ca2Cr2C2O9_500C_60min_3163eac0-3ee7-402a-807a-82c5842b6298.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0710.xrdml",
+      "raw_sha256": "8dba32fce36aa7f328616988364ee3fe81a9637cbd023e2e8b8dc25e326fb0e7",
+      "raw_size_bytes": 40205,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.9,
+      "sample_id": "PG_0710",
+      "scan_id": "PG_0710_1_2CaCO3-Cr2O3_Ca2Cr2C2O9_500C_60min_3163eac0-3ee7-402a-807a-82c5842b6298",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 64,
+      "source_phase_labels": [
+        "CaCO3_167_(icsd_166364)-0",
+        "Cr2O3_167_(icsd_290234)-0",
+        "CaCrO4_141_(icsd_83387)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_4951",
+      "expected_phase_weights": {
+        "WO3_2_(icsd_1620)-1": 0.1715,
+        "ZnWO4_13_(icsd_162234)-0": 0.8285
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_4951_1_ff0966ea-092f-4ca6-8399-22f676bc7573.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_4951.xrdml",
+      "raw_sha256": "e91d5839385d6307ca323640f6bda70201a7ab83cb971d1e4918951d96d2cd99",
+      "raw_size_bytes": 38796,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 15.24,
+      "sample_id": "PG_4951",
+      "scan_id": "PG_4951_1_ff0966ea-092f-4ca6-8399-22f676bc7573",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 65,
+      "source_phase_labels": [
+        "ZnWO4_13_(icsd_162234)-0",
+        "WO3_2_(icsd_1620)-1"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0912",
+      "expected_phase_weights": {
+        "Co3O4_227_(icsd_69374)-0": 0.4601,
+        "Fe(CoO2)2_227_(icsd_259783)-None": 0.2131,
+        "Fe7.784O12_15_(icsd_193716)-None": 0.3268
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0912-1_1_16639a70-f9f9-494f-abac-a7cae51e6462.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0912.xrdml",
+      "raw_sha256": "188013d1f991c2a5866be407e6a98e931ab143c19250eaabd31e40cfade1b8d9",
+      "raw_size_bytes": 45241,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 1.14,
+      "sample_id": "PG_0912",
+      "scan_id": "PG_0912-1_1_16639a70-f9f9-494f-abac-a7cae51e6462",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 66,
+      "source_phase_labels": [
+        "Co3O4_227_(icsd_69374)-0",
+        "Fe7.784O12_15_(icsd_193716)-None",
+        "Fe(CoO2)2_227_(icsd_259783)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0124",
+      "expected_phase_weights": {
+        "Ag2O_224_(icsd_173984)-0": 0.0478674074466745,
+        "Ag_225_(icsd_604631)-2": 0.5654784128216427,
+        "Li2CO3_15_(icsd_16713)-0": 0.15580168421620638,
+        "Li2O_225_(icsd_182027)-0": 0.14630158152009623,
+        "LiOH(H2O)(9138)": 0.08455091399538028
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0124_1_1_0f8cc0d7-9b1f-4cb2-945a-1e07f02e8b83.xrdml",
+      "phase_count": 5,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0124.xrdml",
+      "raw_sha256": "f02a61f3e760cf9a16327a06396c6d2a34557c58c89a9fe1b38fd5b4c7cd69e8",
+      "raw_size_bytes": 38051,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 5.65,
+      "sample_id": "PG_0124",
+      "scan_id": "PG_0124_1_1_0f8cc0d7-9b1f-4cb2-945a-1e07f02e8b83",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 67,
+      "source_phase_labels": [
+        "Ag2O_224_(icsd_173984)-0",
+        "Ag_225_(icsd_604631)-2",
+        "Li2CO3_15_(icsd_16713)-0",
+        "Li2O_225_(icsd_182027)-0",
+        "LiOH(H2O)(9138)"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1531",
+      "expected_phase_weights": {
+        "Ga2P3H12(NO4)3_15_(icsd_413872)-4": 0.1538,
+        "Ga7.92O12_12_(icsd_63907)-None": 0.8462
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1531_1_Ga2O3-PH9(NO2)2_Ga2PH9N2O7_200C_60min_eeee6cb7-1d8e-4809-baff-bde98da0b04e.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1531.xrdml",
+      "raw_sha256": "e05e9c6f11abebb8a39ce504f2ed0474c27353c8ce57a767dfc285e8e6368c42",
+      "raw_size_bytes": 42158,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.14,
+      "sample_id": "PG_1531",
+      "scan_id": "PG_1531_1_Ga2O3-PH9(NO2)2_Ga2PH9N2O7_200C_60min_eeee6cb7-1d8e-4809-baff-bde98da0b04e",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 68,
+      "source_phase_labels": [
+        "Ga7.92O12_12_(icsd_63907)-None",
+        "Ga2P3H12(NO4)3_15_(icsd_413872)-4"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1339",
+      "expected_phase_weights": {
+        "Fe13.6Ni11.44O32_227_(icsd_67846)-None": 1.0
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1339_1_80b9ccf9-563a-4584-acd8-128dc8b28dd4.xrdml",
+      "phase_count": 1,
+      "phase_stratum": "single",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1339.xrdml",
+      "raw_sha256": "3c112fe001643c899a1474b82f91edfeed63dd790d9296d063a01ac5e194e2b2",
+      "raw_size_bytes": 45491,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.33,
+      "sample_id": "PG_1339",
+      "scan_id": "PG_1339_1_80b9ccf9-563a-4584-acd8-128dc8b28dd4",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 69,
+      "source_phase_labels": [
+        "Fe13.6Ni11.44O32_227_(icsd_67846)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1929",
+      "expected_phase_weights": {
+        "K4C3O10_55_(icsd_401721)-None": 0.2657,
+        "K4H6C2O9_15_(icsd_280789)-0": 0.2779,
+        "MnO2_136_(icsd_643186)-6": 0.4564
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        2,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1929_1_7d42deb3-3256-491c-a714-12f7ecdbf978.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1929.xrdml",
+      "raw_sha256": "7e90ce1368f93750b3f064c00294470bd2b32047e05316a0cd811a8968b48425",
+      "raw_size_bytes": 45484,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.89,
+      "sample_id": "PG_1929",
+      "scan_id": "PG_1929_1_7d42deb3-3256-491c-a714-12f7ecdbf978",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 70,
+      "source_phase_labels": [
+        "MnO2_136_(icsd_643186)-6",
+        "K4H6C2O9_15_(icsd_280789)-0",
+        "K4C3O10_55_(icsd_401721)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0509",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.10870116169629583,
+        "BaO2_139_(icsd_80750)-0": 0.5343303929727715,
+        "Co3O4_227_(icsd_69374)-0": 0.3569684453309328
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0509_1_3BaO2-Co3O4_Ba3Co3O10_200C_60min_6eed1930-dc7a-426c-a377-712f75285573.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0509.xrdml",
+      "raw_sha256": "858eb221eae7bf08d8206a385e82ac765eb39f7cdd2ce8bed55dd28d912e3f09",
+      "raw_size_bytes": 45501,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 2.79,
+      "sample_id": "PG_0509",
+      "scan_id": "PG_0509_1_3BaO2-Co3O4_Ba3Co3O10_200C_60min_6eed1930-dc7a-426c-a377-712f75285573",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 71,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "BaO2_139_(icsd_80750)-0",
+        "Co3O4_227_(icsd_69374)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1018",
+      "expected_phase_weights": {
+        "Cr2O3_167_(icsd_290234)-0": 0.4282,
+        "In2O3_206_(icsd_190344)-0": 0.5718
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1018-1_50d4deb2-3236-4758-b88a-bdee1bd52eae.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1018.xrdml",
+      "raw_sha256": "0a00e5fec6b2ed2373e2bd5f6101598815663daf0cf2f8927264bc66c5b97b2e",
+      "raw_size_bytes": 38532,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.68,
+      "sample_id": "PG_1018",
+      "scan_id": "PG_1018-1_50d4deb2-3236-4758-b88a-bdee1bd52eae",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 72,
+      "source_phase_labels": [
+        "In2O3_206_(icsd_190344)-0",
+        "Cr2O3_167_(icsd_290234)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_5152",
+      "expected_phase_weights": {
+        "Zn1.96O2_186_(icsd_13952)-None": 0.3969,
+        "ZrO2_14_(icsd_157403)-0": 0.6031
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_5152_1_1b23db1d-1ed1-4a9f-9cf6-1aac4de9168f.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_5152.xrdml",
+      "raw_sha256": "b6d6bb48b038ece3c1e87e80338cb5615cc64e154c3e125f8e7575230de83e8e",
+      "raw_size_bytes": 41861,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.44,
+      "sample_id": "PG_5152",
+      "scan_id": "PG_5152_1_1b23db1d-1ed1-4a9f-9cf6-1aac4de9168f",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 73,
+      "source_phase_labels": [
+        "ZrO2_14_(icsd_157403)-0",
+        "Zn1.96O2_186_(icsd_13952)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0948",
+      "expected_phase_weights": {
+        "Co22.16O32_227_(icsd_173815)-None": 0.4693,
+        "V2O5_59_(icsd_40488)-0": 0.5307
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0948_1_2Co3O4-3V2O5_V6Co6O23_400C_60min_e3e96883-4c27-444a-8c49-63471ae1dc90.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0948.xrdml",
+      "raw_sha256": "a1faddff93ae0ae3b33e24258d27d917f2c49ad5c6891e24beec8c3788ed0754",
+      "raw_size_bytes": 45528,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 1.54,
+      "sample_id": "PG_0948",
+      "scan_id": "PG_0948_1_2Co3O4-3V2O5_V6Co6O23_400C_60min_e3e96883-4c27-444a-8c49-63471ae1dc90",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 74,
+      "source_phase_labels": [
+        "V2O5_59_(icsd_40488)-0",
+        "Co22.16O32_227_(icsd_173815)-None"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1418",
+      "expected_phase_weights": {
+        "FeH4(CO3)2_15_(icsd_161344)-28": 0.5178,
+        "In2O3_206_(icsd_190344)-0": 0.4822
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1418-1_1_d0628ab9-558c-4308-858e-f668d43a0324.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1418.xrdml",
+      "raw_sha256": "da856c92196772772cdefaed2466cd19be61aeae57fcefb1b3b4fc870acccd6e",
+      "raw_size_bytes": 45218,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 2.5,
+      "sample_id": "PG_1418",
+      "scan_id": "PG_1418-1_1_d0628ab9-558c-4308-858e-f668d43a0324",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 75,
+      "source_phase_labels": [
+        "In2O3_206_(icsd_190344)-0",
+        "FeH4(CO3)2_15_(icsd_161344)-28"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1852",
+      "expected_phase_weights": {
+        "In2O3_206_(icsd_190344)-0": 0.477,
+        "ZrO2_14_(icsd_157403)-0": 0.523
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1852-1_3a8a6a7c-0fd9-4f37-993d-125a37075165.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1852.xrdml",
+      "raw_sha256": "9d628248bb62dd4030af50238c0293729ace2a6dad81cac95c92f467b06c27d6",
+      "raw_size_bytes": 40593,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.77,
+      "sample_id": "PG_1852",
+      "scan_id": "PG_1852-1_3a8a6a7c-0fd9-4f37-993d-125a37075165",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 76,
+      "source_phase_labels": [
+        "In2O3_206_(icsd_190344)-0",
+        "ZrO2_14_(icsd_157403)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2949",
+      "expected_phase_weights": {
+        "MnO2_136_(icsd_643186)-6": 0.236,
+        "WO3_2_(icsd_1620)-1": 0.764
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2949-1_1_9de7dfcb-28f4-4703-9150-19e4aded4df4.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2949.xrdml",
+      "raw_sha256": "f3979ab747534ea9b60cfae943458e10821f052990208d8034a1fde60a00d612",
+      "raw_size_bytes": 41869,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.83,
+      "sample_id": "PG_2949",
+      "scan_id": "PG_2949-1_1_9de7dfcb-28f4-4703-9150-19e4aded4df4",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 77,
+      "source_phase_labels": [
+        "WO3_2_(icsd_1620)-1",
+        "MnO2_136_(icsd_643186)-6"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_3547",
+      "expected_phase_weights": {
+        "NaVO3_15_(icsd_63479)-0": 1.0
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_3547-1_89cc46f9-2b1f-4f6e-a936-657ca29f9d37.xrdml",
+      "phase_count": 1,
+      "phase_stratum": "single",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_3547.xrdml",
+      "raw_sha256": "6ee15e2bd69d1712066b8bd3a8eb04a3e516d4137dd9f8e4191bce29dc4ceae1",
+      "raw_size_bytes": 38815,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.16,
+      "sample_id": "PG_3547",
+      "scan_id": "PG_3547-1_89cc46f9-2b1f-4f6e-a936-657ca29f9d37",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 78,
+      "source_phase_labels": [
+        "NaVO3_15_(icsd_63479)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_4448",
+      "expected_phase_weights": {
+        "SnO2_136_(icsd_183984)-0": 0.535,
+        "V2O5_59_(icsd_47262)-0": 0.465
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_4448-1_1_97db8619-840c-4fcb-a559-e808bbc37c7e.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_4448.xrdml",
+      "raw_sha256": "f828396bdf9ad166f1fe71e092b51de9d2c1b3f767894ad6564f0e6d7fc4f27c",
+      "raw_size_bytes": 37816,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.82,
+      "sample_id": "PG_4448",
+      "scan_id": "PG_4448-1_1_97db8619-840c-4fcb-a559-e808bbc37c7e",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 79,
+      "source_phase_labels": [
+        "SnO2_136_(icsd_183984)-0",
+        "V2O5_59_(icsd_47262)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0419",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.7625,
+        "K4H6C2O9_15_(icsd_280789)-0": 0.2375
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0419_1_bb659d8e-8712-49b4-9aef-078f914da43e.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0419.xrdml",
+      "raw_sha256": "c3aba6ad988c24e3dc8298e29cfec864653ca910730ad5afddebbbdad28b5871",
+      "raw_size_bytes": 38690,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 7.07,
+      "sample_id": "PG_0419",
+      "scan_id": "PG_0419_1_bb659d8e-8712-49b4-9aef-078f914da43e",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 80,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "K4H6C2O9_15_(icsd_280789)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0530",
+      "expected_phase_weights": {
+        "BaO2_139_(icsd_80750)-0": 0.4843,
+        "MoO3_62_(icsd_166362)-28": 0.5157
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0530_1_BaO2-MoO3_BaMoO5_200C_60min_abd9268a-d140-4c05-a775-2f57ccfc7fa5.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0530.xrdml",
+      "raw_sha256": "c10379df3d931e5c53b63f5f626b5387fb83b7dfa228b43bfdbe61c6203ce81d",
+      "raw_size_bytes": 41246,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 4.29,
+      "sample_id": "PG_0530",
+      "scan_id": "PG_0530_1_BaO2-MoO3_BaMoO5_200C_60min_abd9268a-d140-4c05-a775-2f57ccfc7fa5",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 81,
+      "source_phase_labels": [
+        "MoO3_62_(icsd_166362)-28",
+        "BaO2_139_(icsd_80750)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0307",
+      "expected_phase_weights": {
+        "B(HO)3_2_(icsd_61354)-0": 0.05126382944359202,
+        "CaCO3_167_(icsd_166364)-0": 0.948736170556408
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0307_1_B(HO)3-CaCO3_CaBH3CO6_200C_60min_b95d4add-1ffc-4253-859f-1e59d84c3bd5.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0307.xrdml",
+      "raw_sha256": "1edd84602b79a9f572aacdaed1f133ec4212dd519e7d34197a0c13d19168a063",
+      "raw_size_bytes": 39019,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 7.57,
+      "sample_id": "PG_0307",
+      "scan_id": "PG_0307_1_B(HO)3-CaCO3_CaBH3CO6_200C_60min_b95d4add-1ffc-4253-859f-1e59d84c3bd5",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 82,
+      "source_phase_labels": [
+        "B(HO)3_2_(icsd_61354)-0",
+        "CaCO3_167_(icsd_166364)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0508",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.06550684378655651,
+        "BaO2_139_(icsd_80750)-0": 0.5541377766454811,
+        "CoO_225_(icsd_29049)-37": 0.3803553795679625
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0508_1_BaO2-CoO_BaCoO3_200C_60min_e1ad2559-32d1-4643-b596-e57ee6293970.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0508.xrdml",
+      "raw_sha256": "c92e39fd4ad12a32681c2e654178580f048a49e5395f6d7303eae8b8715f91fc",
+      "raw_size_bytes": 45495,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 3.02,
+      "sample_id": "PG_0508",
+      "scan_id": "PG_0508_1_BaO2-CoO_BaCoO3_200C_60min_e1ad2559-32d1-4643-b596-e57ee6293970",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 83,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "BaO2_139_(icsd_80750)-0",
+        "CoO_225_(icsd_29049)-37"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0729",
+      "expected_phase_weights": {
+        "CaCO3_167_(icsd_166364)-0": 0.7367,
+        "MnO2_136_(icsd_643186)-6": 0.2633
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0729_1_CaCO3-MnO2_CaMnCO5_300C_60min_29064472-a5a6-475d-866c-b4b8f4f33db4.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0729.xrdml",
+      "raw_sha256": "2ea7a9c42fe0913519e97ec99008488ceb755a3dee6d04a7fc031c8fe1d79921",
+      "raw_size_bytes": 44868,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.85,
+      "sample_id": "PG_0729",
+      "scan_id": "PG_0729_1_CaCO3-MnO2_CaMnCO5_300C_60min_29064472-a5a6-475d-866c-b4b8f4f33db4",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 84,
+      "source_phase_labels": [
+        "CaCO3_167_(icsd_166364)-0",
+        "MnO2_136_(icsd_643186)-6"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0527",
+      "expected_phase_weights": {
+        "BaCO3_62_(icsd_166091)-0": 0.06520654800231308,
+        "BaO2_139_(icsd_80750)-0": 0.563286960584546,
+        "Mn3O4_141_(icsd_8355)-0": 0.3715064914131409
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0527_1_3BaO2-Mn3O4_Ba3Mn3O10_200C_60min_e4e5531e-5112-40f0-90ec-b1ee6d4b98dd.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0527.xrdml",
+      "raw_sha256": "62fb6f5c55afee26c9fca7136168dfa301d61d98689d932c72b53dda9852697a",
+      "raw_size_bytes": 40003,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 5.51,
+      "sample_id": "PG_0527",
+      "scan_id": "PG_0527_1_3BaO2-Mn3O4_Ba3Mn3O10_200C_60min_e4e5531e-5112-40f0-90ec-b1ee6d4b98dd",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 85,
+      "source_phase_labels": [
+        "BaCO3_62_(icsd_166091)-0",
+        "BaO2_139_(icsd_80750)-0",
+        "Mn3O4_141_(icsd_8355)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0752",
+      "expected_phase_weights": {
+        "CaCO3_167_(icsd_166364)-0": 0.3775,
+        "ZrO2_14_(icsd_157403)-0": 0.6176,
+        "ZrO2_14_(icsd_15983)-0": 0.00491
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0752_1.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0752.xrdml",
+      "raw_sha256": "384913b18b49c44124c3f74852161f8a812d10d029a348e64daa42a45f335306",
+      "raw_size_bytes": 45020,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 4.05,
+      "sample_id": "PG_0752",
+      "scan_id": "PG_0752_1",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 86,
+      "source_phase_labels": [
+        "ZrO2_14_(icsd_157403)-0",
+        "CaCO3_167_(icsd_166364)-0",
+        "ZrO2_14_(icsd_15983)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_4547",
+      "expected_phase_weights": {
+        "Sr2V2O7_2_(icsd_20401)-0": 0.3822,
+        "Sr3V2O8_166_(icsd_167701)-0": 0.31,
+        "Sr5V3O13_176_(icsd_23718)-None": 0.3079
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_4547-1_98684caf-0298-4881-b0b8-a79684d586a9.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_4547.xrdml",
+      "raw_sha256": "005707e34d1ee6ef6bf352568c3a1522596caf10e2ba1ded3b7cf06035fd4eb1",
+      "raw_size_bytes": 41635,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 3.97,
+      "sample_id": "PG_4547",
+      "scan_id": "PG_4547-1_98684caf-0298-4881-b0b8-a79684d586a9",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 87,
+      "source_phase_labels": [
+        "Sr2V2O7_2_(icsd_20401)-0",
+        "Sr5V3O13_176_(icsd_23718)-None",
+        "Sr3V2O8_166_(icsd_167701)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0849",
+      "expected_phase_weights": {
+        "CoWO4_13_(icsd_15851)-0": 0.3074,
+        "WO3_2_(icsd_1620)-1": 0.6926
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0849_1_df478d73-d25b-48bc-b967-2599fe27b00a.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0849.xrdml",
+      "raw_sha256": "6aba226a2abebb6998bbd81557cbdedf08e19ae8100ad9f9cf43311412cca4a1",
+      "raw_size_bytes": 39282,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.3,
+      "sample_id": "PG_0849",
+      "scan_id": "PG_0849_1_df478d73-d25b-48bc-b967-2599fe27b00a",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 88,
+      "source_phase_labels": [
+        "WO3_2_(icsd_1620)-1",
+        "CoWO4_13_(icsd_15851)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1651",
+      "expected_phase_weights": {
+        "Ge2.6823O6_152_(icsd_38642)-None": 0.5132,
+        "Zn2GeO4_148_(icsd_37695)-0": 0.1834,
+        "Zn2O1.94_186_(icsd_180050)-None": 0.30337
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1651_1_64c1f013-e900-4bf0-8afd-b37edb028e0e.xrdml",
+      "phase_count": 3,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1651.xrdml",
+      "raw_sha256": "19281bac6f13346c721c295aa2c4e9ac1445aad3d28ab5d4ba955759466c7301",
+      "raw_size_bytes": 41411,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.31,
+      "sample_id": "PG_1651",
+      "scan_id": "PG_1651_1_64c1f013-e900-4bf0-8afd-b37edb028e0e",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 89,
+      "source_phase_labels": [
+        "Ge2.6823O6_152_(icsd_38642)-None",
+        "Zn2O1.94_186_(icsd_180050)-None",
+        "Zn2GeO4_148_(icsd_37695)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2840",
+      "expected_phase_weights": {
+        "Mn2O3_61_(icsd_290640)-0": 0.22575273521491704,
+        "Mn3O4_141_(icsd_167411)-0": 0.07546073024981519,
+        "Mn3O4_57_(icsd_113668)-52": 0.00969958420663506,
+        "Mn5O8_12_(icsd_16956)-3": 0.011870120532595353,
+        "MnO2_14_(icsd_27456)-None": 0.03208324006810058,
+        "Pb2O3_14_(icsd_23760)-5": 0.01702514430675105,
+        "Pb3O4_135_(icsd_647261)-0": 0.39395980438041367,
+        "Pb3O4_55_(icsd_9753)-0": 0.2212203840492712,
+        "PbO_57_(icsd_99777)-0": 0.012928256991500995
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2840-1_61a1b7a4-5b31-470b-9891-021ec57cca7b.xrdml",
+      "phase_count": 9,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2840.xrdml",
+      "raw_sha256": "de76db1b84b0fec94e661b7f2caa9ee083ad84f7b991ead916a03675d48fdeca",
+      "raw_size_bytes": 45223,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 5.7,
+      "sample_id": "PG_2840",
+      "scan_id": "PG_2840-1_61a1b7a4-5b31-470b-9891-021ec57cca7b",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 90,
+      "source_phase_labels": [
+        "Mn2O3_61_(icsd_290640)-0",
+        "Mn3O4_141_(icsd_167411)-0",
+        "Mn3O4_57_(icsd_113668)-52",
+        "Mn5O8_12_(icsd_16956)-3",
+        "MnO2_14_(icsd_27456)-None",
+        "Pb2O3_14_(icsd_23760)-5",
+        "Pb3O4_135_(icsd_647261)-0",
+        "Pb3O4_55_(icsd_9753)-0",
+        "PbO_57_(icsd_99777)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1622",
+      "expected_phase_weights": {
+        "Ge2.6823O6_152_(icsd_38642)-None": 0.7557,
+        "Li2CO3_15_(icsd_16713)-0": 0.2443
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1622-1_1_ea7d03c8-e444-48af-9944-903e611e0657.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1622.xrdml",
+      "raw_sha256": "029aaa7ae0d04acae88dc062c5fd67277e3a18b3ee9405420125d5f865548607",
+      "raw_size_bytes": 41679,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.75,
+      "sample_id": "PG_1622",
+      "scan_id": "PG_1622-1_1_ea7d03c8-e444-48af-9944-903e611e0657",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 91,
+      "source_phase_labels": [
+        "Ge2.6823O6_152_(icsd_38642)-None",
+        "Li2CO3_15_(icsd_16713)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_3046",
+      "expected_phase_weights": {
+        "MoO2_14_(icsd_23722)-0": 0.054385811246824886,
+        "MoO3_62_(icsd_166362)-28": 0.6969874640034749,
+        "Ti3.136O8_141_(icsd_82080)-None": 0.21944518428612028,
+        "Ti3O5_63_(icsd_20361)-5": 0.029181540463579826
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_3046-1_317a2a4d-a2d0-45fc-a2fd-76e4705119b8.xrdml",
+      "phase_count": 4,
+      "phase_stratum": "three_or_more",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_3046.xrdml",
+      "raw_sha256": "7a9d3e4784b39e99f27732b3e87e7f01a7912edb38a5a8a87ddc32d4637efe2f",
+      "raw_size_bytes": 43545,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 9.61,
+      "sample_id": "PG_3046",
+      "scan_id": "PG_3046-1_317a2a4d-a2d0-45fc-a2fd-76e4705119b8",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 92,
+      "source_phase_labels": [
+        "MoO2_14_(icsd_23722)-0",
+        "MoO3_62_(icsd_166362)-28",
+        "Ti3.136O8_141_(icsd_82080)-None",
+        "Ti3O5_63_(icsd_20361)-5"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1220",
+      "expected_phase_weights": {
+        "Fe3O4_227_(icsd_64829)-0": 0.933325877302408,
+        "KH2PO4(51075)": 0.06667412269759199
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        2,
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1220_0f10ff21-0667-4c6c-b34d-d332afa25795.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1220.xrdml",
+      "raw_sha256": "93742b8c930880924a9b61778c2902e14bbfe299d7c055ee5f4283278abb27bc",
+      "raw_size_bytes": 45189,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 2.65,
+      "sample_id": "PG_1220",
+      "scan_id": "PG_1220_0f10ff21-0667-4c6c-b34d-d332afa25795",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 93,
+      "source_phase_labels": [
+        "Fe3O4_227_(icsd_64829)-0",
+        "KH2PO4(51075)"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1534",
+      "expected_phase_weights": {
+        "Ga7.92O12_12_(icsd_63907)-None": 0.9687205173219229,
+        "NH4H2PO4(28154)": 0.03127948267807718
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        2,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1534_1_dc267cd9-f0e5-4804-a51d-da9cfd617131.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1534.xrdml",
+      "raw_sha256": "8cc57d7089336cdad80a18a01fbd0227f644eba8ea82601cfbf7fc8ee3cd9b2e",
+      "raw_size_bytes": 41679,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 9.49,
+      "sample_id": "PG_1534",
+      "scan_id": "PG_1534_1_dc267cd9-f0e5-4804-a51d-da9cfd617131",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 94,
+      "source_phase_labels": [
+        "Ga7.92O12_12_(icsd_63907)-None",
+        "NH4H2PO4(28154)"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0215",
+      "expected_phase_weights": {
+        "Al(HO)3_14_(icsd_184003)-17": 0.4328,
+        "Ga7.92O12_12_(icsd_63907)-None": 0.5672
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0215_1_2Al(HO)3-Ga2O3_Al2Ga2(H2O3)3_200C_60min_e1b3be47-dbf8-466e-8367-d2e1ce10a092.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0215.xrdml",
+      "raw_sha256": "192582e654fb2be60becfc5e71512788ba05be0fb32d4341d931c66c46a16938",
+      "raw_size_bytes": 42480,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 6.63,
+      "sample_id": "PG_0215",
+      "scan_id": "PG_0215_1_2Al(HO)3-Ga2O3_Al2Ga2(H2O3)3_200C_60min_e1b3be47-dbf8-466e-8367-d2e1ce10a092",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 95,
+      "source_phase_labels": [
+        "Ga7.92O12_12_(icsd_63907)-None",
+        "Al(HO)3_14_(icsd_184003)-17"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2124",
+      "expected_phase_weights": {
+        "La(HO)3_176_(icsd_167480)-0": 0.892568666305304,
+        "Li2CO3_15_(icsd_16713)-0": 0.10743133369469597
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2124-1_1_5615bfeb-725f-4eda-ac3e-78065fde03a6.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2124.xrdml",
+      "raw_sha256": "0e85b97e8f556d602a55e393b8bcbe551e9d3c202d2784978c8a0982df9c0dfe",
+      "raw_size_bytes": 38803,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 8.41,
+      "sample_id": "PG_2124",
+      "scan_id": "PG_2124-1_1_5615bfeb-725f-4eda-ac3e-78065fde03a6",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 96,
+      "source_phase_labels": [
+        "La(HO)3_176_(icsd_167480)-0",
+        "Li2CO3_15_(icsd_16713)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_3546",
+      "expected_phase_weights": {
+        "Na2CO3_12_(icsd_281362)-0": 0.24112294074223026,
+        "TiO2_141_(icsd_172914)-0": 0.7588770592577698
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_3546_1.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_3546.xrdml",
+      "raw_sha256": "05c49c247a54bb2e6d1d1ae2a845e95b977da2e3c953535e0f29350baaed896f",
+      "raw_size_bytes": 39308,
+      "refinement_origin": "manual",
+      "refinement_rank": -1,
+      "refinement_rwp": 8.69,
+      "sample_id": "PG_3546",
+      "scan_id": "PG_3546_1",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 97,
+      "source_phase_labels": [
+        "Na2CO3_12_(icsd_281362)-0",
+        "TiO2_141_(icsd_172914)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_2126",
+      "expected_phase_weights": {
+        "La(HO)3_176_(icsd_167480)-0": 0.7441,
+        "MnO_225_(icsd_643195)-0": 0.2559
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_2126_1_5f55ec03-6e4f-442d-bfb3-c4ab5a6b4b72.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_2126.xrdml",
+      "raw_sha256": "88ea5e55734764a0145fb512e71694913313563b3c2ebb531a3cb74f464c0354",
+      "raw_size_bytes": 39900,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 5.24,
+      "sample_id": "PG_2126",
+      "scan_id": "PG_2126_1_5f55ec03-6e4f-442d-bfb3-c4ab5a6b4b72",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 98,
+      "source_phase_labels": [
+        "La(HO)3_176_(icsd_167480)-0",
+        "MnO_225_(icsd_643195)-0"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_1034",
+      "expected_phase_weights": {
+        "Cr2O3_167_(icsd_290234)-0": 0.6266,
+        "PH6NO4_122_(icsd_84116)-2": 0.3734
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_1034_1_aedb4e74-2fa5-4846-bf47-3b2e90639314.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_1034.xrdml",
+      "raw_sha256": "dd8f588f8d96df3355d5fca88d9df973dba8342703b53ea4e733081049ac0fc1",
+      "raw_size_bytes": 40394,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 4.59,
+      "sample_id": "PG_1034",
+      "scan_id": "PG_1034_1_aedb4e74-2fa5-4846-bf47-3b2e90639314",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 99,
+      "source_phase_labels": [
+        "Cr2O3_167_(icsd_290234)-0",
+        "PH6NO4_122_(icsd_84116)-2"
+      ]
+    },
+    {
+      "angle_unit": "two_theta",
+      "case_id": "precursor-pg_0219",
+      "expected_phase_weights": {
+        "Al(HO)3_14_(icsd_184003)-17": 0.5033,
+        "K4C3O10_55_(icsd_401721)-None": 0.4967
+      },
+      "geometry": "reflection_bragg_brentano",
+      "human_quality_score": 1,
+      "human_quality_score_history": [
+        1,
+        1
+      ],
+      "instrument_profile": "Aeris-fds-Pixcel1d-Medipix3",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "original_raw_path": "data/xrd/raw_scans/PG_0219_1_1_092d7e03-412d-4b5a-baeb-738c1a88950e.xrdml",
+      "phase_count": 2,
+      "phase_stratum": "two",
+      "precursor_source": "https://github.com/lauren-walters/precursor-genome",
+      "radiation": "Cu Ka",
+      "raw_archive_source": "https://zenodo.org/records/21285546",
+      "raw_path": "data/raw_scans/precursor-pg_0219.xrdml",
+      "raw_sha256": "0cde683239fd00178a919ff0e988a730e147ca758ab8ff428b55a24eb0960986",
+      "raw_size_bytes": 39965,
+      "refinement_origin": "automated_db",
+      "refinement_rank": 1,
+      "refinement_rwp": 7.24,
+      "sample_id": "PG_0219",
+      "scan_id": "PG_0219_1_1_092d7e03-412d-4b5a-baeb-738c1a88950e",
+      "scan_range_deg": [
+        10.0,
+        100.0
+      ],
+      "selection_rank": 100,
+      "source_phase_labels": [
+        "Al(HO)3_14_(icsd_184003)-17",
+        "K4C3O10_55_(icsd_401721)-None"
+      ]
+    }
+  ],
+  "selected_count": 100,
+  "selection_policy": {
+    "max_human_quality_score": 1,
+    "requested_count": 100,
+    "require_active_accepted_refinement": true,
+    "require_active_scan": true,
+    "seed": 17,
+    "source_truth": "Precursor accepted human refinement phase presence and weights",
+    "stratification": "phase_count:single,two,three_or_more"
+  },
+  "source": {
+    "ledger_sample_count": 1035,
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "raw_archive_url": "https://zenodo.org/records/21285546",
+    "repository_url": "https://github.com/lauren-walters/precursor-genome"
+  },
+  "status": "selected"
+}

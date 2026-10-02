@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: Phasentic
+message: "If you use Phasentic, please cite the release you used, and also POW_COD and the Crystallography Open Database."
+type: software
+version: 0.1.0
+date-released: 2026-10-01
+license: MIT
+repository-code: "https://github.com/qaemu/phasentic"
+abstract: >-
+  Phasentic identifies crystalline phases in powder X-ray diffraction
+  patterns. It searches the CNR POW_COD reference database, fits mixtures of
+  up to five phases, and reports ranked hypotheses with full provenance. Its
+  validated preset found the exact phase set in 37.0% (Wilson 95% CI
+  30.6-43.9%) and the right phase family in 49.5% (42.6-56.4%) of 200 sealed
+  held-out Precursor Genome scans. The code was written with Claude Code.
+keywords:
+  - powder X-ray diffraction
+  - phase identification
+  - crystallography
+  - POW_COD
+  - reproducible science
+authors:
+  - alias: qaemu

@@ -1,0 +1,50 @@
+[
+  {
+    "reference_id": "cod-9008566",
+    "formula": "Si",
+    "name": "Silicon (diamond cubic)",
+    "space_group": "Fd-3m",
+    "source": "COD demo subset; d spacings are rounded teaching values",
+    "cod_entry_url": "https://www.crystallography.net/cod/9008566.html",
+    "lines": [
+      {"d_spacing_angstrom": 3.1355, "relative_intensity": 100.0, "hkl": "111"},
+      {"d_spacing_angstrom": 1.9201, "relative_intensity": 55.0, "hkl": "220"},
+      {"d_spacing_angstrom": 1.6375, "relative_intensity": 30.0, "hkl": "311"},
+      {"d_spacing_angstrom": 1.3577, "relative_intensity": 15.0, "hkl": "400"},
+      {"d_spacing_angstrom": 1.2459, "relative_intensity": 10.0, "hkl": "331"},
+      {"d_spacing_angstrom": 1.1086, "relative_intensity": 7.0, "hkl": "422"}
+    ]
+  },
+  {
+    "reference_id": "cod-9000017",
+    "formula": "Al2O3",
+    "name": "Corundum",
+    "space_group": "R-3c",
+    "source": "COD demo subset; d spacings are rounded teaching values",
+    "cod_entry_url": "https://www.crystallography.net/cod/9000017.html",
+    "lines": [
+      {"d_spacing_angstrom": 3.4810, "relative_intensity": 48.0, "hkl": "012"},
+      {"d_spacing_angstrom": 2.5510, "relative_intensity": 100.0, "hkl": "104"},
+      {"d_spacing_angstrom": 2.3810, "relative_intensity": 38.0, "hkl": "110"},
+      {"d_spacing_angstrom": 2.1720, "relative_intensity": 23.0, "hkl": "006"},
+      {"d_spacing_angstrom": 2.0850, "relative_intensity": 37.0, "hkl": "113"},
+      {"d_spacing_angstrom": 1.7405, "relative_intensity": 29.0, "hkl": "024"}
+    ]
+  },
+  {
+    "reference_id": "cod-9000517",
+    "formula": "SiO2",
+    "name": "α-Quartz",
+    "space_group": "P3221",
+    "source": "COD demo subset; d spacings are rounded teaching values",
+    "cod_entry_url": "https://www.crystallography.net/cod/9000517.html",
+    "lines": [
+      {"d_spacing_angstrom": 4.2570, "relative_intensity": 25.0, "hkl": "100"},
+      {"d_spacing_angstrom": 3.3430, "relative_intensity": 100.0, "hkl": "101"},
+      {"d_spacing_angstrom": 2.4560, "relative_intensity": 40.0, "hkl": "110"},
+      {"d_spacing_angstrom": 2.2810, "relative_intensity": 30.0, "hkl": "102"},
+      {"d_spacing_angstrom": 1.8170, "relative_intensity": 20.0, "hkl": "111"},
+      {"d_spacing_angstrom": 1.6710, "relative_intensity": 18.0, "hkl": "200"}
+    ]
+  }
+]
