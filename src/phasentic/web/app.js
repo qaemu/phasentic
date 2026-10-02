@@ -1,24 +1,100 @@
 const translations = {
-  en: { chemistry: "Sample chemistry (precursor and target formulas)", validatedPreset: "Use the validated method (POW_COD, Cu Kα, needs chemistry)", lede: "Powder X-ray diffraction phase identification with a validated, reproducible method.", noticeTitle: "Evidence boundary", noticeText: "Results are ranked hypotheses, not certainties. On held-out data the validated method identifies the exact phases 37% of the time and the right compounds (any polymorph) 49.5%. Confirm calibration and refine before publication.", settings: "Measurement settings", file: "Pattern file", radiation: "Anode / radiation", reference: "Reference source", angle: "Angle coordinate", tolerance: "Peak tolerance (° 2θ)", analysisMode: "Analysis mode", maxPhases: "Maximum phases", instrument: "Instrument metadata", vendor: "Vendor (optional)", model: "Model (optional)", radius: "Goniometer radius (mm, optional)", calibration: "Line-position calibration", standardFile: "Standard scan", standard: "Calibration standard", calibrate: "Calibrate standard", calibrationHint: "No calibration result attached.", instrumentPair: "Provide both instrument vendor and model, or leave both blank.", analyze: "Analyze pattern", pattern: "Measured trace and detected peaks", plotHint: "Upload a pattern to inspect its measured trace and detected peaks.", candidates: "Ranked phase hypotheses", empty: "No analysis yet.", mixtureHint: "Mixture diagnostics will appear when mixture mode is selected.", mixtureSelected: "Selected phase set", mixtureAlternative: "Retained alternative", mixtureHypothesis: "Mixture hypothesis", mixtureQuery: "Residual-query provenance", mixtureQueryCandidatePool: "Candidate pool", mixtureQueryRequeries: "Residual candidate re-queries", mixtureQueryMaxFitAttempts: "Max fit attempts", mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance", mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason", mixtureScaleWarning: "Screening scales are arbitrary profile amplitudes, not phase fractions.", mixtureUnexplained: "Detected peaks remain unexplained", mixtureMissingLines: "Missing expected lines", diagnostics: "Quality and provenance", analysisProvenance: "Analysis provenance", referenceQuery: "Reference query", settingsProvenance: "Analysis settings", inputSha: "Input SHA-256", referenceSource: "Reference source", algorithmVersion: "Algorithm", diagnosticHint: "The report will show scan quality, warnings, and the reference source here.", downloadReport: "Download report", download: "Download JSON report", score: "Screening score", stale: "Previous results cleared because a measurement setting changed.", measuredTrace: "Measured", mixtureTotal: "Mixture total", detectedPeaks: "Detected peaks" },
-  es: { chemistry: "Química de la muestra (fórmulas de precursores y objetivo)", validatedPreset: "Usar el método validado (POW_COD, Cu Kα, requiere la química)", lede: "Identificación de fases por difracción de rayos X de polvo con un método validado y reproducible.", noticeTitle: "Límite de evidencia", noticeText: "Los resultados son hipótesis ordenadas, no certezas. En datos reservados, el método validado identifica las fases exactas el 37% de las veces y los compuestos correctos (cualquier polimorfo) el 49,5%. Confirme la calibración y refine antes de publicar.", settings: "Configuración de medición", file: "Archivo de patrón", radiation: "Ánodo / radiación", reference: "Fuente de referencias", angle: "Coordenada angular", tolerance: "Tolerancia de pico (° 2θ)", analysisMode: "Modo de análisis", maxPhases: "Máximo de fases", instrument: "Metadatos del instrumento", vendor: "Fabricante (opcional)", model: "Modelo (opcional)", radius: "Radio del goniómetro (mm, opcional)", calibration: "Calibración de posición de líneas", standardFile: "Escaneo estándar", standard: "Estándar de calibración", calibrate: "Calibrar estándar", calibrationHint: "No hay resultado de calibración adjunto.", instrumentPair: "Indique fabricante y modelo, o deje ambos vacíos.", analyze: "Analizar patrón", pattern: "Traza medida y picos detectados", plotHint: "Cargue un patrón para inspeccionar la traza medida y los picos detectados.", candidates: "Hipótesis de fases", empty: "Todavía no hay análisis.", mixtureHint: "Los diagnósticos de mezcla aparecen al seleccionar el modo de mezcla.", mixtureSelected: "Conjunto de fases seleccionado", mixtureAlternative: "Alternativa retenida", mixtureHypothesis: "Hipótesis de mezcla", mixtureQuery: "Procedencia de consultas residuales", mixtureQueryCandidatePool: "Conjunto de candidatos", mixtureQueryRequeries: "Nuevas consultas de candidatos por residual", mixtureQueryMaxFitAttempts: "Máximo de intentos de ajuste", mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico", mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada", mixtureScaleWarning: "Las escalas de cribado son amplitudes arbitrarias del perfil, no fracciones de fase.", mixtureUnexplained: "Picos detectados sin explicar", mixtureMissingLines: "Líneas esperadas ausentes", diagnostics: "Calidad y procedencia", analysisProvenance: "Procedencia del análisis", referenceQuery: "Consulta de referencias", settingsProvenance: "Configuración del análisis", inputSha: "SHA-256 de entrada", referenceSource: "Fuente de referencias", algorithmVersion: "Algoritmo", diagnosticHint: "El informe mostrará la calidad del escaneo, advertencias y la fuente de referencias aquí.", downloadReport: "Descargar informe", download: "Descargar informe JSON", score: "Puntuación de cribado", stale: "Se borraron los resultados anteriores porque cambió una configuración de medición.", measuredTrace: "Medida", mixtureTotal: "Total de mezcla", detectedPeaks: "Picos detectados" }
+  en: {
+    lede: "Powder X-ray diffraction phase identification",
+    sample: "Sample", file: "Pattern file", fileHint: ".xy, .xrdml or ASCII .raw, up to 10 MB",
+    chemistry: "Precursor and target formulas", chemistryHint: "Candidates are limited to these elements plus H, C and O.",
+    method: "Method", validatedPreset: "Validated method", validatedHint: "The settings tested on 200 sealed scans. Needs POW_COD, Cu Kα and the formulas above.",
+    radiation: "Anode", reference: "Reference database", customSettings: "Custom settings (not validated)",
+    tolerance: "Peak tolerance (° 2θ)", maxPhases: "Maximum phases", analysisMode: "Analysis mode", angle: "Angle coordinate",
+    customHint: "Ignored while the validated method is selected.",
+    optional: "Instrument and calibration", vendor: "Vendor", model: "Model", radius: "Goniometer radius (mm)",
+    standardFile: "Standard scan", standard: "Calibration standard", calibrate: "Calibrate",
+    calibrationHint: "No calibration attached. A “supported” decision needs one.",
+    instrumentPair: "Give both instrument vendor and model, or leave both blank.",
+    analyze: "Analyze", running: "Analysing…", done: "Done. Read the result as a ranked hypothesis.",
+    noticeTitle: "Read results as ranked hypotheses.",
+    noticeText: "On 200 sealed test scans the validated method found the exact phases in 37% and the right compounds in 49.5%, falling sharply for three or more phases. Confirm before you report.",
+    emptyTitle: "No analysis yet",
+    emptyText: "Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.",
+    decisionLabel: "Decision", selected: "Selected phases", noMixture: "No mixture selected",
+    downloadReport: "Download report", download: "JSON",
+    hypotheses: "Phase hypotheses", phaseEvidence: "Evidence per phase", candidates: "Single-phase candidates", diagnostics: "Quality and provenance",
+    decisions: { supported: "Supported", tentative: "Tentative", unresolved: "Unresolved", rejected: "Rejected" },
+    hypSet: "Phase set", hypStatus: "Status", hypScore: "Selection score (lower is better)", hypUnexplained: "Unexplained peaks", hypMissing: "Missing lines", selectedTag: "selected",
+    mixtureHint: "No mixture hypotheses: this analysis ran in single-phase mode.",
+    mixtureScaleWarning: "Scores rank fits of this scan only; they are not probabilities, and fitted heights are not phase fractions.",
+    mixtureQuery: "Search details",
+    candPhase: "Phase", candSg: "Space group", candRef: "Reference", candScore: "Score", candLines: "Lines matched", candRmse: "Position RMSE", candStatus: "Status",
+    empty: "No candidates.",
+    factSn: "Signal-to-noise", factBaseline: "Background share", factCalibration: "Calibration", factReference: "Reference database", factPeaks: "Detected peaks", factDisplacement: "Displacement correction", factPoints: "Points", factRange: "Range",
+    provenance: "Full provenance", analysisProvenance: "Analysis provenance", fileName: "File name", inputSha: "Input SHA-256", referenceSource: "Reference source",
+    algorithmVersion: "Algorithm", coordinateCorrection: "Coordinate correction", referenceEntries: "Reference entries", sourceUrls: "Reference source URLs",
+    referenceQuery: "Reference query", settingsProvenance: "Analysis settings",
+    mixtureQueryCandidatePool: "Candidate pool", mixtureQueryRequeries: "Residual re-queries", mixtureQueryMaxFitAttempts: "Max fit attempts",
+    mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
+    mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
+    stale: "A setting changed, so the previous result was cleared.",
+    footer: "Runs on this computer; scans are not uploaded anywhere.", footerAi: "Open source (MIT). No AI model is used to analyse scans.",
+  },
+  es: {
+    lede: "Identificación de fases por difracción de rayos X de polvo",
+    sample: "Muestra", file: "Archivo del patrón", fileHint: ".xy, .xrdml o .raw ASCII, hasta 10 MB",
+    chemistry: "Fórmulas de precursores y objetivo", chemistryHint: "Los candidatos se limitan a estos elementos más H, C y O.",
+    method: "Método", validatedPreset: "Método validado", validatedHint: "La configuración probada en 200 escaneos sellados. Requiere POW_COD, Cu Kα y las fórmulas de arriba.",
+    radiation: "Ánodo", reference: "Base de referencias", customSettings: "Configuración personalizada (no validada)",
+    tolerance: "Tolerancia de pico (° 2θ)", maxPhases: "Máximo de fases", analysisMode: "Modo de análisis", angle: "Coordenada angular",
+    customHint: "Se ignora mientras el método validado está seleccionado.",
+    optional: "Instrumento y calibración", vendor: "Fabricante", model: "Modelo", radius: "Radio del goniómetro (mm)",
+    standardFile: "Escaneo estándar", standard: "Estándar de calibración", calibrate: "Calibrar",
+    calibrationHint: "Sin calibración. Una decisión “supported” la necesita.",
+    instrumentPair: "Indique fabricante y modelo, o deje ambos vacíos.",
+    analyze: "Analizar", running: "Analizando…", done: "Listo. Lea el resultado como una hipótesis ordenada.",
+    noticeTitle: "Lea los resultados como hipótesis ordenadas.",
+    noticeText: "En 200 escaneos de prueba sellados, el método validado encontró las fases exactas en el 37% y los compuestos correctos en el 49,5%, con una caída fuerte para tres o más fases. Confirme antes de informar.",
+    emptyTitle: "Todavía no hay análisis",
+    emptyText: "Elija un escaneo, escriba las fórmulas de precursores y objetivo, mantenga el método validado y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y un informe imprimible aparecerán aquí.",
+    decisionLabel: "Decisión", selected: "Fases seleccionadas", noMixture: "No se seleccionó una mezcla",
+    downloadReport: "Descargar informe", download: "JSON",
+    hypotheses: "Hipótesis de fases", phaseEvidence: "Evidencia por fase", candidates: "Candidatos de una sola fase", diagnostics: "Calidad y procedencia",
+    decisions: { supported: "Respaldada", tentative: "Tentativa", unresolved: "Sin resolver", rejected: "Rechazada" },
+    hypSet: "Conjunto de fases", hypStatus: "Estado", hypScore: "Puntuación de selección (menor es mejor)", hypUnexplained: "Picos sin explicar", hypMissing: "Líneas ausentes", selectedTag: "seleccionada",
+    mixtureHint: "Sin hipótesis de mezcla: este análisis se ejecutó en modo de una sola fase.",
+    mixtureScaleWarning: "Las puntuaciones ordenan ajustes de este escaneo; no son probabilidades y las alturas ajustadas no son fracciones de fase.",
+    mixtureQuery: "Detalles de la búsqueda",
+    candPhase: "Fase", candSg: "Grupo espacial", candRef: "Referencia", candScore: "Puntuación", candLines: "Líneas coincidentes", candRmse: "RMSE de posición", candStatus: "Estado",
+    empty: "Sin candidatos.",
+    factSn: "Señal/ruido", factBaseline: "Fracción de fondo", factCalibration: "Calibración", factReference: "Base de referencias", factPeaks: "Picos detectados", factDisplacement: "Corrección de desplazamiento", factPoints: "Puntos", factRange: "Rango",
+    provenance: "Procedencia completa", analysisProvenance: "Procedencia del análisis", fileName: "Archivo", inputSha: "SHA-256 de entrada", referenceSource: "Fuente de referencias",
+    algorithmVersion: "Algoritmo", coordinateCorrection: "Corrección de coordenadas", referenceEntries: "Entradas de referencia", sourceUrls: "URL de referencias",
+    referenceQuery: "Consulta de referencias", settingsProvenance: "Configuración del análisis",
+    mixtureQueryCandidatePool: "Conjunto de candidatos", mixtureQueryRequeries: "Nuevas consultas por residual", mixtureQueryMaxFitAttempts: "Máximo de intentos de ajuste",
+    mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
+    mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
+    stale: "Cambió una configuración, así que se borró el resultado anterior.",
+    footer: "Se ejecuta en esta computadora; los escaneos no se suben a ningún lado.", footerAi: "Código abierto (MIT). No se usa ningún modelo de IA para analizar escaneos.",
+  },
 };
 
-
 const $ = (id) => document.getElementById(id);
-// Okabe-Ito palette (colour-blind safe) for per-phase traces.
-const COMPONENT_COLORS = ["#e69f00", "#009e73", "#f0e442", "#d55e00", "#0072b2"];
 const form = $("analysis-form");
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const R = () => window.PhasenticReport;
 let calibrationResult = null;
 let calibrationRequest = 0;
 let latestReport = null;
 let analysisRequest = 0;
 let activeAnalysisController = null;
 
+function currentLanguage() {
+  return translations[$("language").value] || translations.en;
+}
+
 function setLanguage(language) {
   document.documentElement.lang = language;
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     if (element.id === "calibration-status" && calibrationResult) return;
-    element.textContent = translations[language][element.dataset.i18n];
+    const text = translations[language][element.dataset.i18n];
+    if (typeof text === "string") element.textContent = text;
   });
 }
 
@@ -26,125 +102,6 @@ function setCalibrationStatus(message) {
   const element = $("calibration-status");
   element.removeAttribute("data-i18n");
   element.textContent = message;
-}
-
-
-function currentLanguage() {
-  return translations[$("language").value] || translations.en;
-}
-
-
-function finiteValues(values) {
-  return Array.isArray(values) ? values.filter((value) => Number.isFinite(Number(value))).map(Number) : [];
-}
-
-function traceValues(trace, ...names) {
-  for (const name of names) {
-    if (trace && Array.isArray(trace[name])) return trace[name].map(Number);
-  }
-  return [];
-}
-
-function drawSeries(context, angles, values, options, bounds) {
-  if (!angles.length || !values.length) return;
-  const { min, max, left, right, top, bottom, yMin, yMax } = bounds;
-  const range = Math.max(max - min, 1e-9);
-  const yRange = Math.max(yMax - yMin, 1e-9);
-  context.strokeStyle = options.color;
-  context.lineWidth = options.width || 1;
-  context.setLineDash(options.dash || []);
-  context.beginPath();
-  let started = false;
-  angles.forEach((angle, index) => {
-    const value = Number(values[index]);
-    if (!Number.isFinite(Number(angle)) || !Number.isFinite(value)) return;
-    const x = left + ((Number(angle) - min) / range) * (right - left);
-    const y = bottom - ((value - yMin) / yRange) * (bottom - top);
-    if (!started) { context.moveTo(x, y); started = true; } else context.lineTo(x, y);
-  });
-  if (started) context.stroke();
-  context.setLineDash([]);
-}
-
-function renderTraceLegend(id, items) {
-  const legend = $(id);
-  if (!legend) return;
-  legend.replaceChildren();
-  (Array.isArray(items) ? items : []).filter((item) => item && typeof item.label === "string" && item.label.trim()).forEach((item) => {
-    const key = document.createElement("span"); key.className = "trace-key";
-    const swatch = document.createElement("span"); swatch.className = `trace-swatch${item.dashed ? " dashed" : ""}`; swatch.style.color = item.color || "#9db0b4"; swatch.style.backgroundColor = item.dashed ? "transparent" : (item.color || "#9db0b4");
-    const label = document.createElement("span"); label.textContent = item.label;
-    key.append(swatch, label); legend.appendChild(key);
-  });
-}
-
-function mixtureComponentLabel(report, referenceId) {
-  const hypotheses = report?.mixture?.hypotheses;
-  if (Array.isArray(hypotheses)) {
-    for (const hypothesis of hypotheses) {
-      const component = Array.isArray(hypothesis?.components)
-        ? hypothesis.components.find((candidate) => candidate?.reference_id === referenceId)
-        : null;
-      if (component) return component.name ? `${component.name} · ${referenceId}` : String(referenceId || "component");
-    }
-  }
-  return String(referenceId || "component");
-}
-
-function drawPlot(report) {
-  const canvas = $("plot");
-  const context = canvas.getContext("2d");
-  const width = canvas.width;
-  const height = canvas.height;
-  context.clearRect(0, 0, width, height);
-  context.fillStyle = "#0e141a";
-  context.fillRect(0, 0, width, height);
-  const language = currentLanguage();
-  const legendItems = [];
-  renderTraceLegend("plot-legend", legendItems);
-  const min = Number(report.input.angle_min_deg);
-  const max = Number(report.input.angle_max_deg);
-  const trace = report.provenance && report.provenance.measurement_trace ? report.provenance.measurement_trace : {};
-  const traceAngles = traceValues(trace, "raw_angles_deg", "angles_deg");
-  const traceIntensities = traceValues(trace, "raw_intensities", "observed_intensities", "intensities");
-  const mixtureTrace = report.mixture && report.mixture.residual_trace;
-  const mixtureCalculated = mixtureTrace ? traceValues(mixtureTrace, "calculated_intensities", "calculated") : [];
-  const values = [...traceIntensities, ...finiteValues((report.peaks || []).map((peak) => peak.intensity)), ...mixtureCalculated];
-  const maxIntensity = Math.max(...values, 1);
-  const left = 48; const right = width - 18; const top = 18; const bottom = height - 34;
-  const bounds = { min, max, left, right, top, bottom, yMin: 0, yMax: maxIntensity * 1.05 };
-  context.strokeStyle = "#2a3a45"; context.lineWidth = 1;
-  context.beginPath(); context.moveTo(left, top); context.lineTo(left, bottom); context.lineTo(right, bottom); context.stroke();
-  drawSeries(context, traceAngles, traceIntensities, { color: "#56b4e9", width: 2 }, bounds);
-  if (traceAngles.length && traceIntensities.length) legendItems.push({ label: language.measuredTrace, color: "#56b4e9" });
-  if (mixtureTrace && mixtureCalculated.length) {
-    const angles = traceValues(mixtureTrace, "angles_deg", "angles");
-    drawSeries(context, angles, mixtureCalculated, { color: "#cc79a7" }, bounds);
-    legendItems.push({ label: language.mixtureTotal, color: "#cc79a7" });
-    (mixtureTrace.component_traces || []).forEach((component, componentIndex) => {
-      drawSeries(context, angles, traceValues(component, "calculated_intensities", "intensities"), { color: COMPONENT_COLORS[componentIndex % COMPONENT_COLORS.length] }, bounds);
-      legendItems.push({ label: mixtureComponentLabel(report, component?.reference_id), color: COMPONENT_COLORS[componentIndex % COMPONENT_COLORS.length] });
-    });
-  }
-  context.strokeStyle = "#b8c4c8"; context.lineWidth = 1;
-  (report.peaks || []).forEach((peak) => {
-    const x = left + ((Number(peak.position_deg) - min) / Math.max(max - min, 1e-9)) * (right - left);
-    const y = bottom - (Number(peak.intensity) / Math.max(maxIntensity, 1e-9)) * (bottom - top);
-    context.beginPath(); context.moveTo(x, bottom); context.lineTo(x, y); context.stroke();
-  });
-  if ((report.peaks || []).length) legendItems.push({ label: language.detectedPeaks, color: "#b8c4c8" });
-  context.fillStyle = "#9db0b4"; context.font = "12px system-ui";
-  context.fillText(`${min.toFixed(1)}°`, left, height - 10); context.fillText(`${max.toFixed(1)}°`, right - 40, height - 10);
-  const mixtureCaption = mixtureTrace && mixtureCalculated.length ? ` · ${language.mixtureTotal}` : "";
-  $("plot-caption").textContent = `${report.input.point_count} measured points · ${(report.peaks || []).length} detected peaks · ${report.radiation.label}${mixtureCaption}`;
-  renderTraceLegend("plot-legend", legendItems);
-}
-
-function appendMetric(grid, label, value) {
-  const metric = document.createElement("div"); metric.className = "metric";
-  const span = document.createElement("span"); span.textContent = label;
-  const strong = document.createElement("strong"); strong.textContent = value == null ? "—" : String(value);
-  metric.append(span, strong); grid.appendChild(metric);
 }
 
 function appendKeyValueList(parent, entries, className = "provenance-list") {
@@ -155,7 +112,6 @@ function appendKeyValueList(parent, entries, className = "provenance-list") {
     const description = document.createElement("dd");
     const text = typeof value === "string" ? value : JSON.stringify(value, null, 2);
     if (text.length > 160) {
-      // Long provenance blocks stay one click away instead of filling the page.
       const details = document.createElement("details"); const summary = document.createElement("summary");
       summary.textContent = `${text.length.toLocaleString()} characters`;
       const pre = document.createElement("pre"); pre.textContent = text;
@@ -177,124 +133,143 @@ function fetchJsonOrThrow(response, fallback) {
   });
 }
 
+// The page CSP forbids inline style attributes; re-apply them through the
+// CSSOM, which CSP allows. Markup comes from escaped values only.
+function setHTML(element, markup) {
+  element.innerHTML = String(markup).replace(/ style="/g, ' data-style="');
+  element.querySelectorAll("[data-style]").forEach((node) => { node.style.cssText = node.dataset.style; });
+}
+
+function selectedHypothesis(report) {
+  const m = report && report.mixture;
+  return m && Array.isArray(m.hypotheses) ? m.hypotheses.find((h) => h && h.hypothesis_id === m.selected_hypothesis_id) || null : null;
+}
+
+// Hypotheses as one compact table; markup comes from escaped values and the report helpers.
 function renderMixtureSummary(parent, report) {
-  const language = currentLanguage();
-  const mixture = report && report.mixture && typeof report.mixture === "object" ? report.mixture : null;
+  const L = currentLanguage();
   parent.replaceChildren();
-  const hypotheses = mixture && Array.isArray(mixture.hypotheses) ? mixture.hypotheses.filter((hypothesis) => hypothesis && typeof hypothesis === "object") : [];
-  if (!mixture || !hypotheses.length) {
-    const hint = document.createElement("p"); hint.className = "muted"; hint.textContent = language.mixtureHint; parent.appendChild(hint); return;
-  }
+  const mixture = report && report.mixture && typeof report.mixture === "object" ? report.mixture : null;
+  const hyps = mixture && Array.isArray(mixture.hypotheses) ? mixture.hypotheses.filter((h) => h && typeof h === "object") : [];
+  if (!hyps.length) { const p = document.createElement("p"); p.className = "note"; p.textContent = L.mixtureHint; parent.appendChild(p); return; }
+  const max = Math.max(...hyps.map((h) => Number(h.selection_score) || 0)) || 1;
+  const rows = hyps.map((h) => {
+    const sel = h.hypothesis_id === mixture.selected_hypothesis_id;
+    const set = (h.components || []).map((c) => R().formula(c.formula)).join(" + ") || "—";
+    const score = Number(h.selection_score);
+    const bar = Number.isFinite(score) ? `<span class="bar" style="width:${Math.max(2, (score / max) * 110).toFixed(0)}px"></span>${score.toFixed(4)}` : "—";
+    return `<tr class="${sel ? "selected" : ""}"><td class="f">${set}${sel ? ` <span class="tag">${esc(L.selectedTag)}</span>` : ""}</td><td>${esc(h.status)}</td><td class="num">${bar}</td><td class="num">${(h.unexplained_peak_positions || []).length}</td><td class="num">${(h.missing_expected_lines || []).length}</td></tr>`;
+  }).join("");
+  const wrap = document.createElement("div");
+  setHTML(wrap, `<table><thead><tr><th>${esc(L.hypSet)}</th><th>${esc(L.hypStatus)}</th><th class="num">${esc(L.hypScore)}</th><th class="num">${esc(L.hypUnexplained)}</th><th class="num">${esc(L.hypMissing)}</th></tr></thead><tbody>${rows}</tbody></table><p class="note">${esc(L.mixtureScaleWarning)}</p>`);
+  parent.appendChild(wrap);
   const query = mixture.query && typeof mixture.query === "object" ? mixture.query : {};
-  const querySection = document.createElement("section"); querySection.id = "mixture-query"; querySection.className = "mixture-query";
-  const queryHeading = document.createElement("h3"); queryHeading.className = "provenance-heading"; queryHeading.textContent = language.mixtureQuery; querySection.appendChild(queryHeading);
-  appendKeyValueList(querySection, [
-    [language.algorithmVersion || "Algorithm", mixture.algorithm_version],
-    [language.mixtureQueryCandidatePool, query.candidate_pool_size == null ? query.candidate_pool : `${query.candidate_pool_size} / ${query.candidate_pool_limit == null ? "—" : query.candidate_pool_limit}`],
-    [language.mixtureQueryRequeries, query.residual_candidate_requeries],
-    [language.mixtureQueryMaxFitAttempts, query.max_fit_attempts],
-    [language.mixtureQueryRetainedBranches, query.retained_branches],
-    [language.mixtureQueryFitAttempts, query.fit_attempts],
-    [language.mixtureQueryTolerance, query.tolerance_deg == null ? null : `${query.tolerance_deg}°`],
-    [language.mixtureQueryBackground, query.background_model],
-    [language.mixtureQueryStop, query.stopping_reason],
+  const details = document.createElement("details"); details.className = "provenance";
+  const summary = document.createElement("summary"); summary.textContent = L.mixtureQuery; details.appendChild(summary);
+  appendKeyValueList(details, [
+    [L.algorithmVersion, mixture.algorithm_version],
+    [L.mixtureQueryCandidatePool, query.candidate_pool_size == null ? query.candidate_pool : `${query.candidate_pool_size} / ${query.candidate_pool_limit == null ? "—" : query.candidate_pool_limit}`],
+    [L.mixtureQueryRequeries, query.residual_candidate_requeries],
+    [L.mixtureQueryMaxFitAttempts, query.max_fit_attempts],
+    [L.mixtureQueryRetainedBranches, query.retained_branches],
+    [L.mixtureQueryFitAttempts, query.fit_attempts],
+    [L.mixtureQueryTolerance, query.tolerance_deg == null ? null : `${query.tolerance_deg}°`],
+    [L.mixtureQueryBackground, query.background_model],
+    [L.mixtureQueryStop, query.stopping_reason],
   ]);
-  parent.appendChild(querySection);
-  const selectedId = typeof mixture.selected_hypothesis_id === "string" ? mixture.selected_hypothesis_id : null;
-  hypotheses.forEach((hypothesis, index) => {
-    const hypothesisId = typeof hypothesis.hypothesis_id === "string" && hypothesis.hypothesis_id ? hypothesis.hypothesis_id : `hypothesis-${index + 1}`;
-    const selected = selectedId != null && hypothesisId === selectedId;
-    const card = document.createElement("article"); card.className = "candidate"; card.dataset.hypothesisId = hypothesisId;
-    const heading = document.createElement("h3"); heading.textContent = `${selected ? language.mixtureSelected : language.mixtureAlternative} · ${hypothesisId}`;
-    const status = hypothesis.status == null ? "—" : String(hypothesis.status);
-    const objective = Number(hypothesis.objective);
-    const improvement = Number(hypothesis.objective_improvement);
-    const summary = document.createElement("p"); summary.className = "muted";
-    summary.textContent = `${language.mixtureHypothesis}: ${status} · normalized residual ${Number.isFinite(objective) ? `${(objective * 100).toFixed(2)}%` : "—"} · objective improvement ${Number.isFinite(improvement) ? `${(improvement * 100).toFixed(2)}%` : "—"} · ${language.mixtureQueryFitAttempts}: ${hypothesis.fit_attempts == null ? "—" : hypothesis.fit_attempts} · ${hypothesis.stopping_reason || "—"}`;
-    const components = document.createElement("ul"); components.className = "evidence";
-    const componentList = Array.isArray(hypothesis.components) ? hypothesis.components : [];
-    componentList.forEach((component) => {
-      const item = document.createElement("li");
-      const scale = Number(component && component.screening_scale);
-      const evidenceCount = Array.isArray(component && component.evidence_groups) ? component.evidence_groups.length : 0;
-      const missingCount = Array.isArray(component && component.missing_expected_lines) ? component.missing_expected_lines.length : 0;
-      const name = component && (component.name || component.reference_id) ? (component.name || component.reference_id) : "component";
-      const formula = component && component.formula ? ` (${component.formula})` : "";
-      item.textContent = `${name}${formula} · screening scale ${Number.isFinite(scale) ? scale.toFixed(3) : "—"} · ${evidenceCount} evidence lines${missingCount ? ` · ${missingCount} missing expected lines` : ""}`;
-      components.appendChild(item);
-    });
-    const unexplained = Array.isArray(hypothesis.unexplained_peak_positions) ? hypothesis.unexplained_peak_positions : [];
-    const unexplainedText = document.createElement("p"); unexplainedText.className = "muted";
-    unexplainedText.textContent = `${unexplained.length} ${language.mixtureUnexplained}${unexplained.length ? ` (${unexplained.map((value) => Number.isFinite(Number(value)) ? `${Number(value).toFixed(4)}°` : String(value)).join(", ")})` : ""}.`;
-    const missing = Array.isArray(hypothesis.missing_expected_lines) ? hypothesis.missing_expected_lines : [];
-    const missingText = document.createElement("p"); missingText.className = "muted";
-    missingText.textContent = `${language.mixtureMissingLines}: ${missing.length ? missing.join(", ") : "—"}.`;
-    const scaleWarning = document.createElement("p"); scaleWarning.className = "muted"; scaleWarning.textContent = language.mixtureScaleWarning;
-    card.append(heading, summary, components, unexplainedText, missingText, scaleWarning); parent.appendChild(card);
-  });
+  parent.appendChild(details);
+}
+
+function renderCandidates(parent, report) {
+  const L = currentLanguage();
+  const list = (report.candidates || []).slice(0, 10);
+  if (!list.length) { setHTML(parent, `<p class="note">${esc(L.empty)}</p>`); return; }
+  const rows = list.map((c, i) => `<tr><td class="num">${i + 1}</td><td class="f">${R().formula(c.formula)}</td><td>${R().spaceGroup(c.space_group)}</td><td>${R().codLink(c.reference_id)}</td><td class="num">${(Number(c.score) * 100).toFixed(1)}%</td><td class="num">${esc(c.matched_peaks)}/${esc(c.expected_peaks)}</td><td class="num">${c.position_rmse_deg == null ? "—" : `${Number(c.position_rmse_deg).toFixed(3)}°`}</td><td>${esc(c.status)}</td></tr>`).join("");
+  setHTML(parent, `<table><thead><tr><th class="num">#</th><th>${esc(L.candPhase)}</th><th>${esc(L.candSg)}</th><th>${esc(L.candRef)}</th><th class="num">${esc(L.candScore)}</th><th class="num">${esc(L.candLines)}</th><th class="num">${esc(L.candRmse)}</th><th>${esc(L.candStatus)}</th></tr></thead><tbody>${rows}</tbody></table>`);
 }
 
 function renderAnalysisProvenance(parent, report) {
   if (!parent || !report || typeof report !== "object") return;
-  const language = currentLanguage();
+  const L = currentLanguage();
   const provenance = report.provenance && typeof report.provenance === "object" ? report.provenance : {};
   const input = report.input && typeof report.input === "object" ? report.input : {};
-  const heading = document.createElement("h3"); heading.className = "provenance-heading"; heading.textContent = language.analysisProvenance || "Analysis provenance"; parent.appendChild(heading);
+  const heading = document.createElement("h3"); heading.className = "provenance-heading"; heading.textContent = L.analysisProvenance; parent.appendChild(heading);
   appendKeyValueList(parent, [
-    [language.fileName || "File name", input.file_name],
-    [language.inputSha || "Input SHA-256", input.sha256],
-    [language.referenceSource || "Reference source", provenance.reference_source],
+    [L.fileName, input.file_name],
+    [L.inputSha, input.sha256],
+    [L.referenceSource, provenance.reference_source],
     ["POW_COD release", provenance.powcod_release],
     ["POW_COD database SHA-256", provenance.powcod_database_sha256],
     ["POW_COD cache SHA-256", provenance.powcod_cache_sha256],
     ["POW_COD intensity policy", provenance.reference_query?.intensity_policy],
-    [language.algorithmVersion || "Algorithm", provenance.algorithm_version],
-    [language.coordinateCorrection || "Coordinate correction", provenance.coordinate_correction],
-    [language.referenceEntries || "Reference entries", provenance.cod_entry_ids || provenance.cod_entries],
-    [language.sourceUrls || "Reference source URLs", provenance.cod_source_urls],
-    [language.referenceQuery || "Reference query", provenance.reference_query],
-    [language.settingsProvenance || "Analysis settings", provenance.settings],
+    [L.algorithmVersion, provenance.algorithm_version],
+    [L.coordinateCorrection, provenance.coordinate_correction],
+    [L.referenceEntries, provenance.cod_entry_ids || provenance.cod_entries],
+    [L.sourceUrls, provenance.cod_source_urls],
+    [L.referenceQuery, provenance.reference_query],
+    [L.settingsProvenance, provenance.settings],
   ]);
+}
+
+function renderDiagnostics(parent, report) {
+  const L = currentLanguage();
+  const q = report.quality || {}, p = report.provenance || {}, input = report.input || {};
+  const sn = Number(q.signal_to_noise), base = Number(q.baseline_fraction), disp = Number(p.coordinate_correction?.sample_displacement_deg);
+  const facts = [
+    [L.factSn, Number.isFinite(sn) ? sn.toFixed(0) : "—"],
+    [L.factBaseline, Number.isFinite(base) ? `${(base * 100).toFixed(0)}%` : "—"],
+    [L.factCalibration, q.calibration_status || "—"],
+    [L.factReference, p.reference_source === "pow_cod" ? `POW_COD ${p.powcod_release || ""}` : "demo"],
+    [L.factPeaks, (report.peaks || []).length],
+    [L.factDisplacement, Number.isFinite(disp) ? `${disp.toFixed(3)}°` : "—"],
+    [L.factPoints, input.point_count ?? "—"],
+    [L.factRange, Number.isFinite(Number(input.angle_min_deg)) ? `${Number(input.angle_min_deg).toFixed(1)}–${Number(input.angle_max_deg).toFixed(1)}°` : "—"],
+  ];
+  setHTML(parent, `<dl class="facts">${facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>${(q.warnings || []).length ? `<ul class="warnings">${q.warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : ""}`);
+  const details = document.createElement("details"); details.className = "provenance";
+  const summary = document.createElement("summary"); summary.textContent = L.provenance; details.appendChild(summary);
+  renderAnalysisProvenance(details, report);
+  parent.appendChild(details);
 }
 
 function renderReport(report) {
   latestReport = report;
-  $("decision").textContent = report.decision;
-  $("analysis-id").textContent = `run ${report.analysis_id}`;
-  drawPlot(report);
-  const list = $("candidate-list"); list.replaceChildren();
-  if (!report.candidates.length) { const empty = document.createElement("p"); empty.className = "muted"; empty.textContent = translations[$("language").value].empty; list.appendChild(empty); }
-  report.candidates.forEach((candidate) => {
-    const card = document.createElement("article"); card.className = "candidate";
-    const title = document.createElement("div"); const heading = document.createElement("h3"); heading.textContent = candidate.name; const meta = document.createElement("small"); meta.textContent = `${candidate.formula} · ${candidate.reference_id}`; title.append(heading, meta);
-    const score = document.createElement("div"); score.className = "score"; score.textContent = `${translations[$("language").value].score} ${(candidate.score * 100).toFixed(1)}% · ${candidate.status}`;
-    const evidence = document.createElement("div"); evidence.className = "evidence"; evidence.textContent = `${candidate.matched_peaks}/${candidate.expected_peaks} lines matched · ${candidate.position_rmse_deg == null ? "RMSE unavailable" : `${candidate.position_rmse_deg.toFixed(3)}° RMSE`} · ${candidate.evidence.join("; ")}`;
-    card.append(title, score, evidence); list.appendChild(card);
-  });
-  const mixtureContent = $("mixture-content"); renderMixtureSummary(mixtureContent, report);
-  const diagnostics = $("diagnostic-content"); diagnostics.replaceChildren();
-  const grid = document.createElement("div"); grid.className = "diagnostic-grid";
-  const signal = Number(report.quality && report.quality.signal_to_noise);
-  const baseline = Number(report.quality && report.quality.baseline_fraction);
-  [["Points", report.input.point_count], ["S/N", Number.isFinite(signal) ? signal.toFixed(2) : "—"], ["Baseline", Number.isFinite(baseline) ? `${(baseline * 100).toFixed(1)}%` : "—"], ["Calibration", report.quality.calibration_status], ["Reference", report.provenance.reference_source]].forEach(([label, value]) => appendMetric(grid, label, value));
-  diagnostics.appendChild(grid);
-  if (report.quality.warnings.length) { const warnings = document.createElement("ul"); warnings.className = "warnings"; report.quality.warnings.forEach((warning) => { const item = document.createElement("li"); item.textContent = warning; warnings.appendChild(item); }); diagnostics.appendChild(warnings); }
-  const analysisProvenance = document.createElement("div"); analysisProvenance.id = "analysis-provenance"; analysisProvenance.className = "analysis-provenance"; renderAnalysisProvenance(analysisProvenance, report); diagnostics.appendChild(analysisProvenance);
+  const L = currentLanguage();
+  $("empty-state").hidden = true; $("result").hidden = false;
+  const decision = $("decision");
+  decision.dataset.state = report.decision || "";
+  decision.textContent = (L.decisions && L.decisions[report.decision]) || String(report.decision || "—");
+  const sel = selectedHypothesis(report);
+  const colors = R().PHASE_COLORS;
+  setHTML($("phase-summary"), sel && (sel.components || []).length
+    ? sel.components.map((c, i) => `<span><i style="background:${colors[i % colors.length]}"></i>${R().formula(c.formula)}<em>${R().spaceGroup(c.space_group)}</em></span>`).join("")
+    : `<span><em>${esc(L.noMixture)}</em></span>`);
+  const input = report.input || {};
+  $("analysis-id").textContent = `${report.analysis_id || ""} · ${input.file_name || ""} · ${report.radiation?.label || ""}`;
+  setHTML($("plot"), R().figures.fit(report));
+  const evidence = sel ? R().figures.phases(report) : "";
+  setHTML($("phase-evidence"), evidence);
+  $("evidence-fold").hidden = !evidence;
+  renderMixtureSummary($("mixture-content"), report);
+  renderCandidates($("candidate-list"), report);
+  renderDiagnostics($("diagnostic-content"), report);
 }
 
 function clearRenderedReport() {
   latestReport = null;
-  $("decision").textContent = "—";
-  $("analysis-id").textContent = "";
-  const list = $("candidate-list"); list.replaceChildren();
-  const empty = document.createElement("p"); empty.className = "muted"; empty.textContent = translations[$("language").value].empty; list.appendChild(empty);
-  const mixture = $("mixture-content"); mixture.replaceChildren();
-  const mixtureHint = document.createElement("p"); mixtureHint.className = "muted"; mixtureHint.textContent = translations[$("language").value].mixtureHint; mixture.appendChild(mixtureHint);
-  const diagnostics = $("diagnostic-content"); diagnostics.replaceChildren();
-  const diagnosticHint = document.createElement("p"); diagnosticHint.className = "muted"; diagnosticHint.textContent = translations[$("language").value].diagnosticHint; diagnostics.appendChild(diagnosticHint);
-  const canvas = $("plot"); const context = canvas.getContext("2d"); context.clearRect(0, 0, canvas.width, canvas.height); context.fillStyle = "#0e141a"; context.fillRect(0, 0, canvas.width, canvas.height);
-  renderTraceLegend("plot-legend", []);
+  $("result").hidden = true; $("empty-state").hidden = false;
+  ["plot", "phase-evidence", "phase-summary", "mixture-content", "candidate-list", "diagnostic-content"].forEach((id) => { $(id).replaceChildren(); });
+  $("decision").textContent = "—"; $("analysis-id").textContent = "";
 }
+
+// The validated method fixes the search settings, so the custom ones are inactive.
+function syncPreset() {
+  const on = $("validated-preset").checked;
+  ["tolerance", "analysis-mode", "max-phases"].forEach((id) => { $(id).disabled = on; });
+  $("custom-settings").classList.toggle("is-off", on);
+}
+$("validated-preset").addEventListener("change", syncPreset);
+syncPreset();
 
 function invalidateAnalysis(message = translations[$("language").value].stale) {
   analysisRequest += 1;
@@ -397,7 +372,6 @@ $("reference-source").addEventListener("change", () => {
     $("reference-source").value = "demo";
     $("form-status").textContent = "POW_COD is unavailable until it is configured.";
   }
-  $("footer-source").textContent = `Open local service · reference source: ${$("reference-source").value} · no phase fractions`;
 });
 
 form.addEventListener("submit", async (event) => {
@@ -409,7 +383,7 @@ form.addEventListener("submit", async (event) => {
   const requestId = ++analysisRequest;
   const controller = new AbortController();
   activeAnalysisController = controller;
-  $("form-status").textContent = "Running deterministic screening…";
+  $("form-status").textContent = currentLanguage().running;
   const data = new FormData();
   data.append("file", file);
   const instrument = {};
@@ -441,7 +415,7 @@ form.addEventListener("submit", async (event) => {
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.detail || "Analysis failed");
     if (requestId !== analysisRequest) return;
-    renderReport(payload.data); $("form-status").textContent = "Analysis complete. Review the evidence boundary before reporting.";
+    renderReport(payload.data); $("form-status").textContent = currentLanguage().done;
   } catch (error) {
     if (requestId !== analysisRequest || error && error.name === "AbortError") return;
     $("form-status").textContent = error instanceof Error ? error.message : "Analysis failed.";
@@ -480,7 +454,6 @@ fetch("/api/v1/reference-sources")
         : "POW_COD (not configured)";
     }
     if (data.selected === "pow_cod" && powCodInfo.available === true) selector.value = "pow_cod";
-    $("footer-source").textContent = `Open local service · reference source: ${selector.value} · no phase fractions`;
     $("reference-status").textContent = powCodInfo.available === true
       ? `POW_COD ${powCodInfo.release || "ready"}`
       : "POW_COD is disabled until a verified local database is configured (see README).";

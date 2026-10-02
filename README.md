@@ -34,9 +34,9 @@ report. It runs locally, in the browser or from the command line.
 > See [How this was built](#how-this-was-built).
 
 <p align="center">
-  <img src="docs/images/interface.png" alt="Phasentic interface showing a measured scan with indium oxide and iron oxalate fits" width="900">
+  <img src="docs/images/interface.png" alt="Phasentic interface: a tentative result of ZrO2 and LiOH·H2O with the fit plot and the competing hypotheses" width="900">
   <br>
-  <sub>A development scan from the Precursor Genome dataset (PG_1418, Cu Kα): the measured trace with the fitted In₂O₃ and iron carbonate-hydrate profiles. Both phases match the human-refined label.</sub>
+  <sub>A development scan from the Precursor Genome dataset (PG_2452, Cu Kα), picked at random. Phasentic finds ZrO₂ and LiOH·H₂O; the human-refined label also contains Li₂CO₃, which this run misses. The leftover signal is visible under <i>Evidence per phase</i>.</sub>
 </p>
 
 ## How accurate is it
@@ -107,11 +107,11 @@ Start the local interface and open <http://127.0.0.1:8000>:
 phasentic serve
 ```
 
-Upload a scan, type the precursor and target formulas under
-*Sample chemistry*, tick *Use the validated method*, and press *Analyze*.
-*Download report* gives a printable two-page report (fit plot, per-phase
-evidence, competing hypotheses, method and traceability) that you can save as
-PDF; *Download JSON report* gives the full machine-readable record.
+Choose a scan, type the precursor and target formulas, keep *Validated method*
+selected (the default) and press *Analyze*. *Download report* gives a printable
+two-page report (fit plot, per-phase evidence, competing hypotheses, method and
+traceability) that you can save as PDF; *JSON* gives the full machine-readable
+record.
 
 From the command line, the same validated method:
 

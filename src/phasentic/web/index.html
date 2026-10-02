@@ -3,132 +3,181 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Phasentic research-alpha phase screening" />
+    <meta name="description" content="Phasentic: powder X-ray diffraction phase identification" />
     <title>Phasentic</title>
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <header class="masthead">
-        <div>
-          <div class="brand"><img src="/static/logo-mark.svg" alt="" /><h1>Phasentic</h1></div>
-          <p class="lede" data-i18n="lede">Powder X-ray diffraction phase identification with a validated, reproducible method.</p>
-        </div>
-        <label class="language">Language
-          <select id="language" aria-label="Language">
-            <option value="en">English</option>
-            <option value="es">Español</option>
-          </select>
-        </label>
-      </header>
+    <header class="topbar">
+      <a class="brand" href="/"><img src="/static/logo-mark.svg" alt="" width="26" height="26" /><span>Phasentic</span></a>
+      <p class="tagline" data-i18n="lede">Powder X-ray diffraction phase identification</p>
+      <nav class="topnav">
+        <select id="language" aria-label="Language">
+          <option value="en">English</option>
+          <option value="es">Español</option>
+        </select>
+        <a href="/api/docs">API</a>
+        <a href="https://github.com/qaemu/phasentic">Source</a>
+      </nav>
+    </header>
 
-      <section class="notice" role="note">
-        <strong data-i18n="noticeTitle">Evidence boundary</strong>
-        <span data-i18n="noticeText">Results are ranked hypotheses, not certainties. On held-out data the validated method identifies the exact phases 37% of the time and the right compounds (any polymorph) 49.5%. Confirm calibration and refine before publication.</span>
-      </section>
-
-      <section class="grid">
-        <form id="analysis-form" class="card controls">
-          <h2 data-i18n="settings">Measurement settings</h2>
-          <label><span data-i18n="file">Pattern file</span>
+    <div class="layout">
+      <form id="analysis-form" class="rail" novalidate>
+        <section class="block">
+          <h2 data-i18n="sample">Sample</h2>
+          <label class="field"><span data-i18n="file">Pattern file</span>
             <input id="file" name="file" type="file" accept=".xy,.xrdml,.raw" required />
+            <small data-i18n="fileHint">.xy, .xrdml or ASCII .raw, up to 10 MB</small>
           </label>
-          <label><span data-i18n="radiation">Anode / radiation</span>
-            <select id="radiation" name="radiation">
-              <option>Cu Ka</option>
-              <option>Co Ka</option>
-              <option>Cr Ka</option>
-              <option>Mo Ka</option>
-              <option>Ag Ka</option>
-            </select>
+          <label class="field"><span data-i18n="chemistry">Precursor and target formulas</span>
+            <input id="chemistry" type="text" maxlength="400" placeholder="Ag2O BaCO3 Ba2Ag2C2O7" autocomplete="off" spellcheck="false" />
+            <small data-i18n="chemistryHint">Candidates are limited to these elements plus H, C and O.</small>
           </label>
-          <label><span data-i18n="reference">Reference source</span>
-            <select id="reference-source" name="reference_source">
-              <option value="demo">Offline demo subset</option>
-              <option value="pow_cod" disabled>POW_COD 2205 (not configured)</option>
-            </select>
+        </section>
+
+        <section class="block">
+          <h2 data-i18n="method">Method</h2>
+          <label class="choice"><input id="validated-preset" type="checkbox" checked />
+            <span><b data-i18n="validatedPreset">Validated method</b><small data-i18n="validatedHint">The settings tested on 200 sealed scans. Needs POW_COD, Cu Kα and the formulas above.</small></span>
           </label>
-          <label><span data-i18n="chemistry">Sample chemistry (precursor and target formulas)</span>
-            <input id="chemistry" type="text" maxlength="400" placeholder="e.g. Ag2O BaCO3 Ba2Ag2C2O7" />
-          </label>
-          <label class="checkbox"><input id="validated-preset" type="checkbox" /><span data-i18n="validatedPreset">Use the validated method (POW_COD, Cu Kα, needs chemistry)</span></label>
-          <p id="reference-status" class="muted" aria-live="polite">POW_COD availability is checked when the app loads.</p>
-          <p id="capability-status" class="muted" aria-live="polite">Local engine capabilities are checked when the app loads.</p>
-          <label><span data-i18n="angle">Angle coordinate</span>
-            <select id="angle-unit" name="angle_unit">
-              <option value="two_theta">2θ</option>
-              <option value="two_alpha" disabled>2α (calibration plug-in)</option>
-              <option value="q" disabled>q (calibration plug-in)</option>
-              <option value="d_spacing" disabled>d spacing (calibration plug-in)</option>
-            </select>
-          </label>
-          <label><span data-i18n="tolerance">Peak tolerance (° 2θ)</span>
-            <input id="tolerance" type="number" value="0.10" min="0.01" max="2" step="0.01" />
-          </label>
-          <label><span data-i18n="analysisMode">Analysis mode</span>
-            <select id="analysis-mode" name="analysis_mode">
-              <option value="screening">Single-phase screening</option>
-              <option value="joint_no_requery">Joint mixture screening (fixed candidates)</option>
-              <option value="full_mixture">Full mixture screening (residual re-query)</option>
-            </select>
-          </label>
-          <label><span data-i18n="maxPhases">Maximum phases</span>
-            <input id="max-phases" type="number" value="3" min="1" max="5" step="1" />
-          </label>
-          <div class="subsection">
-            <h3 data-i18n="instrument">Instrument metadata</h3>
-            <label><span data-i18n="vendor">Vendor (optional)</span>
-              <input id="instrument-vendor" type="text" maxlength="120" placeholder="e.g. Rigaku" />
+          <div class="pair">
+            <label class="field"><span data-i18n="radiation">Anode</span>
+              <select id="radiation" name="radiation">
+                <option value="Cu Ka">Cu Kα</option>
+                <option value="Co Ka">Co Kα</option>
+                <option value="Cr Ka">Cr Kα</option>
+                <option value="Mo Ka">Mo Kα</option>
+                <option value="Ag Ka">Ag Kα</option>
+              </select>
             </label>
-            <label><span data-i18n="model">Model (optional)</span>
-              <input id="instrument-model" type="text" maxlength="120" placeholder="e.g. SmartLab" />
-            </label>
-            <label><span data-i18n="radius">Goniometer radius (mm, optional)</span>
-              <input id="instrument-radius" type="number" min="0.001" max="1000" step="0.1" />
+            <label class="field"><span data-i18n="reference">Reference database</span>
+              <select id="reference-source" name="reference_source">
+                <option value="demo">Demo subset</option>
+                <option value="pow_cod" disabled>POW_COD (not configured)</option>
+              </select>
             </label>
           </div>
-          <div class="subsection calibration-block">
-            <h3 data-i18n="calibration">Line-position calibration</h3>
-            <label><span data-i18n="standardFile">Standard scan</span>
+          <p id="reference-status" class="note" aria-live="polite"></p>
+          <details id="custom-settings" class="fold">
+            <summary data-i18n="customSettings">Custom settings (not validated)</summary>
+            <div class="fold-body">
+              <div class="pair">
+                <label class="field"><span data-i18n="tolerance">Peak tolerance (° 2θ)</span>
+                  <input id="tolerance" type="number" value="0.10" min="0.01" max="2" step="0.01" />
+                </label>
+                <label class="field"><span data-i18n="maxPhases">Maximum phases</span>
+                  <input id="max-phases" type="number" value="3" min="1" max="5" step="1" />
+                </label>
+              </div>
+              <label class="field"><span data-i18n="analysisMode">Analysis mode</span>
+                <select id="analysis-mode" name="analysis_mode">
+                  <option value="full_mixture">Mixture, with residual re-query</option>
+                  <option value="joint_no_requery">Mixture, fixed candidates</option>
+                  <option value="screening">Single phase</option>
+                </select>
+              </label>
+              <label class="field"><span data-i18n="angle">Angle coordinate</span>
+                <select id="angle-unit" name="angle_unit">
+                  <option value="two_theta">2θ</option>
+                  <option value="two_alpha" disabled>2α (needs calibration plug-in)</option>
+                  <option value="q" disabled>q (needs calibration plug-in)</option>
+                  <option value="d_spacing" disabled>d spacing (needs calibration plug-in)</option>
+                </select>
+              </label>
+              <p class="note" data-i18n="customHint">Ignored while the validated method is selected.</p>
+            </div>
+          </details>
+        </section>
+
+        <details class="fold block">
+          <summary data-i18n="optional">Instrument and calibration</summary>
+          <div class="fold-body">
+            <div class="pair">
+              <label class="field"><span data-i18n="vendor">Vendor</span>
+                <input id="instrument-vendor" type="text" maxlength="120" placeholder="Rigaku" />
+              </label>
+              <label class="field"><span data-i18n="model">Model</span>
+                <input id="instrument-model" type="text" maxlength="120" placeholder="SmartLab" />
+              </label>
+            </div>
+            <label class="field"><span data-i18n="radius">Goniometer radius (mm)</span>
+              <input id="instrument-radius" type="number" min="0.001" max="1000" step="0.1" />
+            </label>
+            <label class="field"><span data-i18n="standardFile">Standard scan</span>
               <input id="standard-file" type="file" accept=".xy,.xrdml,.raw" />
             </label>
-            <label><span data-i18n="standard">Calibration standard</span>
+            <label class="field"><span data-i18n="standard">Calibration standard</span>
               <select id="standard-id">
                 <option value="silicon_srm_640g">NIST SRM 640g silicon</option>
               </select>
             </label>
-            <button id="calibrate-button" type="button" data-i18n="calibrate">Calibrate standard</button>
-            <p id="calibration-status" class="calibration-status" aria-live="polite" data-i18n="calibrationHint">No calibration result attached.</p>
+            <button id="calibrate-button" class="secondary" type="button" data-i18n="calibrate">Calibrate</button>
+            <p id="calibration-status" class="note" aria-live="polite" data-i18n="calibrationHint">No calibration attached. A “supported” decision needs one.</p>
           </div>
-          <button type="submit" data-i18n="analyze">Analyze pattern</button>
-          <p id="form-status" class="form-status" aria-live="polite"></p>
-        </form>
+        </details>
 
-        <section class="card plot-card">
-          <div class="section-heading"><h2 data-i18n="pattern">Measured trace and detected peaks</h2><span id="decision" class="pill">—</span></div>
-          <canvas id="plot" width="900" height="360" aria-label="Detected diffraction peaks"></canvas>
-          <div id="plot-legend" class="plot-legend" aria-label="Trace legend"></div>
-          <p id="plot-caption" class="muted" data-i18n="plotHint">Upload a pattern to inspect detected peaks.</p>
+        <div class="submit">
+          <button type="submit" class="primary" data-i18n="analyze">Analyze</button>
+          <p id="form-status" class="status" aria-live="polite"></p>
+          <p id="capability-status" class="note" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <main class="work">
+        <p class="boundary"><b data-i18n="noticeTitle">Read results as ranked hypotheses.</b> <span data-i18n="noticeText">On 200 sealed test scans the validated method found the exact phases in 37% and the right compounds in 49.5%, falling sharply for three or more phases. Confirm before you report.</span></p>
+
+        <section id="empty-state" class="empty">
+          <h2 data-i18n="emptyTitle">No analysis yet</h2>
+          <p data-i18n="emptyText">Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.</p>
         </section>
-      </section>
 
-      <section class="card results">
-        <div class="section-heading"><h2 data-i18n="candidates">Ranked phase hypotheses</h2><span id="analysis-id" class="muted"></span></div>
-        <div id="candidate-list" class="candidate-list"><p class="muted" data-i18n="empty">No analysis yet.</p></div>
-        <div id="mixture-content" class="mixture-content"><p class="muted" data-i18n="mixtureHint">Mixture diagnostics will appear when mixture mode is selected.</p></div>
-      </section>
+        <section id="result" class="result" hidden>
+          <div class="result-head">
+            <div class="verdict">
+              <span class="eyebrow" data-i18n="decisionLabel">Decision</span>
+              <span id="decision" class="decision">—</span>
+            </div>
+            <div class="phases">
+              <span class="eyebrow" data-i18n="selected">Selected phases</span>
+              <div id="phase-summary" class="phase-summary"></div>
+            </div>
+            <div class="actions">
+              <button id="download-pdf-report" class="primary" type="button" data-i18n="downloadReport">Download report</button>
+              <button id="download-report" class="secondary" type="button" data-i18n="download">JSON</button>
+            </div>
+          </div>
+          <p id="analysis-id" class="note mono"></p>
 
-      <section class="card diagnostics">
-        <div class="section-heading"><h2 data-i18n="diagnostics">Quality and provenance</h2><span class="actions"><button id="download-pdf-report" type="button" data-i18n="downloadReport">Download report</button><button id="download-report" type="button" data-i18n="download">Download JSON report</button></span></div>
-        <div id="diagnostic-content"><p class="muted" data-i18n="diagnosticHint">The report will show scan quality, warnings, and the reference source here.</p></div>
-      </section>
+          <div id="plot" class="fig"></div>
 
-      <footer>
-        <span id="footer-source">Open local service · selected reference source shown above · no phase fractions</span>
-        <a href="/api/docs">API docs</a>
-      </footer>
-    </main>
+          <section class="part">
+            <h2 data-i18n="hypotheses">Phase hypotheses</h2>
+            <div id="mixture-content"></div>
+          </section>
+
+          <details class="part fold" id="evidence-fold" open>
+            <summary data-i18n="phaseEvidence">Evidence per phase</summary>
+            <div id="phase-evidence" class="fig"></div>
+          </details>
+
+          <section class="part">
+            <h2 data-i18n="candidates">Single-phase candidates</h2>
+            <div id="candidate-list"></div>
+          </section>
+
+          <section class="part">
+            <h2 data-i18n="diagnostics">Quality and provenance</h2>
+            <div id="diagnostic-content"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <footer class="foot">
+      <span id="footer-source" data-i18n="footer">Runs on this computer; scans are not uploaded anywhere.</span>
+      <span data-i18n="footerAi">Open source (MIT). No AI model is used to analyse scans.</span>
+    </footer>
     <script src="/static/report.js" defer></script>
     <script src="/static/app.js" defer></script>
   </body>

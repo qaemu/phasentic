@@ -23,9 +23,9 @@
       parts.sort((a, b) => (tail.indexOf(a[0]) - tail.indexOf(b[0])) || 0);
       ordered = parts.map(([e, n]) => e + n).join("");
     } else {
-      ordered = raw.replace(/\s+/g, "");
+      ordered = raw.replace(/\s+(\d*\.?\d+\()/g, "·$1").replace(/\s+/g, "");
     }
-    return esc(ordered).replace(/(\d+(?:\.\d+)?)/g, "<sub>$1</sub>");
+    return esc(ordered).replace(/([A-Za-z)\]])(\d+(?:\.\d+)?)/g, "$1<sub>$2</sub>");
   }
 
   // "P 1 21/c 1" -> P2₁/c ; "F m -3 m" -> Fm3̄m
@@ -48,6 +48,33 @@
   function niceStep(span, target) { const raw = span / target, mag = 10 ** Math.floor(Math.log10(raw)); return [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) || raw; }
   function path(xs, ys, sx, sy) { let d = ""; for (let i = 0; i < xs.length; i++) { if (!Number.isFinite(ys[i])) continue; d += (d ? "L" : "M") + sx(xs[i]).toFixed(1) + "," + sy(ys[i]).toFixed(1); } return d; }
   const fmtCount = (v) => (Math.abs(v) >= 1000 ? (v / 1000).toFixed(v % 1000 === 0 ? 0 : 1) + "k" : String(Math.round(v)));
+
+  let numbered = true;
+  const num1 = (n) => (numbered ? `<b>Figure ${n}.</b> ` : "");
+
+  function phasesOf(report) {
+    const sel = selectedHypothesis(report);
+    return (sel ? sel.components : []).map((c, i) => ({ component: c, color: PHASE_COLORS[i % PHASE_COLORS.length] }));
+  }
+
+  // Measured trace with detected-peak ticks, for analyses without a mixture fit.
+  function measuredFigure(report) {
+    const t = (report.provenance && report.provenance.measurement_trace) || {};
+    const x = t.corrected_angles_deg || t.raw_angles_deg, y = t.corrected_intensities || t.raw_intensities;
+    if (!x || !y || !x.length) return "";
+    const W = 680, L = 52, R = 12, top = 8, mainH = 170, tickY = top + mainH + 12, H = tickY + 34;
+    const xmin = x[0], xmax = x[x.length - 1], ymax = Math.max(...y) * 1.04;
+    const sx = (v) => L + ((v - xmin) / (xmax - xmin)) * (W - L - R);
+    const sy = (v) => top + mainH - (v / ymax) * mainH;
+    let g = "";
+    ticks(0, ymax, niceStep(ymax, 4)).forEach((v) => { g += `<line x1="${L}" x2="${W - R}" y1="${sy(v)}" y2="${sy(v)}" class="grid"/><text x="${L - 6}" y="${sy(v) + 3}" class="tick" text-anchor="end">${fmtCount(v)}</text>`; });
+    g += `<path d="${path(x, y, sx, sy)}" fill="none" stroke="${MODEL}" stroke-width="1"/>`;
+    (report.peaks || []).forEach((pk) => { g += `<line x1="${sx(pk.position_deg)}" x2="${sx(pk.position_deg)}" y1="${tickY - 4}" y2="${tickY + 4}" stroke="${MUTED}" stroke-width="1.4"/>`; });
+    g += `<line x1="${L}" x2="${W - R}" y1="${tickY + 9}" y2="${tickY + 9}" class="axis"/>`;
+    ticks(xmin, xmax, 10).forEach((v) => { g += `<text x="${sx(v)}" y="${tickY + 21}" class="tick" text-anchor="middle">${v}</text>`; });
+    g += `<text x="${(L + W - R) / 2}" y="${H - 1}" class="label" text-anchor="middle">2θ (°), ${esc(report.radiation?.label || "")}</text>`;
+    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Measured pattern and detected peaks">${g}</svg><figcaption>${num1(1)}Measured pattern. Ticks mark the ${(report.peaks || []).length} detected peaks; no mixture fit was selected.</figcaption></figure>`;
+  }
 
   function selectedHypothesis(report) {
     const m = report.mixture || {};
@@ -90,7 +117,7 @@
     g += `<text x="${(L + W - R) / 2}" y="${H - 2}" class="label" text-anchor="middle">2θ (°), ${esc(report.radiation?.label || "")}, corrected for sample displacement</text>`;
     g += `<text x="12" y="${top + mainH / 2}" class="label" text-anchor="middle" transform="rotate(-90 12 ${top + mainH / 2})">Intensity (counts)</text>`;
     const legend = `<div class="legend"><span><i style="background:${OBS};height:2px"></i>Measured</span><span><i style="background:${MODEL};height:1px"></i>Model (background + phases)</span><span><i class="dash"></i>Background</span>${phases.map((p, k) => `<span><i class="tickkey" style="background:${p.color}"></i>${k + 1} ${formula(p.component.formula)}</span>`).join("")}<span><i style="background:${MUTED};height:1px"></i>Δ measured − model</span></div>`;
-    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Measured pattern, fitted model and difference curve">${g}</svg>${legend}<figcaption><b>Figure 1.</b> Measured pattern and screening fit. Tick rows mark the detected peaks assigned to each phase; the lower panel is the difference between measurement and model.</figcaption></figure>`;
+    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Measured pattern, fitted model and difference curve">${g}</svg>${legend}<figcaption>${num1(1)} Measured pattern and screening fit. Tick rows mark the detected peaks assigned to each phase; the lower panel is the difference between measurement and model.</figcaption></figure>`;
   }
 
   // Figure 2: one small panel per phase: background-subtracted signal vs that phase's contribution.
@@ -123,7 +150,7 @@
       g += `<text x="${W - R}" y="${y0 - 4}" class="tick" text-anchor="end">${mi} peaks matched · ${ie} only this phase explains</text>`;
     });
     ticks(xmin, xmax, 10).forEach((v) => { g += `<text x="${sx(v)}" y="${H - 2}" class="tick" text-anchor="middle">${v}</text>`; });
-    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Contribution of each phase">${g}</svg><figcaption><b>Figure 2.</b> Evidence for each phase (2θ, °). Filled: the phase’s fitted contribution. Grey: the measurement minus background and all other selected phases, i.e. what this phase must explain. Own scale per panel; heights are not weight fractions.</figcaption></figure>`;
+    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Contribution of each phase">${g}</svg><figcaption>${num1(2)} Evidence for each phase (2θ, °). Filled: the phase’s fitted contribution. Grey: the measurement minus background and all other selected phases, i.e. what this phase must explain. Own scale per panel; heights are not weight fractions.</figcaption></figure>`;
   }
 
   // Figure 3: competing hypotheses by selection score (lower is better).
@@ -143,7 +170,7 @@
       g += `<rect x="${L}" y="${y + 2}" width="${Math.max(2, sx(h.selection_score) - L)}" height="12" rx="2" fill="${sel ? MODEL : "#c3c8cf"}"/>`;
       g += `<text x="${sx(h.selection_score) + 6}" y="${y + 12}" class="tick">${h.selection_score.toFixed(4)}</text>`;
     });
-    return `<figure class="narrow"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Competing phase hypotheses">${g}</svg><figcaption><b>Figure 3.</b> Retained hypotheses by selection score (weighted misfit plus a penalty per added phase; lower is better). Close bars mean the data barely separate them.</figcaption></figure>`;
+    return `<figure class="narrow"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Competing phase hypotheses">${g}</svg><figcaption>${num1(3)} Retained hypotheses by selection score (weighted misfit plus a penalty per added phase; lower is better). Close bars mean the data barely separate them.</figcaption></figure>`;
   }
 
   function build(report, opts = {}) {
@@ -152,7 +179,7 @@
     const meta = (p.input_source && p.input_source.metadata) || {};
     const rad = meta.source_radiation || {};
     const sel = selectedHypothesis(r);
-    const phases = (sel ? sel.components : []).map((c, i) => ({ component: c, color: PHASE_COLORS[i % PHASE_COLORS.length] }));
+    const phases = phasesOf(r);
     const generated = opts.date || new Date();
     const dateText = generated.toISOString().slice(0, 10);
     const reportId = `PHX-${r.analysis_id || "unknown"}`;
@@ -274,7 +301,7 @@ dl.one { grid-template-columns: 1fr; } dl.one .kv { grid-template-columns: 34mm 
   <p class="note">Phases are ranked hypotheses from the ${isPowcod ? `POW_COD ${esc(p.powcod_release || "")}` : "demo"} reference database, not certainties. “Unique evidence” counts detected peaks that no other selected phase explains. No phase fractions are reported.</p>
 </section>
 
-${fitFigure(r, phases)}
+${phases.length ? fitFigure(r, phases) : measuredFigure(r)}
 
 <section>
   <h2>Interpretation <span class="label-op">· opinion, not a measured result</span></h2>
@@ -331,7 +358,20 @@ ${alternativesFigure(r)}
 </main></body></html>`;
   }
 
-  const api = { build };
+  // Figures without "Figure N." numbering, for the web interface.
+  const unnumbered = (fn) => (report) => { numbered = false; try { return fn(report); } finally { numbered = true; } };
+  const api = {
+    build,
+    formula,
+    spaceGroup,
+    codLink,
+    PHASE_COLORS,
+    figures: {
+      fit: unnumbered((r) => (phasesOf(r).length ? fitFigure(r, phasesOf(r)) : measuredFigure(r))),
+      phases: unnumbered((r) => phaseFigure(r, phasesOf(r))),
+      alternatives: unnumbered(alternativesFigure),
+    },
+  };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.PhasenticReport = api;
 })(typeof window !== "undefined" ? window : globalThis);
