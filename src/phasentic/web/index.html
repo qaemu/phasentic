@@ -120,7 +120,7 @@
       </section>
 
       <section class="card diagnostics">
-        <div class="section-heading"><h2 data-i18n="diagnostics">Quality and provenance</h2><button id="download-report" type="button" data-i18n="download">Download JSON report</button></div>
+        <div class="section-heading"><h2 data-i18n="diagnostics">Quality and provenance</h2><span class="actions"><button id="download-pdf-report" type="button" data-i18n="downloadReport">Download report</button><button id="download-report" type="button" data-i18n="download">Download JSON report</button></span></div>
         <div id="diagnostic-content"><p class="muted" data-i18n="diagnosticHint">The report will show scan quality, warnings, and the reference source here.</p></div>
       </section>
 
@@ -129,6 +129,7 @@
         <a href="/api/docs">API docs</a>
       </footer>
     </main>
+    <script src="/static/report.js" defer></script>
     <script src="/static/app.js" defer></script>
   </body>
 </html>

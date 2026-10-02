@@ -13,6 +13,9 @@ First public release. The project was developed privately as "XRD Workbench".
 - Validated preset (`--preset validated` / *Use the validated method*) and
   sample chemistry input (`--chemistry` / *Sample chemistry*).
 - Validation receipts and cohort case lists in `validation/`.
+- Printable analysis report (*Download report*): two A4 pages with fit,
+  per-phase evidence and competing-hypothesis figures, structured after
+  ISO/IEC 17025 §7.8.
 
 ### Validated
 - Frozen method tested once on 200 sealed held-out Precursor Genome scans:

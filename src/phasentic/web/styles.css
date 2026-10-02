@@ -71,3 +71,5 @@ footer a { color: var(--accent); }
 .controls p.muted { font-size: 12px; margin: 0; }
 .provenance-list details summary { color: var(--accent); cursor: pointer; font-size: 12px; }
 .provenance-list pre { background: #0e141a; border: 1px solid var(--line); border-radius: 8px; font-size: 11px; max-height: 320px; overflow: auto; padding: 8px; white-space: pre-wrap; }
+
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }

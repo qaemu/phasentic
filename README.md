@@ -109,6 +109,9 @@ phasentic serve
 
 Upload a scan, type the precursor and target formulas under
 *Sample chemistry*, tick *Use the validated method*, and press *Analyze*.
+*Download report* gives a printable two-page report (fit plot, per-phase
+evidence, competing hypotheses, method and traceability) that you can save as
+PDF; *Download JSON report* gives the full machine-readable record.
 
 From the command line, the same validated method:
 
@@ -161,7 +164,7 @@ pip install -e .
 
 The validated runs use `scripts/run_wp5_parallel.py`, which refuses to run if
 the analysis code differs from the hash in the frozen configuration
-(`validation/wp5-precursor-frozen-v5.json`). The cohorts' case lists and the
+(`validation/wp5-precursor-frozen-v4.json`). The cohorts' case lists and the
 outcome receipts are in [`validation/`](validation/); the scans themselves come
 from the [Precursor Genome](https://github.com/lauren-walters/precursor-genome)
 dataset (CC BY 4.0). Step-by-step instructions are in
