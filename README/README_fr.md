@@ -13,8 +13,6 @@
   <a href="../README.md">English</a> | <a href="README_es.md">Español</a> | <b>Français</b> | <a href="README_cn.md">简体中文</a> | <a href="README_ar.md">العربية</a> | <a href="README_de.md">Deutsch</a>
 </p>
 
-<p align="center"><sub>Traduit du README anglais avec Claude Code et vérifié par rétrotraduction. En cas de divergence, la version anglaise fait foi. Dernière synchronisation : 2026-10-03.</sub></p>
-
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.10%E2%80%933.13-3776ab" alt="Python 3.10–3.13">
   <a href="../LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="Licence MIT"></a>
