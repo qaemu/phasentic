@@ -53,6 +53,7 @@ small, .note { color: var(--muted); font-size: 12px; }
 .field { display: grid; gap: 4px; min-width: 0; }
 .field > span { font-size: 12px; font-weight: 600; color: var(--ink); }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pair.source-pair { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
 input, select, button { font: inherit; color: var(--ink); }
 input[type=text], input[type=number], select {
   width: 100%; min-width: 0; padding: 7px 9px; background: var(--sheet);
