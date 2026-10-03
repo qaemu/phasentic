@@ -10,6 +10,10 @@
 </p>
 
 <p align="center">
+  <b>English</b> | <a href="README/README_es.md">Español</a> | <a href="README/README_fr.md">Français</a> | <a href="README/README_cn.md">简体中文</a> | <a href="README/README_ar.md">العربية</a> | <a href="README/README_de.md">Deutsch</a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/python-3.10%E2%80%933.13-3776ab" alt="Python 3.10–3.13">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
 </p>
@@ -27,11 +31,6 @@ peaks, searches the CNR [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/)
 reference database, and fits mixtures of up to five phases. It returns ranked
 phase hypotheses with every setting, hash and warning recorded in a JSON
 report. It runs locally, in the browser or from the command line.
-
-> [!NOTE]
-> The code was written with Claude Code, under the direction of a single
-> developer who chose the methods and owns every claim here.
-> See [How this was built](#how-this-was-built).
 
 <p align="center">
   <img src="docs/images/interface.png" alt="Phasentic interface: a tentative result of ZrO2 and LiOH·H2O with the fit plot and the competing hypotheses" width="900">
@@ -164,7 +163,7 @@ pip install -e .
 
 The validated runs use `scripts/run_wp5_parallel.py`, which refuses to run if
 the analysis code differs from the hash in the frozen configuration
-(`validation/wp5-precursor-frozen-v4.json`). The cohorts' case lists and the
+(`validation/wp5-precursor-frozen-v5.json`). The cohorts' case lists and the
 outcome receipts are in [`validation/`](validation/); the scans themselves come
 from the [Precursor Genome](https://github.com/lauren-walters/precursor-genome)
 dataset (CC BY 4.0). Step-by-step instructions are in

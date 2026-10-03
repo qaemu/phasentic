@@ -13,4 +13,6 @@ Pull requests are welcome when they are small and say clearly what they change:
   (see [docs/validation.md](docs/validation.md)).
 - Update `PARAMETERS.md` and the docs when an assumption or default changes.
 - Never commit POW_COD/COD files, user scans, credentials or generated reports.
+- If you change `README.md`, update the translations in `README/` too, or say in
+  the pull request that they need updating.
 - If you used an AI tool, say so in the pull request.
