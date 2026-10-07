@@ -179,7 +179,7 @@ pip install -e .
 
 Les exécutions validées utilisent `scripts/run_wp5_parallel.py`, qui refuse de
 s’exécuter si le code d’analyse diffère de l’empreinte enregistrée dans la
-configuration figée (`validation/wp5-precursor-frozen-v5.json`). Les listes de
+configuration figée (`validation/wp5-precursor-frozen-v6.json`). Les listes de
 cas des cohortes et les justificatifs des résultats se trouvent dans
 [`validation/`](../validation/) ; les diffractogrammes eux-mêmes proviennent du
 jeu de données [Precursor Genome](https://github.com/lauren-walters/precursor-genome)

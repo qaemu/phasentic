@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 
 from phasentic.domain.models import AngleUnit, Pattern
 
-from .common import validate_series
+from .common import parse_float, validate_series
 
 
 def _local_name(tag: str) -> str:
@@ -18,7 +18,7 @@ def _numbers(value: str | None) -> list[float]:
     if not value:
         return []
     try:
-        return [float(token) for token in re.split(r"[\s,;]+", value.strip()) if token]
+        return [parse_float(token) for token in re.split(r"[\s,;]+", value.strip()) if token]
     except ValueError as exc:
         raise ValueError("XRDML scan contains a non-numeric value") from exc
 
@@ -149,8 +149,8 @@ def parse_xrdml(path: Path) -> Pattern:
     if explicit_positions and len(explicit_positions) == len(intensities):
         angles = explicit_positions
     elif start_text is not None and end_text is not None:
-        start = float(start_text)
-        end = float(end_text)
+        start = parse_float(start_text)
+        end = parse_float(end_text)
         if len(intensities) < 2:
             raise ValueError("XRDML scan must contain at least two positions")
         increment = (end - start) / (len(intensities) - 1)

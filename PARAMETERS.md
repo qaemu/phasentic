@@ -18,7 +18,7 @@ This file is a living, testable contract. Values below are starting boundaries, 
 | peak tolerance | 0.20° 2θ | conservative first pass for unrefined lab scans | certified standard + instrument profile |
 | prominence threshold | 2.5% of corrected maximum | avoids noise-only candidates while retaining weaker lines | benchmark ROC and visual review |
 | background window | 31 points, rolling 20th percentile | inspectable, no smoothing of raw data | scan step size and background class |
-| supported decision | score ≥ 0.75, ≥2 matches, no low-S/N warning | provisional evidence boundary | labeled reference benchmark |
+| supported decision | score ≥ 0.75, ≥2 matches, no low-S/N warning, sample chemistry given when POW_COD is searched | provisional evidence boundary; without chemistry every POW_COD phase competes and dense line lists fit almost anything | labeled reference benchmark |
 | tentative decision | score ≥ 0.50 | candidate requires scientist review | benchmark calibration |
 | ambiguity | top-two scores within 0.05 | report competing hypotheses | multi-phase benchmark |
 | max report peaks | 40 | stable UI and matching cost | high-resolution scans |

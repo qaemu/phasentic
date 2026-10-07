@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 from phasentic import __version__
@@ -246,6 +247,7 @@ def main(argv: list[str] | None = None) -> int:
             import uvicorn
         except ImportError as exc:
             raise SystemExit("uvicorn is missing; reinstall Phasentic: pip install --force-reinstall phasentic") from exc
+        os.environ["PHASENTIC_BIND_HOST"] = args.host  # the app accepts only this host name besides loopback
         uvicorn.run("phasentic.api.main:app", host=args.host, port=args.port, reload=False)
         return 0
     if args.command == "setup-powcod":

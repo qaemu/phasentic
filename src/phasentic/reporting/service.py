@@ -67,8 +67,21 @@ from phasentic.search.qualx_search import (
 POWDER_TWO_THETA_RANGE_DEG = (0.0, 120.0)
 
 
-ALGORITHM_VERSION = "research-alpha-0.9-noise-aware-peaks-displacement-element-filter"
+ALGORITHM_VERSION = "research-alpha-0.10-noise-aware-peaks-displacement-element-filter-chemistry-gate"
 QUALX_RANKING_INFLUENCE = 0.20
+# Without the sample's elements every POW_COD phase competes, and phases with
+# dense line lists can fit almost any pattern: a clean corundum scan was
+# reported as solid neon plus an organic salt. The validation always had
+# chemistry, so this mode is flagged and can never reach "supported".
+NO_CHEMISTRY_WARNING = (
+    "NO_SAMPLE_CHEMISTRY: candidates were not restricted to the sample's elements, so all of POW_COD "
+    "was searched. This is outside the validated method and often returns wrong phases; provide the "
+    "precursor and target formulas. A supported decision is not reported without them."
+)
+
+
+def _support_blocked(warnings: Iterable[str]) -> bool:
+    return any("Low estimated" in warning or warning == NO_CHEMISTRY_WARNING for warning in warnings)
 
 
 def _analysis_intensity_policy(store: object, radiation: Radiation) -> dict[str, object]:
@@ -926,6 +939,8 @@ def analyze_file(
         close = getattr(store, "close", None)
         if owns_store and callable(close):
             close()
+    if resolved_settings.reference_source == "pow_cod" and not resolved_settings.allowed_elements:
+        range_warnings.append(NO_CHEMISTRY_WARNING)
     quality = _quality_report(
         pattern.point_count,
         processed.signal_to_noise,
@@ -939,7 +954,7 @@ def analyze_file(
     decision = _decision(candidates, quality.warnings, calibration_status)
     if mixture is not None:
         mixture = _bound_mixture_result(mixture)
-        if calibration_status is not CalibrationStatus.PASSED or any("Low estimated" in warning for warning in quality.warnings):
+        if calibration_status is not CalibrationStatus.PASSED or _support_blocked(quality.warnings):
             mixture = replace(
                 mixture,
                 hypotheses=tuple(
@@ -1307,9 +1322,7 @@ def _align_candidate_status(
 ) -> tuple:
     """Keep per-candidate support labels consistent with report gates."""
 
-    support_allowed = calibration_status is CalibrationStatus.PASSED and not any(
-        "Low estimated" in warning for warning in warnings
-    )
+    support_allowed = calibration_status is CalibrationStatus.PASSED and not _support_blocked(warnings)
     if support_allowed:
         return candidates
     return tuple(
@@ -1413,7 +1426,7 @@ def _decision(
     if (
         top.score >= 0.75
         and calibration_status == CalibrationStatus.PASSED
-        and not any("Low estimated" in warning for warning in warnings)
+        and not _support_blocked(warnings)
     ):
         return "supported"
     if top.score >= 0.50:

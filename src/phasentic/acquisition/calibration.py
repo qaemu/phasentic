@@ -260,8 +260,10 @@ def fit_calibration(
             wavelength_scale=1.0,
             rmse_deg=None,
             max_abs_residual_deg=None,
-            line_count=len(lines),
-            message="At least three non-overlapping standard lines are required.",
+            # No line was fitted; line_count must match the (empty) residuals
+            # or the result fails its own validation when it is sent back.
+            line_count=0,
+            message=f"Only {len(lines)} standard line(s) detected; at least three non-overlapping lines are required.",
             standard_status=standard_status,
             standard_reference=standard_reference,
             standard_source_url=standard_source_url,

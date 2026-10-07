@@ -167,7 +167,7 @@ pip install -e .
 
 تستخدم التشغيلات المُتحقَّق منها `scripts/run_wp5_parallel.py`، الذي يرفض العمل إذا
 اختلفت شيفرة التحليل عن قيمة التجزئة المسجّلة في الإعدادات المجمّدة
-(`validation/wp5-precursor-frozen-v5.json`). وتوجد قوائم حالات المجموعات وسجلات إثبات
+(`validation/wp5-precursor-frozen-v6.json`). وتوجد قوائم حالات المجموعات وسجلات إثبات
 النتائج في [`validation/`&lrm;](../validation/)؛ أما المسوح نفسها فمصدرها
 مجموعة بيانات [Precursor Genome](https://github.com/lauren-walters/precursor-genome)
 (CC BY 4.0). وتوجد التعليمات خطوةً بخطوة في

@@ -6,7 +6,7 @@ check it.
 ## Result
 
 The validated method (`--preset validated`, frozen as
-[`validation/wp5-precursor-frozen-v5.json`](../validation/wp5-precursor-frozen-v5.json))
+[`validation/wp5-precursor-frozen-v6.json`](../validation/wp5-precursor-frozen-v6.json))
 was run once on 200 sealed held-out scans:
 
 | Level | Correct | Rate | Wilson 95% interval | Declared target |
@@ -82,6 +82,11 @@ held-out scans reproduce exactly: the same selected phases, objective values
 - [`validation/equivalence-v4.json`](../validation/equivalence-v4.json): rename to Phasentic, packaging and installer (frozen v3 → v4).
   The same receipt records that `phasentic analyze --preset validated` reproduces the runner's selection exactly on six held-out scans.
 - [`validation/equivalence-v5.json`](../validation/equivalence-v5.json): SQLite connections closed before files are replaced, so the reference setup works on Windows (frozen v4 → v5).
+- [`validation/equivalence-v6.json`](../validation/equivalence-v6.json): security and correctness review (frozen v5 → v6).
+  All 100 development scans reproduce exactly. Of the 200 held-out scans, 198 reproduce exactly and 2 differ only in the
+  order of two exactly tied alternative hypotheses (objectives equal to 1e-16). The replay ran on a different machine, and
+  the unmodified v5 code there gives the same order, so the cause is floating point, not the change. Selections,
+  decisions and scores are unchanged (74 strict, 99 family).
 
 These replays are equivalence checks, not new evaluations.
 
@@ -124,7 +129,7 @@ python scripts/run_wp5_parallel.py --bundle data/benchmarks/wp5/my-cohort/frozen
   --sample-context data/benchmarks/wp5/my-cohort/sample-context.json \
   --powcod-path ~/.phasentic/powcod/cod2205.sq \
   --powcod-cache-path ~/.phasentic/powcod/powcod-2205.xrd.sqlite \
-  --frozen-config validation/wp5-precursor-frozen-v5.json
+  --frozen-config validation/wp5-precursor-frozen-v6.json
 ```
 
 The exact case lists of the published cohorts are in `validation/selection-*.json`

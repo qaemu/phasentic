@@ -1,0 +1,59 @@
+{
+ "schema": "wp5-equivalence-receipt-1",
+ "recorded_at": "2026-10-07T03:40:00Z",
+ "purpose": "Security and correctness review (signed calibrations, host/origin checks and worker isolation in the web API, no-chemistry support gate, insufficient-calibration consistency fix, stricter number parsing): confirm frozen-v6 reproduces frozen-v5 outputs; not a re-evaluation",
+ "frozen_config_v6_content_sha256": "ea4d40ff7b973be79c2ac437aff60a7a2fe892082a3d36e41f27171bdacc06a2",
+ "code_sha256_v6": "341c76b814c224e7df4a2e4a52c9f28c111acddceaae972ed005644f53893c21",
+ "frozen_config_v5_content_sha256": "c2e6fadede6d31314d55284d76128fbd09a2566565c8576fb209c36250f3efa9",
+ "replay_environment": {
+  "note": "the v5 baseline ran in the Cowork Linux VM on the author's Mac; this replay ran on a separate Linux x86-64 machine",
+  "python": "3.13.16",
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "powcod_source_sha256": "67d2a2788e36b435254d60fa0ee01fc07c224ced3bf18316a1cc5c662b27e0b2",
+  "powcod_cache_content_sha256": "79cc1b068d2db95f90af72bbf0bd15628cd2c3b0036111bc7dfa0b80ea75db99"
+ },
+ "checks": [
+  {
+   "bundle": "frozen-100-v3",
+   "baseline_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step8-winfix-eq-dev",
+   "cases": 100,
+   "differing": 0,
+   "strict": 40,
+   "family": 55
+  },
+  {
+   "bundle": "heldout-200-v2",
+   "baseline_run": "data/benchmarks/wp5/precursor-campaign-v1/experiments/step8-winfix-eq-heldout",
+   "cases": 200,
+   "differing": 2,
+   "differing_selections": 0,
+   "strict": 74,
+   "family": 99,
+   "differences": [
+    {
+     "case_id": "precursor-pg_0634",
+     "kind": "order of two exactly tied hypotheses (ranks 3 and 4)",
+     "objective_difference_max": 1e-16
+    },
+    {
+     "case_id": "precursor-pg_2844",
+     "kind": "order of two exactly tied hypotheses (ranks 2 and 3)",
+     "objective_difference_max": 1e-16
+    }
+   ],
+   "attribution": "platform floating point, not the code change: the unmodified frozen-v5 code run on the replay machine produces output identical to frozen-v6 for both cases, including the swapped order"
+  }
+ ],
+ "compared_fields": [
+  "selected component reference_ids",
+  "selected objective (1e-10)",
+  "all hypothesis ids, objectives and selection scores (1e-10)",
+  "reported decision",
+  "strict pass",
+  "family pass"
+ ],
+ "outcome_unchanged": "validation/outcome-v2.json",
+ "open_item": "A replay of frozen-v6 in the baseline's own environment would confirm the two tie orders there; exact ties (|delta objective| < 1e-16) are ordered by floating-point noise, so the hypothesis ranking is not platform-stable.",
+ "content_sha256": "c0ef087aa45edc71cdbc2b36117697981358fe09f5ea23de9db6912d1c5be5d4"
+}

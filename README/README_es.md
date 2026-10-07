@@ -179,7 +179,7 @@ pip install -e .
 
 Las ejecuciones validadas usan `scripts/run_wp5_parallel.py`, que se niega a
 ejecutarse si el código de análisis difiere del hash registrado en la
-configuración congelada (`validation/wp5-precursor-frozen-v5.json`). Las listas
+configuración congelada (`validation/wp5-precursor-frozen-v6.json`). Las listas
 de casos de cada cohorte y los comprobantes de resultados están en
 [`validation/`](../validation/); los difractogramas proceden del conjunto de
 datos [Precursor Genome](https://github.com/lauren-walters/precursor-genome)

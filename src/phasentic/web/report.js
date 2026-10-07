@@ -201,7 +201,8 @@
     const elements = (s.allowed_elements || []).join(", ");
 
     const dbName = isPowcod ? `POW_COD ${esc(p.powcod_release || "")} (CNR, from COD)` : "Built-in demo subset (three phases; not for real samples)";
-    const fallbackRows = (r.candidates || []).slice(0, 5).map((c, k) => `<tr><td>${k + 1}</td><td class="f">${formula(c.formula)}</td><td>${spaceGroup(c.space_group)}</td><td>${codLink(c.reference_id)}</td><td class="n">${esc(c.matched_peaks ?? "—")}</td><td class="n">score ${num(c.score, 2)}</td></tr>`).join("");
+    // A candidate that matched no detected peak is noise, not a ranked phase.
+    const fallbackRows = (r.candidates || []).filter((c) => Number(c.matched_peaks) > 0).slice(0, 5).map((c, k) => `<tr><td>${k + 1}</td><td class="f">${formula(c.formula)}</td><td>${spaceGroup(c.space_group)}</td><td>${codLink(c.reference_id)}</td><td class="n">${esc(c.matched_peaks ?? "—")}</td><td class="n">score ${num(c.score, 2)}</td></tr>`).join("");
     const phaseRows = phases.map((ph, k) => {
       const c = ph.component;
       return `<tr><td><span class="sw" style="background:${ph.color}"></span>${k + 1}</td><td class="f">${formula(c.formula)}</td><td>${spaceGroup(c.space_group)}</td><td>${codLink(c.reference_id)}</td><td class="n">${(c.matched_peak_indices || []).length}</td><td class="n">${(c.independent_evidence_peak_indices || []).length}</td></tr>`;
@@ -292,7 +293,7 @@ dl.one { grid-template-columns: 1fr; } dl.one .kv { grid-template-columns: 34mm 
   <h2>Result</h2>
   <div class="result">
     <div class="verdict">${decisionText}<small>decision</small></div>
-    <p>${esc(decisionNote)} ${!sel ? "No mixture was selected; the table lists the best-ranked single candidates instead." : unexplained ? "" : "No detected peak is left unexplained."}</p>
+    <p>${esc(decisionNote)} ${!sel ? (fallbackRows ? "No mixture was selected; the table lists the best-ranked single candidates instead." : "No mixture was selected and no candidate matched a detected peak.") : unexplained ? "" : "No detected peak is left unexplained."}</p>
   </div>
   <table>
     <thead><tr><th>#</th><th>Phase</th><th>Space group</th><th>Reference</th><th class="n">Peaks matched</th><th class="n">Unique evidence</th></tr></thead>

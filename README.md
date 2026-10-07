@@ -163,7 +163,7 @@ pip install -e .
 
 The validated runs use `scripts/run_wp5_parallel.py`, which refuses to run if
 the analysis code differs from the hash in the frozen configuration
-(`validation/wp5-precursor-frozen-v5.json`). The cohorts' case lists and the
+(`validation/wp5-precursor-frozen-v6.json`). The cohorts' case lists and the
 outcome receipts are in [`validation/`](validation/); the scans themselves come
 from the [Precursor Genome](https://github.com/lauren-walters/precursor-genome)
 dataset (CC BY 4.0). Step-by-step instructions are in

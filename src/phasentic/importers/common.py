@@ -6,6 +6,14 @@ import math
 from pathlib import Path
 
 
+def parse_float(token: str) -> float:
+    """``float()`` without Python's digit separators, which read "1_0" as 10."""
+
+    if "_" in token:
+        raise ValueError(f"'{token}' is not a plain number")
+    return float(token)
+
+
 def validate_series(angles: list[float], intensities: list[float]) -> tuple[tuple[float, ...], tuple[float, ...]]:
     if len(angles) != len(intensities) or len(angles) < 3:
         raise ValueError("A diffraction pattern needs at least three angle/intensity pairs")
@@ -32,8 +40,8 @@ def parse_two_columns(path: Path) -> tuple[tuple[float, ...], tuple[float, ...]]
         if len(fields) < 2:
             raise ValueError(f"line {line_number} does not contain two numeric columns")
         try:
-            angles.append(float(fields[0]))
-            intensities.append(float(fields[1]))
+            angles.append(parse_float(fields[0]))
+            intensities.append(parse_float(fields[1]))
         except ValueError as exc:
             raise ValueError(f"line {line_number} contains non-numeric data") from exc
     return validate_series(angles, intensities)

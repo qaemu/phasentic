@@ -135,7 +135,7 @@ git clone https://github.com/qaemu/phasentic && cd phasentic
 pip install -e .
 ```
 
-验证运行使用 `scripts/run_wp5_parallel.py`；若分析代码与冻结配置（`validation/wp5-precursor-frozen-v5.json`）中的哈希值不一致，该脚本将拒绝运行。各数据集（开发集与留出测试集）的样本清单和结果凭证位于 [`validation/`](../validation/)；扫描数据本身来自 [Precursor Genome](https://github.com/lauren-walters/precursor-genome) 数据集（CC BY 4.0）。分步说明见 [docs/validation.md](../docs/validation.md)。
+验证运行使用 `scripts/run_wp5_parallel.py`；若分析代码与冻结配置（`validation/wp5-precursor-frozen-v6.json`）中的哈希值不一致，该脚本将拒绝运行。各数据集（开发集与留出测试集）的样本清单和结果凭证位于 [`validation/`](../validation/)；扫描数据本身来自 [Precursor Genome](https://github.com/lauren-walters/precursor-genome) 数据集（CC BY 4.0）。分步说明见 [docs/validation.md](../docs/validation.md)。
 
 <a name="how-this-was-built"></a>
 
