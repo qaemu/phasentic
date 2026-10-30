@@ -29,7 +29,7 @@ import numpy as np
 
 from phasentic.domain.formula import ELEMENT_INDEX, is_molecular_organic, parse_formula
 from phasentic.domain.models import Peak, ReferenceLine, ReferencePhase
-from phasentic.domain.radiation import Radiation, d_from_two_theta, get_radiation
+from phasentic.domain.radiation import REFERENCE_TWO_THETA_MAX_DEG, Radiation, d_from_two_theta, get_radiation
 from phasentic.references.equivalence import EquivalenceError, EquivalenceSidecar
 
 
@@ -1049,12 +1049,12 @@ class PowCodReferenceStore:
         """Decode one cached row (pure for a fixed store and wavelength)."""
 
         d_values, intensities, hkl_values = _decode_reflection_arrays(row["reflection_blob"])
-        # Vectorized Bragg filter to the 0-120 degree window.
+        # Vectorized Bragg filter to the reference 2θ window.
         argument = radiation.wavelength_angstrom / (2.0 * np.maximum(d_values, 1e-12))
         valid = (d_values > 0) & (argument <= 1.0)
         angles = np.full(d_values.shape, np.inf)
         angles[valid] = np.degrees(2.0 * np.arcsin(argument[valid]))
-        keep = np.flatnonzero((angles >= 0.0) & (angles <= 120.0))
+        keep = np.flatnonzero((angles >= 0.0) & (angles <= REFERENCE_TWO_THETA_MAX_DEG))
         if keep.size == 0:
             return d_values, None
         if keep.size > POWCOD_MAX_LINES_PER_PHASE:

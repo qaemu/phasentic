@@ -20,7 +20,7 @@ import sqlite3
 from typing import Any, Iterable, Mapping
 
 from phasentic.domain.models import CandidateMatch, ReferencePhase
-from phasentic.domain.radiation import Radiation, two_theta_from_d
+from phasentic.domain.radiation import REFERENCE_TWO_THETA_MAX_DEG, Radiation, two_theta_from_d
 
 
 EQUIVALENCE_SCHEMA_VERSION = "powcod-equivalence-1"
@@ -454,7 +454,7 @@ def _line_angles(reference: ReferencePhase, radiation: Radiation) -> tuple[float
             angle = two_theta_from_d(float(line.d_spacing_angstrom), radiation)
         except (TypeError, ValueError):
             continue
-        if 0.0 <= angle <= 120.0 and math.isfinite(angle):
+        if 0.0 <= angle <= REFERENCE_TWO_THETA_MAX_DEG and math.isfinite(angle):
             values.append(float(angle))
     return tuple(sorted(set(round(value, 8) for value in values)))
 

@@ -6,6 +6,11 @@ All notable changes are listed here. The format follows
 
 ## [Unreleased]
 
+### Changed
+- The reference 2θ window is now 0–90° (was 0–120°), set once in
+  `domain/radiation.py`; the validated preset matches up to 90° (was 100°).
+  The published validation figures were measured at 100° and must be re-run.
+
 ### Security
 - A calibration result is accepted only if this server issued it (HMAC
   signature). A hand-made `passed` result could previously unlock a
