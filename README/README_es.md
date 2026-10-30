@@ -68,6 +68,7 @@ El protocolo, la ejecución anterior sobre un conjunto de prueba reservado
 se encuentran en [docs/validation.md](../docs/validation.md). Estas cifras se
 aplican a la configuración validada con POW_COD, Cu Kα y la química de los
 precursores de la muestra; otras configuraciones no se han probado.
+Se midieron con una ventana de 0–100°; la configuración actual usa 0–90° y aún no se volvió a validar (ver [CHANGELOG.md](../CHANGELOG.md)).
 
 <a name="install"></a>
 

@@ -68,6 +68,7 @@ Das Protokoll, der frühere Lauf auf einem zurückgehaltenen Testdatensatz
 stehen in [docs/validation.md](../docs/validation.md). Diese Zahlen gelten für
 die validierte Konfiguration (Preset) mit POW_COD, Cu Kα und der
 Präkursorchemie der Probe; andere Einstellungen wurden nicht getestet.
+Sie wurden mit einem Fenster von 0–100° gemessen; das aktuelle Preset nutzt 0–90° und ist noch nicht erneut validiert (siehe [CHANGELOG.md](../CHANGELOG.md)).
 
 <a name="install"></a>
 

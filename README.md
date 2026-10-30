@@ -61,7 +61,9 @@ Accuracy depends strongly on the number of phases:
 The protocol, the earlier held-out run (32% / 42% for the previous version),
 the failure analysis and the receipts are in [docs/validation.md](docs/validation.md).
 These numbers apply to the validated preset with POW_COD, Cu Kα and the
-sample's precursor chemistry; other settings are untested.
+sample's precursor chemistry; other settings are untested. They were measured
+with a 0–100° matching window; the current preset uses 0–90° and has not been
+re-validated yet (see [CHANGELOG.md](CHANGELOG.md)).
 
 ## Install
 

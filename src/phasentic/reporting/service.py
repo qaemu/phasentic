@@ -447,9 +447,13 @@ def analyze_file(
         POWDER_TWO_THETA_RANGE_DEG[1],
         configured_maximum_angle if configured_maximum_angle is not None else POWDER_TWO_THETA_RANGE_DEG[1],
     )
+    # A configured window can only narrow the indexed one; label whichever limit applied.
+    configured_window_applies = (
+        configured_maximum_angle is not None and configured_maximum_angle <= POWDER_TWO_THETA_RANGE_DEG[1]
+    )
     range_label = (
         "the configured primary matching 2theta range"
-        if configured_maximum_angle is not None
+        if configured_window_applies
         else "the indexed 2theta range"
     )
     if np.any((angles < POWDER_TWO_THETA_RANGE_DEG[0]) | (angles > maximum_reference_angle)):
@@ -1114,7 +1118,8 @@ def analyze_file(
             "sample_displacement": displacement_receipt,
             "evaluation_window": {
                 "upper_two_theta_deg": configured_maximum_angle,
-                "basis": "configured_primary_matching_window" if configured_maximum_angle is not None else "indexed_reference_range",
+                "effective_upper_two_theta_deg": maximum_reference_angle,
+                "basis": "configured_primary_matching_window" if configured_window_applies else "indexed_reference_range",
             },
             "settings": {
                 "radiation": radiation.key,

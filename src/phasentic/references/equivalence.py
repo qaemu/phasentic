@@ -30,7 +30,7 @@ EQUIVALENCE_METHOD_VERSION = "curated-only-2026-09-25"
 # analysis-time grouping of the bounded candidate pool, not a persistent claim
 # that two COD entries are universally interchangeable.
 RUNTIME_EQUIVALENCE_SCHEMA_VERSION = "powcod-runtime-equivalence-1"
-RUNTIME_EQUIVALENCE_METHOD_VERSION = "on-demand-structural-powder-2026-09-27"
+RUNTIME_EQUIVALENCE_METHOD_VERSION = "on-demand-structural-powder-2026-10-30-90deg"
 
 
 class EquivalenceError(RuntimeError):

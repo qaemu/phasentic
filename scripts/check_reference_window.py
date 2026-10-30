@@ -8,13 +8,12 @@ import sqlite3
 import tempfile
 from pathlib import Path
 
-from phasentic.domain.models import AnalysisSettings
+from phasentic.domain.models import AnalysisSettings, ReferenceLine, ReferencePhase
 from phasentic.domain.radiation import REFERENCE_TWO_THETA_MAX_DEG as LIMIT, d_from_two_theta, two_theta_from_d
 from phasentic.presets import validated_preset
 from phasentic.references.equivalence import _line_angles
 from phasentic.references.powcod import PowCodReferenceStore, build_powcod_cache
 from phasentic.reporting.service import analyze_file
-
 
 
 def main() -> None:
@@ -32,10 +31,11 @@ def main() -> None:
             angles = [two_theta_from_d(line.d_spacing_angstrom, "Cu Ka") for line in store.get("1").lines]
     assert len(angles) == 1 and abs(angles[0] - inside) < 1e-3, angles
 
-    # Equivalence clustering compares only lines inside the window.
-    from phasentic.domain.models import ReferenceLine, ReferencePhase
+    # Equivalence compares only lines inside the window, in 2θ of the chosen radiation.
     phase = ReferencePhase("x", "Si", "Si", "F d -3 m", (ReferenceLine(d_in, 100.0), ReferenceLine(d_out, 50.0)))
     assert len(_line_angles(phase, "Cu Ka")) == 1
+    d_mo = d_from_two_theta(outside, "Mo Ka")
+    assert len(_line_angles(ReferencePhase("y", "Si", "Si", "F d -3 m", (ReferenceLine(d_mo, 1.0),)), "Mo Ka")) == 0
 
     # Preset agrees with the window, so reports state the limit that ran.
     assert validated_preset()["matching_two_theta_max_deg"] == LIMIT
@@ -51,9 +51,14 @@ def main() -> None:
             rows.append(f"{x:.4f} {y:.4f}")
         scan.write_text("\n".join(rows) + "\n")
         report = analyze_file(scan, AnalysisSettings()).to_dict()
+        # A configured window wider than the limit runs at the limit, and the report says so.
+        wide = analyze_file(scan, AnalysisSettings(matching_two_theta_max_deg=LIMIT + 10.0)).to_dict()
     assert report["peaks"] and all(peak["position_deg"] <= LIMIT for peak in report["peaks"])
     assert any(f"0-{LIMIT:g} degrees" in warning for warning in report["quality"]["warnings"]), report["quality"]["warnings"]
-    print(f"OK: reference window is 0-{LIMIT:g} deg in store, equivalence, preset and analysis")
+    window = wide["provenance"]["evaluation_window"]
+    assert window["effective_upper_two_theta_deg"] == LIMIT and window["basis"] == "indexed_reference_range", window
+    assert any("indexed 2theta range" in warning for warning in wide["quality"]["warnings"]), wide["quality"]["warnings"]
+    print(f"OK: reference window is 0-{LIMIT:g} deg in store, equivalence, preset, analysis and provenance")
 
 
 if __name__ == "__main__":
