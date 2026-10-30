@@ -15,7 +15,7 @@
     "displacement_tolerance_deg": 0.06,
     "inactive_scale_relative_tolerance": 1e-06,
     "lattice_scale_tolerance": 0.006,
-    "matching_two_theta_max_deg": 100.0,
+    "matching_two_theta_max_deg": 90.0,
     "max_fit_attempts": 300,
     "max_peaks": 80,
     "max_phases": 5,

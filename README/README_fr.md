@@ -68,6 +68,7 @@ version précédente), l’analyse des échecs et les justificatifs se trouvent 
 [docs/validation.md](../docs/validation.md). Ces chiffres valent pour la
 configuration validée avec POW_COD, Cu Kα et la chimie des précurseurs de
 l’échantillon ; les autres réglages n’ont pas été testés.
+Ils ont été mesurés avec une fenêtre de 0–100° ; la configuration actuelle utilise 0–90° et n’a pas encore été revalidée (voir [CHANGELOG.md](../CHANGELOG.md)).
 
 <a name="install"></a>
 

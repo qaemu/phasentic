@@ -53,7 +53,7 @@ Phasentic 读取粉末XRD扫描数据（`.xy`、`.xrdml` 或 ASCII `.raw`），�
 | 2 | 125 | 87 (70%) |
 | 3 个及以上 | 67 | 9 (13%) |
 
-验证协议、此前一次留出测试集运行（上一版本为 32% / 42%）、失败分析以及结果凭证见 [docs/validation.md](../docs/validation.md)。上述数字仅适用于经验证的预设配置（POW_COD、Cu Kα，并提供样品的前驱体化学组成）；其他设置未经测试。
+验证协议、此前一次留出测试集运行（上一版本为 32% / 42%）、失败分析以及结果凭证见 [docs/validation.md](../docs/validation.md)。上述数字仅适用于经验证的预设配置（POW_COD、Cu Kα，并提供样品的前驱体化学组成）；其他设置未经测试。这些数字是在 0–100° 匹配窗口下测得的；当前预设使用 0–90°，尚未重新验证（见 [CHANGELOG.md](../CHANGELOG.md)）。
 
 <a name="install"></a>
 

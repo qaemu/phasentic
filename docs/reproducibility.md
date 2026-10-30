@@ -60,7 +60,9 @@ intervals from those rows. A zero denominator is serialized as `null` with a
 reason and is never replaced with a zero.
 
 For the active Precursor campaign, the primary matching window is the
-versioned 0–100° calibrated 2θ policy. Reports retain a full-scan audit trace
+versioned 0–100° calibrated 2θ policy. The analysis code now caps every window
+at 0–90° (`REFERENCE_TWO_THETA_MAX_DEG`), so a 100° policy runs at 90° and the
+report records both values (`evaluation_window`). Reports retain a full-scan audit trace
 and record the configured window. Phase agreement is evaluated on the five
 highest-weight reference groups with an 80% recall-and-precision gate; the
 candidate search pool is not reduced to five. This policy is part of the run

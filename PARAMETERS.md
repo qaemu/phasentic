@@ -15,6 +15,7 @@ This file is a living, testable contract. Values below are starting boundaries, 
 | Parameter | Alpha value | Rationale | Change trigger |
 |---|---:|---|---|
 | upload limit | 10 MiB | protects localhost service from accidental huge files | real instrument export distribution |
+| reference 2θ window | 0–90° (was 0–120°; validated preset was 100°) | owner decision; keeps a COD-built reference database to Cu Kα d ≥ 1.09 Å | re-validation on the development and held-out cohorts |
 | peak tolerance | 0.20° 2θ | conservative first pass for unrefined lab scans | certified standard + instrument profile |
 | prominence threshold | 2.5% of corrected maximum | avoids noise-only candidates while retaining weaker lines | benchmark ROC and visual review |
 | background window | 31 points, rolling 20th percentile | inspectable, no smoothing of raw data | scan step size and background class |

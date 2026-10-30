@@ -12,6 +12,11 @@ import math
 from functools import lru_cache
 from typing import Mapping
 
+# Upper 2θ limit of the reference window: scans are cropped to it and reference
+# lines beyond it are ignored. One value for the reporting, store and
+# equivalence layers. A configured matching_two_theta_max_deg can only narrow it.
+REFERENCE_TWO_THETA_MAX_DEG = 90.0
+
 
 @dataclass(frozen=True)
 class Radiation:

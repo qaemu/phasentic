@@ -7,7 +7,9 @@ check it.
 
 The validated method (`--preset validated`, frozen as
 [`validation/wp5-precursor-frozen-v6.json`](../validation/wp5-precursor-frozen-v6.json))
-was run once on 200 sealed held-out scans:
+was run once on 200 sealed held-out scans. That run used a 0–100° matching
+window; the current preset uses 0–90° and has not been re-validated, so
+`--preset validated` no longer reproduces these receipts exactly.
 
 | Level | Correct | Rate | Wilson 95% interval | Declared target |
 |---|---|---|---|---|

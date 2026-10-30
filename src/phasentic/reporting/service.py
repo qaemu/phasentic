@@ -28,7 +28,12 @@ from phasentic.domain.models import (
     ReferencePhase,
 )
 from phasentic.domain.formula import passes_element_filter
-from phasentic.domain.radiation import Radiation, get_radiation, radiation_spectral_components
+from phasentic.domain.radiation import (
+    REFERENCE_TWO_THETA_MAX_DEG,
+    Radiation,
+    get_radiation,
+    radiation_spectral_components,
+)
 from phasentic.domain.validation import validate_settings
 from phasentic.importers import import_pattern
 from phasentic.preprocessing.pipeline import (
@@ -64,10 +69,10 @@ from phasentic.search.qualx_search import (
     search_candidates,
 )
 
-POWDER_TWO_THETA_RANGE_DEG = (0.0, 120.0)
+POWDER_TWO_THETA_RANGE_DEG = (0.0, REFERENCE_TWO_THETA_MAX_DEG)
 
 
-ALGORITHM_VERSION = "research-alpha-0.10-noise-aware-peaks-displacement-element-filter-chemistry-gate"
+ALGORITHM_VERSION = "research-alpha-0.11-noise-aware-peaks-displacement-element-filter-chemistry-gate-90deg-window"
 QUALX_RANKING_INFLUENCE = 0.20
 # Without the sample's elements every POW_COD phase competes, and phases with
 # dense line lists can fit almost any pattern: a clean corundum scan was
@@ -442,9 +447,13 @@ def analyze_file(
         POWDER_TWO_THETA_RANGE_DEG[1],
         configured_maximum_angle if configured_maximum_angle is not None else POWDER_TWO_THETA_RANGE_DEG[1],
     )
+    # A configured window can only narrow the indexed one; label whichever limit applied.
+    configured_window_applies = (
+        configured_maximum_angle is not None and configured_maximum_angle <= POWDER_TWO_THETA_RANGE_DEG[1]
+    )
     range_label = (
         "the configured primary matching 2theta range"
-        if configured_maximum_angle is not None
+        if configured_window_applies
         else "the indexed 2theta range"
     )
     if np.any((angles < POWDER_TWO_THETA_RANGE_DEG[0]) | (angles > maximum_reference_angle)):
@@ -1109,7 +1118,8 @@ def analyze_file(
             "sample_displacement": displacement_receipt,
             "evaluation_window": {
                 "upper_two_theta_deg": configured_maximum_angle,
-                "basis": "configured_primary_matching_window" if configured_maximum_angle is not None else "indexed_reference_range",
+                "effective_upper_two_theta_deg": maximum_reference_angle,
+                "basis": "configured_primary_matching_window" if configured_window_applies else "indexed_reference_range",
             },
             "settings": {
                 "radiation": radiation.key,
