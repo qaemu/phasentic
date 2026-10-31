@@ -376,6 +376,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-sites", type=int, default=3000, help="skip larger cells (a few take minutes each)")
     parser.add_argument("--archive", type=Path, help="use an already-downloaded cod-cifs-mysql.tgz")
     parser.add_argument("--refresh-modified", action="store_true", help="also re-fetch archive entries changed since")
+    parser.add_argument(
+        "--skip-top-up", action="store_true",
+        help="build the database from the archive entries only; a later normal run adds the newer entries",
+    )
     parser.add_argument("--since", help="top up entries modified after this ISO date (default: archive date)")
     parser.add_argument("--keep-archive", action="store_true", help="keep the 27 GB archive after processing")
     parser.add_argument("--limit", type=int, help="process at most N new entries per stage (trial runs)")
@@ -407,7 +411,7 @@ def main(argv: list[str] | None = None) -> int:
                 print("Archive processed and deleted (pass --keep-archive to keep it).", flush=True)
         state = dict(db.execute("SELECT key, value FROM state"))
 
-    if state.get("top_up_done") != "1":
+    if state.get("top_up_done") != "1" and not args.skip_top_up:
         since = datetime.fromisoformat(args.since or state["archive_date"])
         if since.tzinfo is None:
             since = since.replace(tzinfo=timezone.utc)
@@ -424,7 +428,8 @@ def main(argv: list[str] | None = None) -> int:
 
     counts = {s: n for s, n in db.execute("SELECT status, COUNT(*) FROM skipped GROUP BY status")}
     entries = db.execute("SELECT COUNT(*) FROM id").fetchone()[0]
-    snapshot = dict(db.execute("SELECT key, value FROM state")).get("cod_snapshot", "partial")
+    state = dict(db.execute("SELECT key, value FROM state"))
+    snapshot = state.get("cod_snapshot") or f"archive-{state.get('archive_date', 'unknown')[:10]}"
     db.close()
     print(f"Patterns stored: {entries}; skipped: {counts.get('skip', 0)}; failed: {counts.get('fail', 0)}.", flush=True)
     build_cache(source, cache, release=f"COD-{snapshot}")
