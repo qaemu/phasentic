@@ -65,6 +65,24 @@ def http(url: str, *, headers: dict[str, str] | None = None, attempts: int = 5, 
         time.sleep(2 ** attempt)
 
 
+def fetch(url: str, attempts: int = 10) -> bytes:
+    """GET a whole response; retries dropped connections (also mid-read) for ~25 minutes."""
+
+    for attempt in range(attempts):
+        try:
+            with http(url, attempts=1) as response:
+                return response.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code in (404, 410) or attempt == attempts - 1:
+                raise
+        except OSError:  # includes resets and timeouts
+            if attempt == attempts - 1:
+                raise
+        wait = min(5 * 2 ** attempt, 300)
+        print(f"  COD connection problem; retrying in {wait} s", flush=True)
+        time.sleep(wait)
+
+
 def keep_awake() -> None:
     """Stop Windows from sleeping while this process runs (no-op elsewhere)."""
 
@@ -255,43 +273,72 @@ def process_archive(archive: Path, processor: Processor, limit: int | None) -> N
                 break
 
 
-def modified_since(since: datetime) -> list[str]:
-    """IDs of COD entries modified after ``since`` (paged OPTIMADE query)."""
+def modified_since(db: sqlite3.Connection, since: datetime) -> list[str]:
+    """IDs of COD entries modified after ``since`` (paged OPTIMADE query).
 
-    url = OPTIMADE_URL + "?" + urllib.parse.urlencode(
+    Each page is saved, so a stopped listing continues from the last page.
+    """
+
+    db.execute("CREATE TABLE IF NOT EXISTS modified (id TEXT PRIMARY KEY)")
+    first = OPTIMADE_URL + "?" + urllib.parse.urlencode(
         {
             "filter": f'last_modified>"{since.astimezone(timezone.utc):%Y-%m-%dT%H:%M:%SZ}"',
             "page_limit": 100,
             "response_fields": "id",
         }
     )
-    ids: list[str] = []
+    state = dict(db.execute("SELECT key, value FROM state"))
+    if state.get("listing_query") != first:  # new listing (or different date): start over
+        db.execute("DELETE FROM modified")
+        db.executemany("INSERT OR REPLACE INTO state VALUES (?, ?)", (("listing_query", first), ("listing_next", first)))
+        db.commit()
+        state = dict(db.execute("SELECT key, value FROM state"))
+    url = state.get("listing_next") or None
     while url:
-        with http(url) as response:
-            page = json.load(response)
-        ids.extend(item["id"] for item in page["data"])
+        page = json.loads(fetch(url))
         next_link = page.get("links", {}).get("next")
         url = next_link["href"] if isinstance(next_link, dict) else next_link
-        if len(ids) % 10_000 < 100:
-            print(f"  listed {len(ids)} of {page['meta'].get('data_returned')} modified entries", flush=True)
-    return ids
+        db.executemany("INSERT OR IGNORE INTO modified VALUES (?)", ((item["id"],) for item in page["data"]))
+        db.execute("INSERT OR REPLACE INTO state VALUES ('listing_next', ?)", (url or "",))
+        db.commit()
+        listed = db.execute("SELECT COUNT(*) FROM modified").fetchone()[0]
+        if listed % 10_000 < 100:
+            print(f"  listed {listed} of {page['meta'].get('data_returned')} modified entries", flush=True)
+        time.sleep(0.5)  # be gentle with COD's server
+    return [row[0] for row in db.execute("SELECT id FROM modified ORDER BY id")]
 
 
-def process_top_up(processor: Processor, since: datetime, refresh_modified: bool, limit: int | None) -> None:
-    print(f"Listing COD entries modified after {since:%Y-%m-%d}...", flush=True)
-    ids = modified_since(since)
+def process_top_up(processor: Processor, since: datetime, refresh_modified: bool, limit: int | None) -> int:
+    """Fetch and process the top-up entries; return how many could not be downloaded."""
+
+    print(f"Listing COD entries modified after {since:%Y-%m-%d} (resumes where it stopped)...", flush=True)
+    ids = modified_since(processor.db, since)
     wanted = ids if refresh_modified else [i for i in ids if i not in processor.done]
     if limit is not None:
         wanted = wanted[:limit]
-    print(f"Fetching {len(wanted)} entries one by one ({len(ids)} modified in total).", flush=True)
-    for cod_id in wanted:
+    print(f"Fetching {len(wanted)} entries ({len(ids)} modified in total), 4 at a time.", flush=True)
+
+    def download(cod_id: str) -> tuple[str, str | None, str | None]:
         try:
-            with http(CIF_URL.format(cod_id)) as response:
-                text = response.read().decode("utf-8", errors="replace")
+            return cod_id, fetch(CIF_URL.format(cod_id)).decode("utf-8", errors="replace"), None
         except urllib.error.HTTPError as exc:
-            processor.results.append(("fail", cod_id, f"download HTTP {exc.code}"))
-            continue
-        processor.submit(cod_id, text)
+            return cod_id, None, f"download HTTP {exc.code}"
+        except OSError as exc:  # still failing after ~25 min: leave it for the next run
+            return cod_id, None, None
+
+    from concurrent.futures import ThreadPoolExecutor
+
+    unreachable = 0
+    with ThreadPoolExecutor(4) as downloads:
+        for start in range(0, len(wanted), 200):  # batches keep downloaded CIFs out of memory
+            for cod_id, text, error in downloads.map(download, wanted[start : start + 200]):
+                if text is not None:
+                    processor.submit(cod_id, text)
+                elif error is not None:
+                    processor.results.append(("fail", cod_id, error))
+                else:
+                    unreachable += 1
+    return unreachable
 
 
 # ---------------------------------------------------------------- stage 4
@@ -365,8 +412,11 @@ def main(argv: list[str] | None = None) -> int:
         if since.tzinfo is None:
             since = since.replace(tzinfo=timezone.utc)
         processor = Processor(db, args.workers, args.max_sites, "top-up")
-        process_top_up(processor, since, args.refresh_modified, args.limit)
+        unreachable = process_top_up(processor, since, args.refresh_modified, args.limit)
         processor.close()
+        if unreachable:
+            print(f"{unreachable} entries could not be downloaded; run again later to fetch them.", flush=True)
+            return 1
         if args.limit is None:
             db.execute("INSERT OR REPLACE INTO state VALUES ('top_up_done', '1')")
             db.execute("INSERT OR REPLACE INTO state VALUES ('cod_snapshot', ?)", (datetime.now(timezone.utc).date().isoformat(),))
