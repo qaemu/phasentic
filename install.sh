@@ -3,8 +3,10 @@
 #   curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 # Installs uv (a Python installer, no admin rights needed), Python 3.12 and Phasentic,
 # downloads the COD reference database (8.6 GB, about 10 GB free disk needed)
-# and, on Linux, adds Phasentic to the applications menu.
+# and adds Phasentic to Applications (macOS) or the applications menu (Linux).
 set -eu
+
+assets=https://raw.githubusercontent.com/qaemu/phasentic/main/assets
 
 if ! command -v uv >/dev/null 2>&1; then
     echo "Installing uv..."
@@ -22,13 +24,47 @@ if ! "$phasentic" setup-cod; then
     exit 1
 fi
 
-if [ "$(uname)" = "Linux" ]; then
+case "$(uname)" in
+Darwin)
+    apps=/Applications
+    [ -w "$apps" ] || { apps="$HOME/Applications"; mkdir -p "$apps"; }
+    app="$apps/Phasentic.app"
+    rm -rf "$app"
+    mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
+    curl -fsSL "$assets/phasentic.icns" -o "$app/Contents/Resources/phasentic.icns" || true
+    # The app opens a Terminal window running the server; closing it stops Phasentic.
+    printf '#!/bin/sh\n"%s" serve --open\n' "$phasentic" > "$app/Contents/Resources/phasentic.command"
+    cat > "$app/Contents/MacOS/Phasentic" <<'EOF'
+#!/bin/sh
+exec open -a Terminal "$(dirname "$0")/../Resources/phasentic.command"
+EOF
+    chmod +x "$app/Contents/MacOS/Phasentic" "$app/Contents/Resources/phasentic.command"
+    cat > "$app/Contents/Info.plist" <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key><string>Phasentic</string>
+    <key>CFBundleIconFile</key><string>phasentic</string>
+    <key>CFBundleIdentifier</key><string>io.github.qaemu.phasentic</string>
+    <key>CFBundleName</key><string>Phasentic</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+</dict>
+</plist>
+EOF
+    echo "Added Phasentic to $apps."
+    ;;
+Linux)
+    icon="$HOME/.phasentic/phasentic.svg"
+    mkdir -p "$HOME/.phasentic"
+    curl -fsSL "$assets/phasentic.svg" -o "$icon" || icon=
     menu="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
     mkdir -p "$menu"
-    printf '[Desktop Entry]\nType=Application\nName=Phasentic\nComment=Powder XRD phase identification\nExec="%s" serve --open\nTerminal=true\nCategories=Science;\n' \
-        "$phasentic" > "$menu/phasentic.desktop"
+    printf '[Desktop Entry]\nType=Application\nName=Phasentic\nComment=Powder XRD phase identification\nExec="%s" serve --open\nIcon=%s\nTerminal=true\nCategories=Science;\n' \
+        "$phasentic" "$icon" > "$menu/phasentic.desktop"
     echo "Added Phasentic to the applications menu."
-fi
+    ;;
+esac
 
 echo
-echo "Phasentic is installed. Open a new terminal and run: phasentic serve --open"
+echo "Phasentic is installed. Open it from your applications, or run: phasentic serve --open"
