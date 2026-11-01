@@ -9,9 +9,16 @@ from phasentic import __version__
 from phasentic.acquisition.calibration import calibrate_standard_file
 from phasentic.domain.models import AnalysisSettings, AngleUnit, analysis_mode_controls
 from phasentic.presets import chemistry_elements, validated_preset
-from phasentic.references.factory import POWCOD_CACHE_NAME, POWCOD_DATABASE_NAME, default_reference_source, phasentic_home
+from phasentic.references.factory import (
+    COD_CACHE_NAME,
+    POWCOD_CACHE_NAME,
+    POWCOD_DATABASE_NAME,
+    default_reference_source,
+    phasentic_home,
+)
 from phasentic.references.powcod import (
     PowCodReferenceStore,
+    _sha256,
     build_powcod_cache,
     verify_powcod_source,
     write_powcod_manifest,
@@ -90,6 +97,9 @@ def build_parser() -> argparse.ArgumentParser:
     setup = subparsers.add_parser("setup-powcod", help="Install POW_COD 2205 from the downloaded zip (one step)")
     setup.add_argument("source", type=Path, help="powcod-2205.zip as downloaded from CNR, or an extracted cod2205.sq")
 
+    setup_cod = subparsers.add_parser("setup-cod", help="Install the COD reference database downloaded from Zenodo")
+    setup_cod.add_argument("database", type=Path, help="the downloaded cod.xrd.sqlite")
+
     powcod = subparsers.add_parser("powcod", help="Prepare and verify a local CNR POW_COD release")
     powcod_subparsers = powcod.add_subparsers(dest="powcod_command", required=True)
     prepare = powcod_subparsers.add_parser("prepare", help="Build a deterministic read-only query cache")
@@ -111,6 +121,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 POWCOD_ZIP_SHA256 = "75b74f9544e8677edb2c6dc46196ee4331e27f21d943a70b08c68f18c010f9df"
+# cod.xrd.sqlite as published: COD build of 2026-11-01, 526,354 phases, 8,554,987,520 bytes.
+COD_DATABASE_SHA256 = "60b0cd334caaee23b8ba9312e673d348a2661707d46bae5faedfc4fbc0a010a0"
 
 
 def _emit(payload: dict, output: Path | None) -> None:
@@ -167,6 +179,35 @@ def _setup_powcod(source: Path) -> int:
     write_powcod_manifest(target / "powcod-2205.manifest.json", result)
     print(
         f"POW_COD {result.release} is ready: {result.phase_count} phases.\n"
+        "Phasentic now uses it by default. Start the interface with: phasentic serve"
+    )
+    return 0
+
+
+def _setup_cod(source: Path) -> int:
+    """Check a downloaded COD database against the published checksum and install it."""
+
+    import shutil
+
+    source = source.expanduser().resolve()
+    if not source.is_file():
+        raise SystemExit(f"Not found: {source}")
+    print("Checking the file checksum (a minute or two for 8.6 GB)...", flush=True)
+    digest = _sha256(source)
+    if digest != COD_DATABASE_SHA256:
+        raise SystemExit(
+            "This is not the published COD database, or the download is damaged "
+            f"(sha256 {digest}, expected {COD_DATABASE_SHA256}). Download it again."
+        )
+    target = phasentic_home() / "cod" / COD_CACHE_NAME
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if source != target.resolve():
+        print(f"Moving it to {target}...", flush=True)
+        shutil.move(str(source), target)
+    with PowCodReferenceStore(None, cache_path=target) as store:
+        metadata = store.metadata()
+    print(
+        f"COD database {metadata.get('release')} is ready: {metadata.get('phase_count')} phases.\n"
         "Phasentic now uses it by default. Start the interface with: phasentic serve"
     )
     return 0
@@ -252,6 +293,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "setup-powcod":
         return _setup_powcod(args.source)
+    if args.command == "setup-cod":
+        return _setup_cod(args.database)
     if args.command == "powcod":
         if args.powcod_command == "prepare":
             result = build_powcod_cache(
