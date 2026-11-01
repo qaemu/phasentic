@@ -93,6 +93,7 @@ def build_parser() -> argparse.ArgumentParser:
     serve = subparsers.add_parser("serve", help="Start the localhost web interface")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
+    serve.add_argument("--open", action="store_true", help="open the interface in the default browser")
 
     setup = subparsers.add_parser("setup-powcod", help="Install POW_COD 2205 from the downloaded zip (one step)")
     setup.add_argument("source", type=Path, help="powcod-2205.zip as downloaded from CNR, or an extracted cod2205.sq")
@@ -232,9 +233,8 @@ def _setup_cod(source: Path | None) -> int:
         print("Checking the installed COD database (a minute or two)...", flush=True)
         if _sha256(target) == COD_DATABASE_SHA256:
             source = target
-        else:
-            print("The installed copy is damaged; downloading it again.", flush=True)
-            target.unlink()
+        else:  # keep it until a verified download replaces it
+            print("The installed copy does not match the published database; downloading it again.", flush=True)
     if source is None:
         partial = target.with_name(target.name + ".part")
         needed = COD_DATABASE_SIZE - (partial.stat().st_size if partial.exists() else 0)
@@ -254,6 +254,8 @@ def _setup_cod(source: Path | None) -> int:
         print("Checking the file checksum (a minute or two for 8.6 GB)...", flush=True)
         digest = _sha256(source)
         if digest != COD_DATABASE_SHA256:
+            if source.name.endswith(".part"):
+                source.unlink()  # a corrupt download must not be resumed
             raise SystemExit(
                 "This is not the published COD database, or the download is damaged "
                 f"(sha256 {digest}, expected {COD_DATABASE_SHA256}). Run the command again."
@@ -348,6 +350,11 @@ def main(argv: list[str] | None = None) -> int:
         except ImportError as exc:
             raise SystemExit("uvicorn is missing; reinstall Phasentic: pip install --force-reinstall phasentic") from exc
         os.environ["PHASENTIC_BIND_HOST"] = args.host  # the app accepts only this host name besides loopback
+        if args.open:
+            import threading
+            import webbrowser
+
+            threading.Timer(2.0, webbrowser.open, [f"http://{args.host}:{args.port}/"]).start()
         uvicorn.run("phasentic.api.main:app", host=args.host, port=args.port, reload=False)
         return 0
     if args.command == "setup-powcod":

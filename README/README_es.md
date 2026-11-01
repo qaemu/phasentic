@@ -27,8 +27,8 @@
 </p>
 
 Phasentic lee un difractograma de polvo (`.xy`, `.xrdml` o `.raw` en ASCII),
-detecta los picos, consulta la base de datos de referencia
-[POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) del CNR y ajusta mezclas
+detecta los picos, consulta una base de datos de referencia construida a partir de la
+[Crystallography Open Database](https://www.crystallography.net/cod/) (o [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) del CNR) y ajusta mezclas
 de hasta cinco fases. Devuelve hipótesis de fases ordenadas por puntuación y
 registra en un informe JSON todos los parámetros, hashes y advertencias. Se
 ejecuta en local, desde el navegador o desde la línea de comandos.
@@ -90,9 +90,10 @@ macOS y Linux:
 curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-Si la descarga se interrumpe, basta con ejecutar el mismo comando otra vez:
-continúa donde quedó. Después, abrir una terminal nueva y ejecutar
-`phasentic serve`.
+En Windows también agrega un acceso directo **Phasentic** al Escritorio y al
+menú Inicio, y abre Phasentic en el navegador. En macOS y Linux se inicia con
+`phasentic serve --open`. Si la descarga se interrumpe, basta con ejecutar el
+mismo comando otra vez: continúa donde quedó.
 
 ### Usar POW_COD en su lugar
 

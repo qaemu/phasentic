@@ -1,7 +1,8 @@
 # Phasentic installer for Windows. Run in PowerShell:
 #   powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 # Installs uv (a Python installer, no admin rights needed), Python 3.12 and Phasentic,
-# then downloads the COD reference database (8.6 GB, about 10 GB free disk needed).
+# downloads the COD reference database (8.6 GB, about 10 GB free disk needed),
+# adds Phasentic shortcuts to the Desktop and Start Menu, and starts it.
 
 $ErrorActionPreference = "Stop"
 
@@ -20,5 +21,17 @@ $phasentic = Join-Path (uv tool dir --bin) "phasentic.exe"
 & $phasentic setup-cod
 if ($LASTEXITCODE -ne 0) { throw "The reference database is not installed yet. Run this installer again to resume." }
 
+Write-Host "Adding Phasentic shortcuts to the Desktop and Start Menu..."
+$shell = New-Object -ComObject WScript.Shell
+foreach ($folder in @([Environment]::GetFolderPath("Desktop"), [Environment]::GetFolderPath("Programs"))) {
+    $shortcut = $shell.CreateShortcut((Join-Path $folder "Phasentic.lnk"))
+    $shortcut.TargetPath = $phasentic
+    $shortcut.Arguments = "serve --open"
+    $shortcut.WorkingDirectory = $env:USERPROFILE
+    $shortcut.Description = "Start Phasentic and open it in the browser"
+    $shortcut.Save()
+}
+
 Write-Host ""
-Write-Host "Phasentic is installed. Open a new terminal and run: phasentic serve"
+Write-Host "Phasentic is installed. Starting it now; next time, open the Phasentic shortcut."
+Start-Process $phasentic -ArgumentList "serve", "--open"

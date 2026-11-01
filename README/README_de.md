@@ -27,8 +27,8 @@
 </p>
 
 Phasentic liest einen Pulver-XRD-Scan (`.xy`, `.xrdml` oder ASCII-`.raw`) ein,
-detektiert die Reflexe, durchsucht die Referenzdatenbank
-[POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) des CNR und passt Gemische
+detektiert die Reflexe, durchsucht eine aus der
+[Crystallography Open Database](https://www.crystallography.net/cod/) erstellte Referenzdatenbank (oder [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) des CNR) und passt Gemische
 aus bis zu fünf Phasen an. Als Ergebnis liefert es eine Rangliste von
 Phasenhypothesen; jede Einstellung, jeder Hash und jede Warnung wird in einem
 JSON-Bericht festgehalten. Phasentic läuft lokal, im Browser oder auf der
@@ -90,8 +90,10 @@ macOS und Linux:
 curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-Bricht der Download ab, einfach denselben Befehl erneut ausführen; er setzt
-dort fort. Danach ein neues Terminal öffnen und `phasentic serve` ausführen.
+Unter Windows legt er außerdem eine **Phasentic**-Verknüpfung auf dem Desktop
+und im Startmenü an und öffnet Phasentic im Browser. Unter macOS und Linux
+startet man es mit `phasentic serve --open`. Bricht der Download ab, einfach
+denselben Befehl erneut ausführen; er setzt dort fort.
 
 ### Stattdessen POW_COD verwenden
 

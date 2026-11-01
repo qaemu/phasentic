@@ -27,7 +27,7 @@
 </p>
 
 يقرأ Phasentic مسحًا لحيود الأشعة السينية للمساحيق (XRD) بصيغة &lrm;`.xy` أو &lrm;`.xrdml` أو &lrm;`.raw` النصية (ASCII)،
-ويكشف القمم، ويبحث في قاعدة البيانات المرجعية [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) التابعة لـ CNR،
+ويكشف القمم، ويبحث في قاعدة بيانات مرجعية مبنية من [Crystallography Open Database](https://www.crystallography.net/cod/) (أو [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) التابعة لـ CNR)،
 ويطابق مخاليط تضم ما يصل إلى خمسة أطوار. ويُعيد فرضيات أطوار مرتّبة، مع تسجيل كل إعداد وكل قيمة تجزئة (hash) وكل تحذير
 في تقرير بصيغة JSON. ويعمل محليًا، في المتصفح أو من سطر الأوامر.
 
@@ -84,8 +84,8 @@ macOS وLinux:
 curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-إذا انقطع التنزيل، شغّل الأمر نفسه مرة أخرى فيستأنف من حيث توقف. ثم افتح نافذة طرفية جديدة
-وشغّل &lrm;`phasentic serve`.
+وعلى Windows يضيف أيضًا اختصار **Phasentic** إلى سطح المكتب وقائمة ابدأ، ويفتح Phasentic في المتصفح.
+وعلى macOS وLinux يُشغَّل بالأمر &lrm;`phasentic serve --open`. وإذا انقطع التنزيل، شغّل الأمر نفسه مرة أخرى فيستأنف من حيث توقف.
 
 ### استخدام POW_COD بدلًا من ذلك
 

@@ -27,8 +27,9 @@
 </p>
 
 Phasentic reads a powder XRD scan (`.xy`, `.xrdml` or ASCII `.raw`), detects
-peaks, searches the CNR [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/)
-reference database, and fits mixtures of up to five phases. It returns ranked
+peaks, searches a reference database built from the
+[Crystallography Open Database](https://www.crystallography.net/cod/) (or CNR's [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/)),
+and fits mixtures of up to five phases. It returns ranked
 phase hypotheses with every setting, hash and warning recorded in a JSON
 report. It runs locally, in the browser or from the command line.
 
@@ -82,8 +83,10 @@ macOS and Linux:
 curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-If the download is interrupted, run the same command again; it resumes. Then
-open a new terminal and run `phasentic serve`.
+On Windows it also adds a **Phasentic** shortcut to the Desktop and Start Menu
+and starts Phasentic in your browser. On macOS and Linux, start it with
+`phasentic serve --open`. If the download is interrupted, run the same command
+again; it resumes.
 
 ### Using POW_COD instead
 
@@ -140,7 +143,7 @@ a standard scan (NIST SRM 640g silicon by default): `phasentic calibrate standar
 ## How it works
 
 1. Import the scan, estimate the background, detect peaks (noise-aware).
-2. Retrieve candidates from POW_COD, restricted to the sample's elements.
+2. Retrieve candidates from the reference database, restricted to the sample's elements.
 3. Fit non-negative mixtures of reference profiles with a bounded beam search,
    residual re-queries and phase swaps; reject phases whose strong lines are
    missing from the scan.

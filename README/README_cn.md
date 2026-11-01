@@ -26,7 +26,7 @@
   <a href="#how-this-was-built">开发方式</a>
 </p>
 
-Phasentic 读取粉末XRD扫描数据（`.xy`、`.xrdml` 或 ASCII `.raw`），检测衍射峰，检索 CNR 的 [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) 参考数据库，并对最多五个物相的混合物进行拟合。它给出经排序的物相假设，并将全部设置、哈希值和警告记录在 JSON 报告中。软件在本地运行，可通过浏览器或命令行使用。
+Phasentic 读取粉末XRD扫描数据（`.xy`、`.xrdml` 或 ASCII `.raw`），检测衍射峰，检索基于 [Crystallography Open Database](https://www.crystallography.net/cod/) 构建的参考数据库（或 CNR 的 [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/)），并对最多五个物相的混合物进行拟合。它给出经排序的物相假设，并将全部设置、哈希值和警告记录在 JSON 报告中。软件在本地运行，可通过浏览器或命令行使用。
 
 <p align="center">
   <img src="../docs/images/interface.png" alt="Phasentic 界面：ZrO2 与 LiOH·H2O 的暂定结果，附拟合图和竞争假设" width="900">
@@ -73,7 +73,7 @@ macOS 和 Linux：
 curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-如果下载中断，再次运行同一条命令即可从中断处继续。之后打开一个新的终端并运行 `phasentic serve`。
+在 Windows 上，它还会在桌面和开始菜单中添加 **Phasentic** 快捷方式，并在浏览器中启动 Phasentic。在 macOS 和 Linux 上，用 `phasentic serve --open` 启动。如果下载中断，再次运行同一条命令即可从中断处继续。
 
 ### 改用 POW_COD
 
