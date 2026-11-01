@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+from http.client import HTTPException
 import json
 import os
 import re
@@ -75,7 +76,7 @@ def fetch(url: str, attempts: int = 10) -> bytes:
         except urllib.error.HTTPError as exc:
             if exc.code in (404, 410) or attempt == attempts - 1:
                 raise
-        except OSError:  # includes resets and timeouts
+        except (OSError, HTTPException):  # resets, timeouts, truncated bodies
             if attempt == attempts - 1:
                 raise
         wait = min(5 * 2 ** attempt, 300)
@@ -323,7 +324,7 @@ def process_top_up(processor: Processor, since: datetime, refresh_modified: bool
             return cod_id, fetch(CIF_URL.format(cod_id)).decode("utf-8", errors="replace"), None
         except urllib.error.HTTPError as exc:
             return cod_id, None, f"download HTTP {exc.code}"
-        except OSError as exc:  # still failing after ~25 min: leave it for the next run
+        except (OSError, HTTPException):  # still failing after ~25 min: leave it for the next run
             return cod_id, None, None
 
     from concurrent.futures import ThreadPoolExecutor
