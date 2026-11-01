@@ -22,6 +22,8 @@ $phasentic = Join-Path (uv tool dir --bin) "phasentic.exe"
 if ($LASTEXITCODE -ne 0) { throw "The reference database is not installed yet. Run this installer again to resume." }
 
 Write-Host "Adding Phasentic shortcuts to the Desktop and Start Menu..."
+$icon = Join-Path $env:USERPROFILE ".phasentic\phasentic.ico"
+try { irm https://raw.githubusercontent.com/qaemu/phasentic/main/assets/phasentic.ico -OutFile $icon } catch { $icon = $null }
 $shell = New-Object -ComObject WScript.Shell
 foreach ($folder in @([Environment]::GetFolderPath("Desktop"), [Environment]::GetFolderPath("Programs"))) {
     $shortcut = $shell.CreateShortcut((Join-Path $folder "Phasentic.lnk"))
@@ -29,6 +31,7 @@ foreach ($folder in @([Environment]::GetFolderPath("Desktop"), [Environment]::Ge
     $shortcut.Arguments = "serve --open"
     $shortcut.WorkingDirectory = $env:USERPROFILE
     $shortcut.Description = "Start Phasentic and open it in the browser"
+    if ($icon) { $shortcut.IconLocation = $icon }
     $shortcut.Save()
 }
 
