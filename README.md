@@ -67,38 +67,34 @@ re-validated yet (see [CHANGELOG.md](CHANGELOG.md)).
 
 ## Install
 
-You need Python 3.10–3.13. The simplest way installs the `phasentic` command
-in its own environment:
+One command installs Python 3.12, Phasentic and its reference database (an
+8.6 GB download from Zenodo; keep about 10 GB free). No admin rights needed.
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
+Windows (PowerShell):
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-or, with [uv](https://docs.astral.sh/uv/): `uv tool install git+https://github.com/qaemu/phasentic`,
-or with plain pip: `pip install git+https://github.com/qaemu/phasentic`.
-
-Check it worked:
+macOS and Linux:
 
 ```bash
-phasentic --version
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-### Add the POW_COD reference database (once)
+If the download is interrupted, run the same command again; it resumes. Then
+open a new terminal and run `phasentic serve`.
 
-Without POW_COD, Phasentic runs on a three-phase demo subset that is only good
-for trying the interface. For real work:
+### Using POW_COD instead
 
-1. Download **POW_COD 2205 (FULL)** (about 1.9 GB) from the
-   [CNR download page](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/).
-2. Run:
+If you have **POW_COD 2205 (FULL)** from the
+[CNR download page](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/),
+install it with the command below; Phasentic then uses it instead of the COD
+database. The published accuracy figures were measured with POW_COD.
 
-   ```bash
-   phasentic setup-powcod ~/Downloads/powcod-2205.zip
-   ```
-
-This checks the archive, extracts it to `~/.phasentic/powcod` (about 6 GB),
-and builds a query cache once (20–60 minutes). After that, Phasentic uses
-POW_COD by default.
+```bash
+phasentic setup-powcod ~/Downloads/powcod-2205.zip
+```
 
 ## Quick start
 

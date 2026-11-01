@@ -74,38 +74,36 @@ Se midieron con una ventana de 0–100°; la configuración actual usa 0–90° 
 
 ## Instalación
 
-Se necesita Python 3.10–3.13. La forma más sencilla instala el comando
-`phasentic` en su propio entorno:
+Un solo comando instala Python 3.12, Phasentic y su base de datos de
+referencia (una descarga de 8.6 GB desde Zenodo; conviene tener unos 10 GB
+libres). No hacen falta permisos de administrador.
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
+Windows (PowerShell):
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-o bien, con [uv](https://docs.astral.sh/uv/): `uv tool install git+https://github.com/qaemu/phasentic`,
-o directamente con pip: `pip install git+https://github.com/qaemu/phasentic`.
-
-Comprobar que la instalación funciona:
+macOS y Linux:
 
 ```bash
-phasentic --version
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-### Añadir la base de datos de referencia POW_COD (una sola vez)
+Si la descarga se interrumpe, basta con ejecutar el mismo comando otra vez:
+continúa donde quedó. Después, abrir una terminal nueva y ejecutar
+`phasentic serve`.
 
-Sin POW_COD, Phasentic funciona con un subconjunto de demostración de tres
-fases que solo sirve para probar la interfaz. Para trabajo real:
+### Usar POW_COD en su lugar
 
-1. Descargar **POW_COD 2205 (FULL)** (unos 1.9 GB) desde la
-   [página de descarga del CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/).
-2. Ejecutar:
+Si se dispone de **POW_COD 2205 (FULL)** desde la
+[página de descarga del CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/),
+se instala con el comando siguiente; Phasentic la usa entonces en lugar de la
+base de datos COD. Las cifras de exactitud publicadas se midieron con POW_COD.
 
-   ```bash
-   phasentic setup-powcod ~/Downloads/powcod-2205.zip
-   ```
-
-Este comando verifica el archivo comprimido, lo extrae en `~/.phasentic/powcod`
-(unos 6 GB) y construye una caché de consultas una única vez (20–60 minutos).
-A partir de entonces, Phasentic usa POW_COD por defecto.
+```bash
+phasentic setup-powcod ~/Downloads/powcod-2205.zip
+```
 
 <a name="quick-start"></a>
 

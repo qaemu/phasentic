@@ -1,20 +1,27 @@
 # Installation
 
-Phasentic needs Python 3.10–3.13 on Linux, macOS or Windows.
+Phasentic runs on Linux, macOS and Windows.
 
-## The `phasentic` command
+## Install
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
-# or: uv tool install git+https://github.com/qaemu/phasentic
-# or: pip install git+https://github.com/qaemu/phasentic
-phasentic --version
+Installs uv, Python 3.12, Phasentic and the COD reference database (8.6 GB
+from Zenodo; about 10 GB free disk needed). No admin rights needed.
+
+```powershell
+# Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-If you don't have `pipx`: `python -m pip install --user pipx && python -m pipx ensurepath`,
-then open a new terminal.
+```bash
+# macOS and Linux
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
+```
 
-## POW_COD (once)
+Running it again resumes an interrupted download and leaves a correct
+installation alone. The database goes to `~/.phasentic/cod` (set
+`PHASENTIC_HOME` to use another folder).
+
+## POW_COD instead of COD (optional)
 
 Download **POW_COD 2205 (FULL)** from the
 [CNR page](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/), then:
@@ -24,8 +31,8 @@ phasentic setup-powcod path/to/powcod-2205.zip
 ```
 
 It verifies the archive's SHA-256, extracts it to `~/.phasentic/powcod`
-(set `PHASENTIC_HOME` to use another folder; you need about 9 GB free) and
-builds the query cache. From then on POW_COD is the default reference.
+(about 9 GB free needed) and builds the query cache. When POW_COD is
+installed, Phasentic uses it instead of the COD database.
 Manual alternatives are in [cod-database.md](cod-database.md).
 
 ## From a clone (development)

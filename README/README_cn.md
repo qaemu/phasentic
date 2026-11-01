@@ -59,33 +59,29 @@ Phasentic 读取粉末XRD扫描数据（`.xy`、`.xrdml` 或 ASCII `.raw`），�
 
 ## 安装
 
-需要 Python 3.10–3.13。最简单的方式是将 `phasentic` 命令安装在独立环境中：
+一条命令即可安装 Python 3.12、Phasentic 及其参考数据库（从 Zenodo 下载 8.6 GB；请预留约 10 GB 空间）。无需管理员权限。
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
+Windows（PowerShell）：
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-或使用 [uv](https://docs.astral.sh/uv/)：`uv tool install git+https://github.com/qaemu/phasentic`，
-或直接使用 pip：`pip install git+https://github.com/qaemu/phasentic`。
-
-检查是否安装成功：
+macOS 和 Linux：
 
 ```bash
-phasentic --version
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-### 添加 POW_COD 参考数据库（仅需一次）
+如果下载中断，再次运行同一条命令即可从中断处继续。之后打开一个新的终端并运行 `phasentic serve`。
 
-未安装 POW_COD 时，Phasentic 使用一个仅含三个物相的演示子集运行，只适合试用界面。用于实际工作时：
+### 改用 POW_COD
 
-1. 从 [CNR 下载页面](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/)下载 **POW_COD 2205 (FULL)**（约 1.9 GB）。
-2. 运行：
+如果您已从 [CNR 下载页面](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/)获得 **POW_COD 2205 (FULL)**，可用下面的命令安装；之后 Phasentic 将使用它代替 COD 数据库。已发布的准确率数据是使用 POW_COD 测得的。
 
-   ```bash
-   phasentic setup-powcod ~/Downloads/powcod-2205.zip
-   ```
-
-该命令会校验压缩包，将其解压到 `~/.phasentic/powcod`（约 6 GB），并一次性构建查询缓存（20–60 分钟）。此后 Phasentic 默认使用 POW_COD。
+```bash
+phasentic setup-powcod ~/Downloads/powcod-2205.zip
+```
 
 <a name="quick-start"></a>
 

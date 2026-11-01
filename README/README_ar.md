@@ -69,38 +69,33 @@
 
 ## التثبيت
 
-يلزم Python 3.10–3.13. أبسط طريقة تثبّت الأمر `phasentic`
-في بيئة مستقلة خاصة به:
+يثبّت أمر واحد Python 3.12 وPhasentic وقاعدة بياناته المرجعية (تنزيل بحجم 8.6 GB من Zenodo؛
+يلزم نحو 10 GB من المساحة الحرة). ولا حاجة إلى صلاحيات المسؤول.
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
+Windows (PowerShell):
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-أو باستخدام [uv](https://docs.astral.sh/uv/): `uv tool install git+https://github.com/qaemu/phasentic`،
-أو باستخدام pip العادي: `pip install git+https://github.com/qaemu/phasentic`.
-
-للتأكد من نجاح التثبيت:
+macOS وLinux:
 
 ```bash
-phasentic --version
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-### إضافة قاعدة البيانات المرجعية POW_COD (مرة واحدة)
+إذا انقطع التنزيل، شغّل الأمر نفسه مرة أخرى فيستأنف من حيث توقف. ثم افتح نافذة طرفية جديدة
+وشغّل &lrm;`phasentic serve`.
 
-من دون POW_COD، يعمل Phasentic على مجموعة فرعية تجريبية من ثلاثة أطوار لا تصلح إلا
-لتجربة الواجهة. وللعمل الفعلي:
+### استخدام POW_COD بدلًا من ذلك
 
-1. نزّل **POW_COD 2205 (FULL)** (نحو 1.9 GB) من
-   [صفحة التنزيل لدى CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/).
-2. شغّل:
+إذا كانت لديك **POW_COD 2205 (FULL)** من
+[صفحة التنزيل لدى CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/)،
+فثبّتها بالأمر أدناه؛ وعندها يستخدمها Phasentic بدلًا من قاعدة COD. وقد قيست أرقام الدقة المنشورة باستخدام POW_COD.
 
-   ```bash
-   phasentic setup-powcod ~/Downloads/powcod-2205.zip
-   ```
-
-يتحقق هذا الأمر من الأرشيف، ويستخرجه إلى &lrm;`~/.phasentic/powcod` (نحو 6 GB)،
-ويبني ذاكرة تخزين مؤقت للاستعلامات مرة واحدة (20–60 دقيقة). وبعد ذلك يستخدم Phasentic
-قاعدة POW_COD افتراضيًا.
+```bash
+phasentic setup-powcod ~/Downloads/powcod-2205.zip
+```
 
 <a name="quick-start"></a>
 
