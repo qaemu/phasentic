@@ -65,8 +65,11 @@ def main() -> None:
         thread.join()
         return
     webview.create_window("Phasentic", url, js_api=_Api(), width=1400, height=900)
-    linux = sys.platform.startswith("linux")
-    webview.start(gui="qt" if linux else None, icon=str(Path(__file__).parent / "web" / "logo-mark.svg"))
+    web = Path(__file__).parent / "web"
+    if sys.platform == "win32":
+        webview.start(icon=str(web / "phasentic.ico"))
+    else:  # macOS takes the icon from the app bundle
+        webview.start(gui="qt" if sys.platform.startswith("linux") else None, icon=str(web / "logo-mark.svg"))
     server.should_exit = True
 
 
