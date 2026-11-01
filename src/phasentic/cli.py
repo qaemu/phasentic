@@ -122,7 +122,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 POWCOD_ZIP_SHA256 = "75b74f9544e8677edb2c6dc46196ee4331e27f21d943a70b08c68f18c010f9df"
 # cod.xrd.sqlite as published: COD build of 2026-11-01, 526,354 phases, 8,554,987,520 bytes.
-COD_DATABASE_SHA256 = "60b0cd334caaee23b8ba9312e673d348a2661707d46bae5faedfc4fbc0a010a0"
+COD_DATABASE_SHA256 = "f613eae75bbc5e3fb69a9047ee28b58416a94f18b4a253f29683be535e3d0398"
 COD_DATABASE_SIZE = 8_554_987_520
 COD_DATABASE_URL = "https://zenodo.org/records/23862393/files/cod.xrd.sqlite?download=1"
 

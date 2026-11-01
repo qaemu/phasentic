@@ -201,9 +201,9 @@
     const elements = (s.allowed_elements || []).join(", ");
 
     const release = String(p.powcod_release || "");
-    const dbShort = release.startsWith("COD") ? esc(release) : `POW_COD ${esc(release)}`;
+    const dbShort = release.includes("COD") ? esc(release) : `POW_COD ${esc(release)}`;
     const dbName = !isPowcod ? "Built-in demo subset (three phases; not for real samples)"
-      : release.startsWith("COD") ? `${dbShort} (calculated from the Crystallography Open Database)` : `${dbShort} (CNR, from COD)`;
+      : release.includes("COD") ? `${dbShort} (calculated from the Crystallography Open Database)` : `${dbShort} (CNR, from COD)`;
     // A candidate that matched no detected peak is noise, not a ranked phase.
     const fallbackRows = (r.candidates || []).filter((c) => Number(c.matched_peaks) > 0).slice(0, 5).map((c, k) => `<tr><td>${k + 1}</td><td class="f">${formula(c.formula)}</td><td>${spaceGroup(c.space_group)}</td><td>${codLink(c.reference_id)}</td><td class="n">${esc(c.matched_peaks ?? "—")}</td><td class="n">score ${num(c.score, 2)}</td></tr>`).join("");
     const phaseRows = phases.map((ph, k) => {

@@ -140,10 +140,10 @@ function setHTML(element, markup) {
   element.querySelectorAll("[data-style]").forEach((node) => { node.style.cssText = node.dataset.style; });
 }
 
-// The local database is either the COD build (release "COD-…") or POW_COD.
+// The local database is either Phasentic's COD build (release "PXRD_COD …") or POW_COD.
 function databaseLabel(release) {
   if (typeof release !== "string" || !release) return "Reference database";
-  return release.startsWith("COD") ? release : `POW_COD ${release}`;
+  return release.includes("COD") ? release : `POW_COD ${release}`;
 }
 
 function selectedHypothesis(report) {
