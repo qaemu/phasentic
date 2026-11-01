@@ -35,6 +35,9 @@ dependencies = [
   "fastapi>=0.115,<1",
   "python-multipart>=0.0.9,<1",
   "uvicorn[standard]>=0.30,<1",
+  # App window: the system web engine on Windows and macOS, Qt on Linux
+  "pywebview>=6,<7; sys_platform != 'linux'",
+  "pywebview[qt]>=6,<7; sys_platform == 'linux'",
 ]
 
 [project.urls]
@@ -45,6 +48,9 @@ Changelog = "https://github.com/qaemu/phasentic/blob/main/CHANGELOG.md"
 
 [project.scripts]
 phasentic = "phasentic.cli:main"
+
+[project.gui-scripts]
+phasentic-app = "phasentic.desktop:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

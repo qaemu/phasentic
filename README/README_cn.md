@@ -73,7 +73,7 @@ macOS 和 Linux：
 curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-在 Windows 上，它还会在桌面和开始菜单中添加 **Phasentic** 快捷方式，并在浏览器中启动 Phasentic。在 macOS 上会添加到“应用程序”，在 Linux 上会添加到应用程序菜单。如果下载中断，再次运行同一条命令即可从中断处继续。
+在 Windows 上，它还会在桌面和开始菜单中添加 **Phasentic** 快捷方式，并在独立窗口中打开 Phasentic。在 macOS 上会添加到“应用程序”，在 Linux 上会添加到应用程序菜单。如果下载中断，再次运行同一条命令即可从中断处继续。
 
 ### 改用 POW_COD
 
@@ -87,7 +87,7 @@ phasentic setup-powcod ~/Downloads/powcod-2205.zip
 
 ## 快速上手
 
-启动本地界面并打开 <http://127.0.0.1:8000>：
+通过快捷方式打开 Phasentic，或运行 `phasentic-app`。如需在浏览器中使用，运行下面的命令并打开 <http://127.0.0.1:8000>：
 
 ```bash
 phasentic serve

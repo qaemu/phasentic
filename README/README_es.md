@@ -91,7 +91,7 @@ curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | s
 ```
 
 En Windows también agrega un acceso directo **Phasentic** al Escritorio y al
-menú Inicio, y abre Phasentic en el navegador. En macOS lo agrega a
+menú Inicio, y abre Phasentic en su propia ventana. En macOS lo agrega a
 Aplicaciones y en Linux al menú de aplicaciones. Si la descarga se interrumpe, basta con ejecutar el
 mismo comando otra vez: continúa donde quedó.
 
@@ -110,7 +110,8 @@ phasentic setup-powcod ~/Downloads/powcod-2205.zip
 
 ## Inicio rápido
 
-Iniciar la interfaz local y abrir <http://127.0.0.1:8000>:
+Abrir Phasentic desde su acceso directo, o ejecutar `phasentic-app`. Para usarlo
+en el navegador, ejecutar el comando de abajo y abrir <http://127.0.0.1:8000>:
 
 ```bash
 phasentic serve

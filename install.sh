@@ -32,13 +32,8 @@ Darwin)
     rm -rf "$app"
     mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
     curl -fsSL "$assets/phasentic.icns" -o "$app/Contents/Resources/phasentic.icns" || true
-    # The app opens a Terminal window running the server; closing it stops Phasentic.
-    printf '#!/bin/sh\n"%s" serve --open\n' "$phasentic" > "$app/Contents/Resources/phasentic.command"
-    cat > "$app/Contents/MacOS/Phasentic" <<'EOF'
-#!/bin/sh
-exec open -a Terminal "$(dirname "$0")/../Resources/phasentic.command"
-EOF
-    chmod +x "$app/Contents/MacOS/Phasentic" "$app/Contents/Resources/phasentic.command"
+    printf '#!/bin/sh\nexec "%s-app"\n' "$phasentic" > "$app/Contents/MacOS/Phasentic"
+    chmod +x "$app/Contents/MacOS/Phasentic"
     cat > "$app/Contents/Info.plist" <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -60,11 +55,15 @@ Linux)
     curl -fsSL "$assets/phasentic.svg" -o "$icon" || icon=
     menu="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
     mkdir -p "$menu"
-    printf '[Desktop Entry]\nType=Application\nName=Phasentic\nComment=Powder XRD phase identification\nExec="%s" serve --open\nIcon=%s\nTerminal=true\nCategories=Science;\n' \
+    printf '[Desktop Entry]\nType=Application\nName=Phasentic\nComment=Powder XRD phase identification\nExec="%s-app"\nIcon=%s\nTerminal=false\nCategories=Science;\n' \
         "$phasentic" "$icon" > "$menu/phasentic.desktop"
     echo "Added Phasentic to the applications menu."
+    if [ -z "${WAYLAND_DISPLAY:-}" ] && ! ldconfig -p 2>/dev/null | grep -q libxcb-cursor; then
+        echo "Note: the Phasentic window needs libxcb-cursor0 (Debian/Ubuntu: sudo apt install libxcb-cursor0);"
+        echo "without it Phasentic opens in the browser instead."
+    fi
     ;;
 esac
 
 echo
-echo "Phasentic is installed. Open it from your applications, or run: phasentic serve --open"
+echo "Phasentic is installed. Open it from your applications, or run: phasentic-app"

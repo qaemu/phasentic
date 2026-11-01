@@ -84,7 +84,7 @@ macOS وLinux:
 curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-وعلى Windows يضيف أيضًا اختصار **Phasentic** إلى سطح المكتب وقائمة ابدأ، ويفتح Phasentic في المتصفح.
+وعلى Windows يضيف أيضًا اختصار **Phasentic** إلى سطح المكتب وقائمة ابدأ، ويفتح Phasentic في نافذته الخاصة.
 وعلى macOS يُضاف إلى مجلد التطبيقات، وعلى Linux إلى قائمة التطبيقات. وإذا انقطع التنزيل، شغّل الأمر نفسه مرة أخرى فيستأنف من حيث توقف.
 
 ### استخدام POW_COD بدلًا من ذلك
@@ -101,7 +101,7 @@ phasentic setup-powcod ~/Downloads/powcod-2205.zip
 
 ## البدء السريع
 
-شغّل الواجهة المحلية وافتح <http://127.0.0.1:8000>:
+افتح Phasentic من اختصاره، أو شغّل &lrm;`phasentic-app`. ولاستخدامه في المتصفح بدلًا من ذلك، شغّل الأمر أدناه وافتح <http://127.0.0.1:8000>:
 
 ```bash
 phasentic serve

@@ -285,21 +285,31 @@ function invalidateCalibration(message) {
   setCalibrationStatus(message);
 }
 
+// In the Phasentic app window (pywebview) files are saved through a save dialog
+// and links open in the system browser, so the window never navigates away.
+function saveFile(name, text, type) {
+  if (window.pywebview && window.pywebview.api) { window.pywebview.api.save_file(name, text); return; }
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const link = document.createElement("a"); link.href = url; link.download = name; link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+document.addEventListener("click", (event) => {
+  const link = event.target.closest && event.target.closest("a[href]");
+  if (!link || !window.pywebview || !window.pywebview.api || link.getAttribute("href") === "/") return;
+  event.preventDefault();
+  window.pywebview.api.open_url(link.href);
+});
+
 let appVersion = "";
 fetch("/api/v1/health").then((r) => r.json()).then((d) => { appVersion = d.version || ""; }).catch(() => {});
 $("download-pdf-report").addEventListener("click", () => {
   if (!latestReport || !window.PhasenticReport) return;
   const html = window.PhasenticReport.build(latestReport, { version: appVersion, preset: $("validated-preset").checked ? "validated" : null });
-  const url = URL.createObjectURL(new Blob([html], { type: "text/html" }));
-  const link = document.createElement("a"); link.href = url; link.download = `phasentic-report-${latestReport.analysis_id || "analysis"}.html`; link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  saveFile(`phasentic-report-${latestReport.analysis_id || "analysis"}.html`, html, "text/html");
 });
 $("download-report").addEventListener("click", () => {
   if (!latestReport) return;
-  const blob = new Blob([JSON.stringify(latestReport, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a"); link.href = url; link.download = `${latestReport.analysis_id || "xrd-report"}.json`; link.click();
-  URL.revokeObjectURL(url);
+  saveFile(`${latestReport.analysis_id || "xrd-report"}.json`, JSON.stringify(latestReport, null, 2), "application/json");
 });
 
 

@@ -99,6 +99,12 @@ def create_app() -> Any:
     # A host name other than loopback only arrives through DNS rebinding,
     # unless `phasentic serve --host` named it explicitly.
     allowed_hosts = LOOPBACK_HOSTS | {os.environ.get("PHASENTIC_BIND_HOST", "127.0.0.1")}
+    # The app window (pywebview) injects its bridge with eval and inline styles.
+    csp = (
+        "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval'"
+        if os.environ.get("PHASENTIC_APP_WINDOW")
+        else "default-src 'self'; style-src 'self'; script-src 'self'"
+    )
     timeout_seconds = float(os.environ.get("PHASENTIC_ANALYSIS_TIMEOUT_SECONDS", "300"))
     # ponytail: per-process key; calibrations from before a server restart must be redone.
     calibration_key = secrets.token_bytes(32)
@@ -126,7 +132,7 @@ def create_app() -> Any:
                     headers["X-Content-Type-Options"] = "nosniff"
                     headers["X-Frame-Options"] = "DENY"
                     headers["Referrer-Policy"] = "no-referrer"
-                    headers["Content-Security-Policy"] = "default-src 'self'; style-src 'self'; script-src 'self'"
+                    headers["Content-Security-Policy"] = csp
                 await send(message)
 
             request = Request(scope)
