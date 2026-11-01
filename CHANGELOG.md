@@ -6,6 +6,11 @@ All notable changes are listed here. The format follows
 
 ## [Unreleased]
 
+### Removed
+- Validation and testing tooling: `scripts/`, the `phasentic.validation`
+  package, `benchmarks/`, the WP-5 and crosswalk schemas, and the `evaluation`
+  extra. It remains available at commit `14fc94f`.
+
 ### Changed
 - The reference 2θ window is now 0–90° (was 0–120°), set once in
   `domain/radiation.py`; the validated preset matches up to 90° (was 100°).

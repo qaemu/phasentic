@@ -160,6 +160,7 @@ Clone the repository and install it:
 
 ```bash
 git clone https://github.com/qaemu/phasentic && cd phasentic
+git checkout 14fc94f   # last version that includes the validation tooling
 pip install -e .
 ```
 
