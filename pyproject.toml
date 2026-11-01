@@ -43,11 +43,6 @@ Documentation = "https://github.com/qaemu/phasentic/tree/main/docs"
 Issues = "https://github.com/qaemu/phasentic/issues"
 Changelog = "https://github.com/qaemu/phasentic/blob/main/CHANGELOG.md"
 
-[project.optional-dependencies]
-evaluation = [
-  "matplotlib>=3.8,<4",
-]
-
 [project.scripts]
 phasentic = "phasentic.cli:main"
 

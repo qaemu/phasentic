@@ -236,7 +236,7 @@ as an execution of v0.10.
 | `displacement_search_max_deg` | 0.60 | Specimen displacement D·cosθ estimated before matching (0 disables). |
 | `lattice_scale_tolerance` | 0.006 | Per-phase isotropic d-spacing scale searched by the matcher; retrieval windows widened by the same fraction. |
 | `peak_tolerance_deg` | 0.10 | Narrowed from 0.20 once displacement, scale and width are modelled. |
-| `allowed_elements` | none | Optional sample-context chemistry filter (see `scripts/precursor_sample_context.py`). |
+| `allowed_elements` | none | Optional sample-context chemistry filter (set with `--chemistry`). |
 | `complexity_penalty` / `ambiguity_margin` | 0.10 / 0.05 | Now **relative**: an extra phase must lower the objective by more than 10%; alternatives within 5% are ambiguous. Frozen protocols written with the old absolute values must be overridden. |
 
 These are development defaults, not tuned or validated values.

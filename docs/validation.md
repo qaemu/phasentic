@@ -35,6 +35,10 @@ or other settings.
 
 ## Protocol
 
+The validation tooling (scripts and the `phasentic.validation` package) was
+removed from the repository after commit `14fc94f`; paths below refer to that
+commit. The case lists and receipts remain in `validation/`.
+
 1. **Data.** [Precursor Genome](https://github.com/lauren-walters/precursor-genome)
    scans with accepted human Rietveld refinements and human quality score 1.
    Each label is the set of refined phases.
@@ -110,6 +114,7 @@ You need the Precursor Genome raw scans and POW_COD 2205.
 
 ```bash
 git clone https://github.com/qaemu/phasentic && cd phasentic
+git checkout 14fc94f   # last version that includes the validation tooling
 pip install -e .
 phasentic setup-powcod path/to/powcod-2205.zip
 

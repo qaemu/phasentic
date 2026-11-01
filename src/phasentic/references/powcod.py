@@ -757,21 +757,30 @@ class PowCodReferenceStore:
 
     def __init__(
         self,
-        source_path: Path | str,
+        source_path: Path | str | None,
         *,
         cache_path: Path | str | None = None,
         info_path: Path | str | None = None,
         equivalence_path: Path | str | None = None,
     ) -> None:
-        self.source_path = Path(source_path).expanduser().resolve()
+        # ``source_path=None`` opens a distributed cache on its own (e.g. the COD
+        # database installed by ``phasentic setup-cod``, whose file hash was
+        # checked at install). A configured source must still exist and match.
+        if source_path is None and cache_path is None:
+            raise PowCodError("POWCOD_NOT_CONFIGURED: a source database or a cache path is required")
+        self.source_path = Path(source_path).expanduser().resolve() if source_path is not None else None
         self.cache_path = Path(cache_path).expanduser().resolve() if cache_path is not None else self.source_path.with_name(self.source_path.name + ".xrd.sqlite")
-        self.info_path = _info_path(self.source_path, Path(info_path) if info_path is not None else None)
+        self.info_path = (
+            _info_path(self.source_path, Path(info_path) if info_path is not None else None)
+            if self.source_path is not None
+            else None
+        )
         self.equivalence_path = Path(equivalence_path).expanduser().resolve() if equivalence_path is not None else None
         self._equivalence: EquivalenceSidecar | None = None
-        if not self.source_path.is_file():
+        if self.source_path is not None and not self.source_path.is_file():
             raise PowCodError(f"POWCOD_NOT_FOUND: {self.source_path}")
         if not self.cache_path.is_file():
-            raise PowCodError(f"POWCOD_CACHE_NOT_FOUND: run phasentic powcod prepare for {self.source_path.name}")
+            raise PowCodError(f"POWCOD_CACHE_NOT_FOUND: {self.cache_path.name}")
         # ``powcod verify`` is the explicit integrity gate.  Re-running a
         # multi-gigabyte SQLite integrity scan for every measured case would
         # make a 100-case campaign needlessly take hours before any matching
@@ -821,12 +830,13 @@ class PowCodReferenceStore:
                 or not math.isclose(self._max_index_d, POWCOD_MAX_INDEX_D_ANGSTROM, rel_tol=0.0, abs_tol=1e-9)
             ):
                 raise PowCodError("POWCOD_SCHEMA_UNSUPPORTED: cache index metadata values")
-            stat = self.source_path.stat()
-            if str(stat.st_size) != metadata.get("source_size") or str(stat.st_mtime_ns) != metadata.get("source_mtime_ns"):
-                raise PowCodError("POWCOD_SOURCE_CHANGED: rebuild the POW_COD cache")
+            if self.source_path is not None:
+                stat = self.source_path.stat()
+                if str(stat.st_size) != metadata.get("source_size") or str(stat.st_mtime_ns) != metadata.get("source_mtime_ns"):
+                    raise PowCodError("POWCOD_SOURCE_CHANGED: rebuild the POW_COD cache")
             expected_info_size = metadata.get("info_size", "")
             expected_info_mtime = metadata.get("info_mtime_ns", "")
-            if expected_info_size or expected_info_mtime:
+            if self.source_path is not None and (expected_info_size or expected_info_mtime):
                 if self.info_path is None or not self.info_path.is_file():
                     raise PowCodError("POWCOD_INFO_CHANGED: rebuild the POW_COD cache")
                 info_stat = self.info_path.stat()

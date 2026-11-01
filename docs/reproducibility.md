@@ -35,6 +35,9 @@ fitting; the lookup budget and fitter budget are distinct controls.
 
 ## WP-5 evaluation package
 
+The tooling described in this section was removed from the repository after
+commit `14fc94f`; check out that commit to use it.
+
 WP-5 uses five hash-authenticated local artifacts: a source inventory, case
 inventory, frozen protocol, frozen bundle, and per-variant run directories.
 `scripts/benchmark_wp5.py import` verifies every eligible source byte against

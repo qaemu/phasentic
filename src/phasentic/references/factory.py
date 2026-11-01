@@ -17,6 +17,7 @@ class ReferenceConfigurationError(RuntimeError):
 
 POWCOD_DATABASE_NAME = "cod2205.sq"
 POWCOD_CACHE_NAME = "powcod-2205.xrd.sqlite"
+COD_CACHE_NAME = "cod.xrd.sqlite"  # installed by ``phasentic setup-cod`` into <home>/cod
 
 
 def phasentic_home(environment: Mapping[str, str] | None = None) -> Path:
@@ -27,19 +28,19 @@ def phasentic_home(environment: Mapping[str, str] | None = None) -> Path:
     return Path(raw).expanduser() if raw else Path.home() / ".phasentic"
 
 
-def _installed(name: str, environment: Mapping[str, str] | None) -> Path | None:
-    candidate = phasentic_home(environment) / "powcod" / name
+def _installed(name: str, environment: Mapping[str, str] | None, folder: str = "powcod") -> Path | None:
+    candidate = phasentic_home(environment) / folder / name
     return candidate if candidate.is_file() else None
 
 
 def default_reference_source(environment: Mapping[str, str] | None = None) -> str:
-    """``PHASENTIC_REFERENCE_SOURCE`` if set, else POW_COD when installed, else the demo subset."""
+    """``PHASENTIC_REFERENCE_SOURCE`` if set, else POW_COD/COD when installed, else the demo subset."""
 
     values = environment if environment is not None else os.environ
     selected = values.get("PHASENTIC_REFERENCE_SOURCE", "").strip()
     if selected in {"demo", "pow_cod"}:
         return selected
-    if configured_powcod_path(environment=values) and configured_powcod_cache_path(environment=values):
+    if configured_powcod_cache_path(environment=values):
         return "pow_cod"
     return "demo"
 
@@ -64,7 +65,7 @@ def configured_powcod_cache_path(
     values = environment if environment is not None else os.environ
     raw = explicit_path if explicit_path is not None else values.get("PHASENTIC_POWCOD_CACHE_PATH")
     if raw is None or not str(raw).strip():
-        return _installed(POWCOD_CACHE_NAME, values)
+        return _installed(POWCOD_CACHE_NAME, values) or _installed(COD_CACHE_NAME, values, "cod")
     return Path(str(raw)).expanduser()
 
 
@@ -96,18 +97,18 @@ def open_reference_store(
         return DemoReferenceStore()
     if source == "pow_cod":
         database = configured_powcod_path(powcod_path, environment=environment)
-        if database is None:
-            raise ReferenceConfigurationError(
-                "POWCOD_NOT_CONFIGURED: set PHASENTIC_POWCOD_PATH to a verified POW_COD SQLite database"
-            )
         cache = configured_powcod_cache_path(powcod_cache_path, environment=environment)
+        if database is None and cache is None:
+            raise ReferenceConfigurationError(
+                "POWCOD_NOT_CONFIGURED: install a reference database (phasentic setup-cod or setup-powcod)"
+            )
         equivalence = configured_powcod_equivalence_path(powcod_equivalence_path, environment=environment)
         try:
             return PowCodReferenceStore(database, cache_path=cache, equivalence_path=equivalence)
         except PowCodError:
             raise
         except Exception as exc:
-            raise ReferenceConfigurationError(f"POWCOD_UNREADABLE: {database}") from exc
+            raise ReferenceConfigurationError(f"POWCOD_UNREADABLE: {database or cache}") from exc
     raise ReferenceConfigurationError(f"REFERENCE_SOURCE_UNSUPPORTED: {source}")
 
 
@@ -117,7 +118,7 @@ def reference_source_status(*, environment: Mapping[str, str] | None = None) -> 
     values = environment if environment is not None else os.environ
     powcod: dict[str, object] = {"available": False}
     powcod_path = configured_powcod_path(environment=values)
-    if powcod_path is not None:
+    if powcod_path is not None or configured_powcod_cache_path(environment=values) is not None:
         powcod["configured"] = True
         try:
             store = PowCodReferenceStore(
@@ -130,6 +131,7 @@ def reference_source_status(*, environment: Mapping[str, str] | None = None) -> 
                 {
                     "available": True,
                     "release": metadata.get("release"),
+                    "label": "POW_COD 2205" if metadata.get("release") == "2205" else str(metadata.get("release")),
                     "database_sha256": metadata.get("source_sha256"),
                     "cache_sha256": metadata.get("cache_sha256"),
                     "schema_version": metadata.get("schema_version"),
