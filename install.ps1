@@ -12,12 +12,19 @@ if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
     $env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
 }
 
+# A running Phasentic locks its files and makes reinstalling fail.
+$bin = uv tool dir --bin
+$tools = uv tool dir
+Get-CimInstance Win32_Process | Where-Object {
+    $_.ExecutablePath -like "$tools\phasentic\*" -or $_.CommandLine -like "*$bin\phasentic.exe*"
+} | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+
 Write-Host "Installing Phasentic..."
 uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
 if ($LASTEXITCODE -ne 0) { throw "Phasentic could not be installed." }
 uv tool update-shell | Out-Null
 
-$phasentic = Join-Path (uv tool dir --bin) "phasentic.exe"
+$phasentic = Join-Path $bin "phasentic.exe"
 & $phasentic setup-cod
 if ($LASTEXITCODE -ne 0) { throw "The reference database is not installed yet. Run this installer again to resume." }
 
