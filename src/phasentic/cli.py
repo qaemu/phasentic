@@ -93,7 +93,6 @@ def build_parser() -> argparse.ArgumentParser:
     serve = subparsers.add_parser("serve", help="Start the localhost web interface")
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8000)
-    serve.add_argument("--open", action="store_true", help="open the interface in the default browser")
 
     setup = subparsers.add_parser("setup-powcod", help="Install POW_COD 2205 from the downloaded zip (one step)")
     setup.add_argument("source", type=Path, help="powcod-2205.zip as downloaded from CNR, or an extracted cod2205.sq")
@@ -269,7 +268,7 @@ def _setup_cod(source: Path | None) -> int:
         metadata = store.metadata()
     print(
         f"COD database {metadata.get('release')} is ready: {metadata.get('phase_count')} phases.\n"
-        "Phasentic uses it by default. Start the interface with: phasentic serve"
+        "Phasentic uses it by default. Open Phasentic from its shortcut, or run: phasentic-app"
     )
     return 0
 
@@ -350,11 +349,6 @@ def main(argv: list[str] | None = None) -> int:
         except ImportError as exc:
             raise SystemExit("uvicorn is missing; reinstall Phasentic: pip install --force-reinstall phasentic") from exc
         os.environ["PHASENTIC_BIND_HOST"] = args.host  # the app accepts only this host name besides loopback
-        if args.open:
-            import threading
-            import webbrowser
-
-            threading.Timer(2.0, webbrowser.open, [f"http://{args.host}:{args.port}/"]).start()
         uvicorn.run("phasentic.api.main:app", host=args.host, port=args.port, reload=False)
         return 0
     if args.command == "setup-powcod":

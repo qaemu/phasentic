@@ -13,15 +13,12 @@ from pathlib import Path
 class _Api:
     """Functions the page calls through ``window.pywebview.api``."""
 
-    def save_file(self, name: str, text: str) -> bool:
+    def save_file(self, name: str, text: str) -> None:
         import webview
 
         chosen = webview.windows[0].create_file_dialog(webview.FileDialog.SAVE, save_filename=name)
-        if not chosen:
-            return False
-        path = chosen if isinstance(chosen, str) else chosen[0]
-        Path(path).write_text(text, encoding="utf-8")
-        return True
+        if chosen:
+            Path(chosen if isinstance(chosen, str) else chosen[0]).write_text(text, encoding="utf-8")
 
     def open_url(self, url: str) -> None:
         if url.startswith(("http://", "https://")):

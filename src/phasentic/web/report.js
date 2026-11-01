@@ -200,7 +200,10 @@
     const preset = isPowcod && (opts.preset || (s.candidate_pool === 100 && s.max_fit_attempts === 300 && s.complexity_penalty === 0.02 && s.oxidizing_synthesis === true ? "validated" : null));
     const elements = (s.allowed_elements || []).join(", ");
 
-    const dbName = isPowcod ? `POW_COD ${esc(p.powcod_release || "")} (CNR, from COD)` : "Built-in demo subset (three phases; not for real samples)";
+    const release = String(p.powcod_release || "");
+    const dbShort = release.startsWith("COD") ? esc(release) : `POW_COD ${esc(release)}`;
+    const dbName = !isPowcod ? "Built-in demo subset (three phases; not for real samples)"
+      : release.startsWith("COD") ? `${dbShort} (calculated from the Crystallography Open Database)` : `${dbShort} (CNR, from COD)`;
     // A candidate that matched no detected peak is noise, not a ranked phase.
     const fallbackRows = (r.candidates || []).filter((c) => Number(c.matched_peaks) > 0).slice(0, 5).map((c, k) => `<tr><td>${k + 1}</td><td class="f">${formula(c.formula)}</td><td>${spaceGroup(c.space_group)}</td><td>${codLink(c.reference_id)}</td><td class="n">${esc(c.matched_peaks ?? "—")}</td><td class="n">score ${num(c.score, 2)}</td></tr>`).join("");
     const phaseRows = phases.map((ph, k) => {
@@ -299,7 +302,7 @@ dl.one { grid-template-columns: 1fr; } dl.one .kv { grid-template-columns: 34mm 
     <thead><tr><th>#</th><th>Phase</th><th>Space group</th><th>Reference</th><th class="n">Peaks matched</th><th class="n">Unique evidence</th></tr></thead>
     <tbody>${phaseRows || fallbackRows || `<tr><td colspan="6">No candidate phases.</td></tr>`}</tbody>
   </table>
-  <p class="note">Phases are ranked hypotheses from the ${isPowcod ? `POW_COD ${esc(p.powcod_release || "")}` : "demo"} reference database, not certainties. “Unique evidence” counts detected peaks that no other selected phase explains. No phase fractions are reported.</p>
+  <p class="note">Phases are ranked hypotheses from the ${isPowcod ? dbShort : "demo"} reference database, not certainties. “Unique evidence” counts detected peaks that no other selected phase explains. No phase fractions are reported.</p>
 </section>
 
 ${phases.length ? fitFigure(r, phases) : measuredFigure(r)}

@@ -3,7 +3,7 @@ const translations = {
     lede: "Powder X-ray diffraction phase identification",
     sample: "Sample", file: "Pattern file", fileHint: ".xy, .xrdml or ASCII .raw, up to 10 MB",
     chemistry: "Precursor and target formulas", chemistryHint: "Candidates are limited to these elements plus H, C and O.",
-    method: "Method", validatedPreset: "Validated method", validatedHint: "The settings tested on 200 sealed scans. Needs POW_COD, Cu Kα and the formulas above.",
+    method: "Method", validatedPreset: "Validated method", validatedHint: "The settings tested on 200 sealed scans (with POW_COD). Needs Cu Kα and the formulas above.",
     radiation: "Anode", reference: "Reference database", customSettings: "Custom settings (not validated)",
     tolerance: "Peak tolerance (° 2θ)", maxPhases: "Maximum phases", analysisMode: "Analysis mode", angle: "Angle coordinate",
     customHint: "Ignored while the validated method is selected.",
@@ -40,7 +40,7 @@ const translations = {
     lede: "Identificación de fases por difracción de rayos X de polvo",
     sample: "Muestra", file: "Archivo del patrón", fileHint: ".xy, .xrdml o .raw ASCII, hasta 10 MB",
     chemistry: "Fórmulas de precursores y objetivo", chemistryHint: "Los candidatos se limitan a estos elementos más H, C y O.",
-    method: "Método", validatedPreset: "Método validado", validatedHint: "La configuración probada en 200 escaneos sellados. Requiere POW_COD, Cu Kα y las fórmulas de arriba.",
+    method: "Método", validatedPreset: "Método validado", validatedHint: "La configuración probada en 200 escaneos sellados (con POW_COD). Requiere Cu Kα y las fórmulas de arriba.",
     radiation: "Ánodo", reference: "Base de referencias", customSettings: "Configuración personalizada (no validada)",
     tolerance: "Tolerancia de pico (° 2θ)", maxPhases: "Máximo de fases", analysisMode: "Modo de análisis", angle: "Coordenada angular",
     customHint: "Se ignora mientras el método validado está seleccionado.",
@@ -140,6 +140,12 @@ function setHTML(element, markup) {
   element.querySelectorAll("[data-style]").forEach((node) => { node.style.cssText = node.dataset.style; });
 }
 
+// The local database is either the COD build (release "COD-…") or POW_COD.
+function databaseLabel(release) {
+  if (typeof release !== "string" || !release) return "Reference database";
+  return release.startsWith("COD") ? release : `POW_COD ${release}`;
+}
+
 function selectedHypothesis(report) {
   const m = report && report.mixture;
   return m && Array.isArray(m.hypotheses) ? m.hypotheses.find((h) => h && h.hypothesis_id === m.selected_hypothesis_id) || null : null;
@@ -219,7 +225,7 @@ function renderDiagnostics(parent, report) {
     [L.factSn, Number.isFinite(sn) ? sn.toFixed(0) : "—"],
     [L.factBaseline, Number.isFinite(base) ? `${(base * 100).toFixed(0)}%` : "—"],
     [L.factCalibration, q.calibration_status || "—"],
-    [L.factReference, p.reference_source === "pow_cod" ? `POW_COD ${p.powcod_release || ""}` : "demo"],
+    [L.factReference, p.reference_source === "pow_cod" ? databaseLabel(p.powcod_release) : "demo"],
     [L.factPeaks, (report.peaks || []).length],
     [L.factDisplacement, Number.isFinite(disp) ? `${disp.toFixed(3)}°` : "—"],
     [L.factPoints, input.point_count ?? "—"],
@@ -288,7 +294,10 @@ function invalidateCalibration(message) {
 // In the Phasentic app window (pywebview) files are saved through a save dialog
 // and links open in the system browser, so the window never navigates away.
 function saveFile(name, text, type) {
-  if (window.pywebview && window.pywebview.api) { window.pywebview.api.save_file(name, text); return; }
+  if (window.pywebview && window.pywebview.api) {
+    window.pywebview.api.save_file(name, text).catch((error) => { $("form-status").textContent = `Could not save ${name}: ${error.message || error}`; });
+    return;
+  }
   const url = URL.createObjectURL(new Blob([text], { type }));
   const link = document.createElement("a"); link.href = url; link.download = name; link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -358,6 +367,17 @@ $("standard-file").addEventListener("change", () => {
   invalidateCalibration("Standard scan changed; calibrate the standard again.");
 });
 
+// A file dropped anywhere is selected instead of being opened, which would
+// replace Phasentic (and the results) in the browser tab or app window.
+document.addEventListener("dragover", (event) => event.preventDefault());
+document.addEventListener("drop", (event) => {
+  event.preventDefault();
+  const files = event.dataTransfer && event.dataTransfer.files;
+  if (!files || !files.length) return;
+  const input = event.target.matches && event.target.matches("input[type=file]") ? event.target : $("file");
+  input.files = files;
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+});
 $("file").addEventListener("change", () => {
   invalidateAnalysis();
 });
@@ -380,7 +400,7 @@ $("reference-source").addEventListener("change", () => {
   invalidateAnalysis();
   if ($("reference-source").value === "pow_cod" && $("reference-source").selectedOptions[0].disabled) {
     $("reference-source").value = "demo";
-    $("form-status").textContent = "POW_COD is unavailable until it is configured.";
+    $("form-status").textContent = "No reference database is installed.";
   }
 });
 
@@ -459,14 +479,12 @@ fetch("/api/v1/reference-sources")
     const powCodInfo = sources.pow_cod && typeof sources.pow_cod === "object" ? sources.pow_cod : {};
     if (powCod) {
       powCod.disabled = powCodInfo.available !== true;
-      powCod.textContent = powCodInfo.available === true
-        ? `POW_COD ${typeof powCodInfo.release === "string" ? powCodInfo.release : "ready"}`
-        : "POW_COD (not configured)";
+      powCod.textContent = powCodInfo.available === true ? databaseLabel(powCodInfo.release) : "Reference database (not installed)";
     }
     if (data.selected === "pow_cod" && powCodInfo.available === true) selector.value = "pow_cod";
     $("reference-status").textContent = powCodInfo.available === true
-      ? `POW_COD ${powCodInfo.release || "ready"}`
-      : "POW_COD is disabled until a verified local database is configured (see README).";
+      ? databaseLabel(powCodInfo.release)
+      : "No reference database installed; run the install command again (see README).";
   })
   .catch(() => { $("reference-status").textContent = "Reference-source status unavailable; demo subset remains active."; });
 
