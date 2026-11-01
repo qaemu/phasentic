@@ -84,8 +84,8 @@ curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | s
 ```
 
 On Windows it also adds a **Phasentic** shortcut to the Desktop and Start Menu
-and starts Phasentic in your browser. On macOS and Linux, start it with
-`phasentic serve --open`. If the download is interrupted, run the same command
+and starts Phasentic in your browser. On macOS it adds
+Phasentic to Applications, on Linux to the applications menu. If the download is interrupted, run the same command
 again; it resumes.
 
 ### Using POW_COD instead

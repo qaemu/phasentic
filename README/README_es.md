@@ -91,8 +91,8 @@ curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | s
 ```
 
 En Windows también agrega un acceso directo **Phasentic** al Escritorio y al
-menú Inicio, y abre Phasentic en el navegador. En macOS y Linux se inicia con
-`phasentic serve --open`. Si la descarga se interrumpe, basta con ejecutar el
+menú Inicio, y abre Phasentic en el navegador. En macOS lo agrega a
+Aplicaciones y en Linux al menú de aplicaciones. Si la descarga se interrumpe, basta con ejecutar el
 mismo comando otra vez: continúa donde quedó.
 
 ### Usar POW_COD en su lugar

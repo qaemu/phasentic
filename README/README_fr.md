@@ -91,8 +91,8 @@ curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | s
 ```
 
 Sous Windows, il ajoute aussi un raccourci **Phasentic** sur le Bureau et dans
-le menu Démarrer, puis ouvre Phasentic dans le navigateur. Sous macOS et Linux,
-le lancer avec `phasentic serve --open`. Si le téléchargement est interrompu,
+le menu Démarrer, puis ouvre Phasentic dans le navigateur. Sous macOS, il l’ajoute
+aux Applications, sous Linux au menu des applications. Si le téléchargement est interrompu,
 il suffit de relancer la même commande : il reprend là où il s’était arrêté.
 
 ### Utiliser POW_COD à la place

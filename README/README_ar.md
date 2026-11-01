@@ -85,7 +85,7 @@ curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | s
 ```
 
 وعلى Windows يضيف أيضًا اختصار **Phasentic** إلى سطح المكتب وقائمة ابدأ، ويفتح Phasentic في المتصفح.
-وعلى macOS وLinux يُشغَّل بالأمر &lrm;`phasentic serve --open`. وإذا انقطع التنزيل، شغّل الأمر نفسه مرة أخرى فيستأنف من حيث توقف.
+وعلى macOS يُضاف إلى مجلد التطبيقات، وعلى Linux إلى قائمة التطبيقات. وإذا انقطع التنزيل، شغّل الأمر نفسه مرة أخرى فيستأنف من حيث توقف.
 
 ### استخدام POW_COD بدلًا من ذلك
 
