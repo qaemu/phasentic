@@ -443,6 +443,16 @@ class AnalysisSettings:
     # Order each branch's candidates by how well they explain the peaks the
     # branch leaves unexplained (Dara-style score) instead of global rank.
     residual_rerank: bool = True
+    # Dara-style preference for phases that fit without stretching: the
+    # summed relative axis change (Δa/a + Δb/b + Δc/c) times this weight is
+    # subtracted when choosing the stretch and from the ranking score (0 = off).
+    lattice_change_penalty: float = 0.0
+    # Ranking bonus for materials with many database entries among the
+    # chemistry-eligible candidates (common phases are more likely; 0 = off).
+    entry_count_prior: float = 0.0
+    # Never add a phase with the same composition as one already in the
+    # hypothesis (a second polymorph), only a different compound.
+    polymorph_guard: bool = False
     d_spacing_scale_tolerance: float = 0.0
     max_fit_attempts: int = 300
     swap_fit_attempt_budget: int = 25
@@ -498,7 +508,11 @@ class AnalysisSettings:
             raise ValueError("missing_intensity_max must be between 0 and 1")
         if not isinstance(self.oxidizing_synthesis, bool):
             raise ValueError("oxidizing_synthesis must be a boolean")
-        for flag in ("anisotropic_lattice_scale", "candidate_dedupe", "residual_rerank"):
+        for name, low, high in (("lattice_change_penalty", 0.0, 100.0), ("entry_count_prior", 0.0, 1.0)):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)) or not low <= float(value) <= high:
+                raise ValueError(f"{name} must be between {low} and {high}")
+        for flag in ("anisotropic_lattice_scale", "candidate_dedupe", "residual_rerank", "polymorph_guard"):
             if not isinstance(getattr(self, flag), bool):
                 raise ValueError(f"{flag} must be a boolean")
         if self.allowed_elements is not None:

@@ -260,6 +260,7 @@ def best_d_spacing_scale(
     scale_tolerance: float,
     *,
     strongest_lines: int = 12,
+    change_penalty: float = 0.0,
 ) -> float:
     """Isotropic d-spacing scale that best aligns strong lines with peaks.
 
@@ -291,7 +292,7 @@ def best_d_spacing_scale(
         hits = np.nan_to_num(distance, nan=np.inf) <= tolerance_deg
         score = (hits.any(axis=1) * line_weights[None, :]).sum(axis=1) + (
             hits.any(axis=2) * observed_weights[None, :]
-        ).sum(axis=1)
+        ).sum(axis=1) - change_penalty * 3.0 * np.abs(scales - 1.0)
         order = np.lexsort((np.abs(scales - 1.0), -score))
         if float(score[order[0]]) > best_score:
             best_score = float(score[order[0]])
@@ -419,6 +420,7 @@ def best_axis_scales(
     start_scale: float,
     *,
     strongest_lines: int = 12,
+    change_penalty: float = 0.0,
 ) -> tuple[float, float, float] | None:
     """Per-axis cell scales (within ``scale_tolerance`` of 1) refining an isotropic start.
 
@@ -449,7 +451,7 @@ def best_axis_scales(
         return _alignment_scores(
             d_values[None, :] * _axis_d_ratios(terms, usable, candidates),
             line_weights, observed, observed_weights, wavelength, tolerance_deg,
-        )
+        ) - change_penalty * np.abs(candidates - 1.0).sum(axis=-1)
 
     factors = np.full(3, float(start_scale))
     start_score = float(scores(factors[None, :])[0])
@@ -501,6 +503,34 @@ def material_key(formula: str, space_group: str) -> tuple | None:
     if not fractions or symbol is None:
         return None
     return (tuple(sorted((element, round(value, 2)) for element, value in fractions.items())), symbol)
+
+
+ENTRY_COUNT_SATURATION = 20
+
+
+def apply_entry_count_prior(matches: Iterable[CandidateMatch], weight: float) -> tuple[CandidateMatch, ...]:
+    """Raise the score of materials with many database entries, then re-rank.
+
+    The count is the number of candidates sharing a composition and space
+    group; common phases (precursors, carbonates, simple oxides) are measured
+    and deposited many times. Bonus = weight * log(count) / log(20), capped at weight.
+    """
+
+    ordered = tuple(matches)
+    if weight <= 0.0:
+        return ordered
+    counts: dict[tuple, int] = {}
+    keys = [material_key(match.formula, match.space_group) for match in ordered]
+    for key in keys:
+        if key is not None:
+            counts[key] = counts.get(key, 0) + 1
+    boosted = [
+        replace(match, score=match.score + weight * min(1.0, math.log(counts[key]) / math.log(ENTRY_COUNT_SATURATION)))
+        if key is not None and counts[key] > 1
+        else match
+        for match, key in zip(ordered, keys)
+    ]
+    return tuple(sorted(boosted, key=lambda item: (-item.score, item.reference_id)))
 
 
 def collapse_same_material(matches: Iterable[CandidateMatch]) -> tuple[CandidateMatch, ...]:
@@ -662,6 +692,7 @@ def match_references(
     collapse_groups: bool = True,
     d_scale_tolerance: float = 0.0,
     anisotropic: bool = False,
+    lattice_change_penalty: float = 0.0,
 ) -> tuple[CandidateMatch, ...]:
     """Rank reference phases against detected peaks.
 
@@ -735,11 +766,13 @@ def match_references(
             )
             continue
         d_scale = best_d_spacing_scale(
-            expected_in_range, observed_in_range, radiation, tolerance_deg, d_scale_tolerance
+            expected_in_range, observed_in_range, radiation, tolerance_deg, d_scale_tolerance,
+            change_penalty=lattice_change_penalty,
         )
         axis_scales = (
             best_axis_scales(
-                expected_in_range, reference.cell, observed_in_range, radiation, tolerance_deg, d_scale_tolerance, d_scale
+                expected_in_range, reference.cell, observed_in_range, radiation, tolerance_deg, d_scale_tolerance, d_scale,
+                change_penalty=lattice_change_penalty,
             )
             if anisotropic
             else None
@@ -834,7 +867,8 @@ def match_references(
                 + _POSITION_ONLY_RANKING_WEIGHTS["unweighted_reference_line_coverage"]
                 * unweighted_line_coverage
             )
-        score = max(0.0, min(1.0, score))
+        axis_change = sum(abs(f - 1.0) for f in axis_scales) if axis_scales is not None else 3.0 * abs(d_scale - 1.0)
+        score = max(0.0, min(1.0, score - lattice_change_penalty * axis_change))
         evidence = tuple(
             f"{match.observed.position_deg:.3f}° observed vs {match.expected_deg:.3f}° expected"
             for match in sorted(matches, key=lambda item: item.observed.intensity, reverse=True)[:5]

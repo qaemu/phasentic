@@ -52,6 +52,7 @@ from phasentic.search.displacement import correct_angles, estimate_sample_displa
 from phasentic.search.matcher import (
     candidate_ranking_profile,
     candidate_retention_profile,
+    apply_entry_count_prior,
     collapse_same_material,
     match_references,
     scale_reference_axes,
@@ -649,6 +650,7 @@ def analyze_file(
             collapse_groups=False,
             d_scale_tolerance=resolved_settings.lattice_scale_tolerance,
             anisotropic=resolved_settings.anisotropic_lattice_scale,
+            lattice_change_penalty=resolved_settings.lattice_change_penalty,
         )
         ranked_candidates, qualx_search_receipt = _qualx_rank(
             peaks,
@@ -662,6 +664,7 @@ def analyze_file(
         ranked_with_evidence = tuple(match for match in ranked_candidates if match.matched_peaks > 0)
         if not ranked_with_evidence:
             ranked_with_evidence = ranked_candidates
+        ranked_with_evidence = apply_entry_count_prior(ranked_with_evidence, resolved_settings.entry_count_prior)
         if resolved_settings.candidate_dedupe:
             ranked_with_evidence = collapse_same_material(ranked_with_evidence)
         raw_candidates, fitter_shortlist_receipt = select_fitter_shortlist(
@@ -782,6 +785,7 @@ def analyze_file(
                             collapse_groups=False,
                             d_scale_tolerance=resolved_settings.lattice_scale_tolerance,
                             anisotropic=resolved_settings.anisotropic_lattice_scale,
+                            lattice_change_penalty=resolved_settings.lattice_change_penalty,
                         )
                         ranked_residual_matches, residual_qualx_receipt = _qualx_rank(
                             residual_peaks,
@@ -799,6 +803,7 @@ def analyze_file(
                         )
                         if not residual_ranked_with_evidence:
                             residual_ranked_with_evidence = ranked_residual_matches
+                        residual_ranked_with_evidence = apply_entry_count_prior(residual_ranked_with_evidence, resolved_settings.entry_count_prior)
                         if resolved_settings.candidate_dedupe:
                             residual_ranked_with_evidence = collapse_same_material(residual_ranked_with_evidence)
                         residual_matches, residual_shortlist_receipt = select_fitter_shortlist(
@@ -866,6 +871,7 @@ def analyze_file(
                             collapse_groups=False,
                             d_scale_tolerance=resolved_settings.lattice_scale_tolerance,
                             anisotropic=resolved_settings.anisotropic_lattice_scale,
+                            lattice_change_penalty=resolved_settings.lattice_change_penalty,
                         )
                         exact_residual_count = sum(
                             match.matched_peaks > 0 for match in ranked_residual_matches
@@ -875,6 +881,7 @@ def analyze_file(
                         )
                         if not residual_ranked_with_evidence:
                             residual_ranked_with_evidence = ranked_residual_matches
+                        residual_ranked_with_evidence = apply_entry_count_prior(residual_ranked_with_evidence, resolved_settings.entry_count_prior)
                         if resolved_settings.candidate_dedupe:
                             residual_ranked_with_evidence = collapse_same_material(residual_ranked_with_evidence)
                         residual_matches, residual_shortlist_receipt = select_fitter_shortlist(
@@ -933,6 +940,7 @@ def analyze_file(
                     abstain_when_ambiguous=resolved_settings.abstain_when_ambiguous,
                     missing_intensity_max=resolved_settings.missing_intensity_max,
                     residual_rerank=resolved_settings.residual_rerank,
+                    polymorph_guard=resolved_settings.polymorph_guard,
                     noise_sigma=(
                         float(peak_detection_receipt["median_noise_sigma"])
                         if isinstance(peak_detection_receipt.get("median_noise_sigma"), float)
@@ -1181,6 +1189,9 @@ def analyze_file(
                 "anisotropic_lattice_scale": resolved_settings.anisotropic_lattice_scale,
                 "candidate_dedupe": resolved_settings.candidate_dedupe,
                 "residual_rerank": resolved_settings.residual_rerank,
+                "lattice_change_penalty": resolved_settings.lattice_change_penalty,
+                "entry_count_prior": resolved_settings.entry_count_prior,
+                "polymorph_guard": resolved_settings.polymorph_guard,
                 "d_spacing_scale_tolerance": resolved_settings.d_spacing_scale_tolerance,
                 "max_fit_attempts": resolved_settings.max_fit_attempts,
                 "swap_fit_attempt_budget": resolved_settings.swap_fit_attempt_budget,
@@ -1280,6 +1291,9 @@ def _analysis_id(
             "anisotropic_lattice_scale": settings.anisotropic_lattice_scale,
             "candidate_dedupe": settings.candidate_dedupe,
             "residual_rerank": settings.residual_rerank,
+            "lattice_change_penalty": settings.lattice_change_penalty,
+            "entry_count_prior": settings.entry_count_prior,
+            "polymorph_guard": settings.polymorph_guard,
             "d_spacing_scale_tolerance": settings.d_spacing_scale_tolerance,
             "max_fit_attempts": settings.max_fit_attempts,
             "swap_fit_attempt_budget": settings.swap_fit_attempt_budget,

@@ -62,6 +62,8 @@ class MixtureSettings:
     # Order each branch's candidates by a Dara-style score on the peaks the
     # branch leaves unexplained, instead of their global screening rank.
     residual_rerank: bool = False
+    # Skip candidates with the same composition as a phase already in the branch.
+    polymorph_guard: bool = False
 
     def validate(self) -> "MixtureSettings":
         if isinstance(self.missing_intensity_max, bool) or not isinstance(self.missing_intensity_max, (int, float)) or not 0.0 <= float(self.missing_intensity_max) <= 1.0:
@@ -132,6 +134,7 @@ class MixtureSettings:
             "abstain_when_ambiguous": self.abstain_when_ambiguous,
             "missing_intensity_max": self.missing_intensity_max,
             "residual_rerank": self.residual_rerank,
+            "polymorph_guard": self.polymorph_guard,
             "inactive_scale_relative_tolerance": self.inactive_scale_relative_tolerance,
             "profile_width_deg": self.profile_width_deg,
             "d_spacing_scale_tolerance": self.d_spacing_scale_tolerance,
@@ -984,6 +987,10 @@ def _try_branch_addition(
     # second phase (same composition and space group, or the same strong
     # reflections).
     if any(_same_material(reference, item, radiation, tolerance_deg) for item in branch.references):
+        return None
+    if config.polymorph_guard and any(
+        compositions_compatible(reference.formula, item.formula, ignore_hydrogen=True) for item in branch.references
+    ):
         return None
     if reference.reference_id not in profiles:
         profile_d_scale, profile = _fit_reference_profile_scale(
