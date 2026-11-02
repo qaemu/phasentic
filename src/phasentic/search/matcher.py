@@ -491,9 +491,13 @@ def material_key(formula: str, space_group: str) -> tuple | None:
     """Composition (heavy atoms, fractions to 0.01) plus space group; None when unknown."""
 
     from phasentic.domain.formula import composition_fractions, normalize_space_group_symbol
+    from phasentic.references.equivalence import space_group_number
 
     fractions = composition_fractions(formula, ignore_hydrogen=True)
-    symbol = normalize_space_group_symbol(space_group)
+    base = (space_group or "").split(":")[0].split()
+    if base and base[-1].upper() in {"RS", "HS", "R", "H"} and len(base) > 1:  # rhombohedral/hexagonal setting tag
+        base = base[:-1]
+    symbol = space_group_number(space_group) or space_group_number(" ".join(base)) or normalize_space_group_symbol(space_group)
     if not fractions or symbol is None:
         return None
     return (tuple(sorted((element, round(value, 2)) for element, value in fractions.items())), symbol)
