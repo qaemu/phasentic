@@ -59,6 +59,9 @@ class MixtureSettings:
     # (1.0 disables). ``noise_sigma`` is the scan's measured noise level.
     missing_intensity_max: float = 1.0
     noise_sigma: float | None = None
+    # Order each branch's candidates by a Dara-style score on the peaks the
+    # branch leaves unexplained, instead of their global screening rank.
+    residual_rerank: bool = False
 
     def validate(self) -> "MixtureSettings":
         if isinstance(self.missing_intensity_max, bool) or not isinstance(self.missing_intensity_max, (int, float)) or not 0.0 <= float(self.missing_intensity_max) <= 1.0:
@@ -128,6 +131,7 @@ class MixtureSettings:
             "ambiguity_margin": self.ambiguity_margin,
             "abstain_when_ambiguous": self.abstain_when_ambiguous,
             "missing_intensity_max": self.missing_intensity_max,
+            "residual_rerank": self.residual_rerank,
             "inactive_scale_relative_tolerance": self.inactive_scale_relative_tolerance,
             "profile_width_deg": self.profile_width_deg,
             "d_spacing_scale_tolerance": self.d_spacing_scale_tolerance,
@@ -557,6 +561,7 @@ def select_mixture_hypotheses(
     all_branches: list[_MixtureBranch] = []
 
     fitted_branch_ids: set[str] = set()
+    line_angle_cache: dict[str, tuple[np.ndarray, np.ndarray]] = {}
     while branches and attempts < addition_attempt_limit:
         expanded: list[_MixtureBranch] = []
         branch_queues: list[tuple[_MixtureBranch, list[ReferencePhase], frozenset[int]]] = []
@@ -617,7 +622,13 @@ def select_mixture_hypotheses(
                 tolerance_deg,
                 config,
             )
-            branch_queues.append((branch, list(branch_candidates.values()), explained_peak_indices))
+            queue = list(branch_candidates.values())
+            if config.residual_rerank and branch.references:
+                queue = _rerank_by_residual_explanation(
+                    queue, _unassigned_detected_peaks(peak_values, branch, config), peak_values,
+                    radiation, tolerance_deg, (float(angles[0]), float(angles[-1])), line_angle_cache,
+                )
+            branch_queues.append((branch, queue, explained_peak_indices))
         # Share the level's attempt budget fairly: every retained branch gets
         # one fit attempt per round (round-robin) instead of the first branch
         # consuming the whole budget. A reference set already fitted from
@@ -1808,6 +1819,75 @@ def _swap_phase_branches(
 
 def _branch_id_from_references(references: Iterable[ReferencePhase]) -> str:
     return "+".join(sorted(reference.reference_id for reference in references))
+
+
+RESIDUAL_UNEXPLAINED_PENALTY = 0.1
+RESIDUAL_EXTRA_LINE_PENALTY = 0.5
+
+
+def _rerank_by_residual_explanation(
+    candidates: list[ReferencePhase],
+    residual_peaks: tuple[Peak, ...],
+    all_peaks: tuple[Peak, ...],
+    radiation: Radiation,
+    tolerance_deg: float,
+    scan_range: tuple[float, float],
+    cache: dict[str, tuple[np.ndarray, np.ndarray]],
+) -> list[ReferencePhase]:
+    """Order candidates by how well they explain the still-unexplained peaks.
+
+    Dara-style score: (I_matched - 0.1 * I_unexplained - 0.5 * I_extra) / I_residual,
+    where I_matched / I_unexplained are residual peak intensities a candidate
+    does / does not reach, and I_extra is the candidate's predicted intensity
+    (scaled to the matched peaks) at angles with no detected peak at all.
+    The sort is stable, so ties keep the evidence-rank order.
+    """
+
+    if not residual_peaks or not candidates:
+        return candidates
+    residual_positions = np.array([peak.position_deg for peak in residual_peaks], dtype=float)
+    residual_intensities = np.array([max(peak.intensity, 0.0) for peak in residual_peaks], dtype=float)
+    total = float(residual_intensities.sum())
+    if total <= 0:
+        return candidates
+    all_positions = np.array([peak.position_deg for peak in all_peaks], dtype=float)
+    detection_floor = float(min(max(peak.intensity, 0.0) for peak in all_peaks))
+    wavelength = radiation.wavelength_angstrom
+    lower, upper = scan_range
+
+    def score(reference: ReferencePhase) -> float:
+        cached = cache.get(reference.reference_id)
+        if cached is None:
+            d = np.array([line.d_spacing_angstrom for line in reference.lines], dtype=float)
+            intensity = np.array([max(line.relative_intensity, 0.0) for line in reference.lines], dtype=float)
+            argument = wavelength / (2.0 * np.maximum(d, 1e-12))
+            valid = argument < 1.0
+            angle = np.degrees(2.0 * np.arcsin(np.clip(argument, 0.0, 1.0)))
+            keep = valid & (angle >= lower) & (angle <= upper)
+            cached = (angle[keep], intensity[keep])
+            cache[reference.reference_id] = cached
+        line_angles, line_intensities = cached
+        if line_angles.size == 0:
+            return -1.0
+        reach = np.abs(residual_positions[:, None] - line_angles[None, :]) <= tolerance_deg
+        peak_matched = reach.any(axis=1)
+        matched = float(residual_intensities[peak_matched].sum())
+        unexplained = total - matched
+        if matched <= 0:
+            return -RESIDUAL_UNEXPLAINED_PENALTY
+        matched_lines = reach.any(axis=0)
+        scale = matched / max(float(line_intensities[matched_lines].sum()), 1e-12)
+        observed_anywhere = (
+            (np.abs(all_positions[:, None] - line_angles[None, :]) <= tolerance_deg).any(axis=0)
+            if all_positions.size
+            else np.zeros(line_angles.size, dtype=bool)
+        )
+        predicted = scale * line_intensities
+        extra = float(predicted[(~observed_anywhere) & (predicted > detection_floor)].sum())
+        return (matched - RESIDUAL_UNEXPLAINED_PENALTY * unexplained - RESIDUAL_EXTRA_LINE_PENALTY * extra) / total
+
+    scores = {reference.reference_id: score(reference) for reference in candidates}
+    return sorted(candidates, key=lambda reference: -scores[reference.reference_id])
 
 
 def _unassigned_detected_peaks(

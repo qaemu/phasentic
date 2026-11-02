@@ -434,6 +434,15 @@ class AnalysisSettings:
     # Per-phase isotropic d-spacing scale searched during matching (doped,
     # solid-solution or non-stoichiometric phases differ from database cells).
     lattice_scale_tolerance: float = 0.006
+    # Stretch a, b and c separately (within lattice_scale_tolerance) when the
+    # reference has a cell and hkl, instead of one isotropic scale.
+    anisotropic_lattice_scale: bool = True
+    # Keep only the best-ranked entry per composition and space group before
+    # the fitter shortlist, so duplicate database entries do not fill it.
+    candidate_dedupe: bool = True
+    # Order each branch's candidates by how well they explain the peaks the
+    # branch leaves unexplained (Dara-style score) instead of global rank.
+    residual_rerank: bool = True
     d_spacing_scale_tolerance: float = 0.0
     max_fit_attempts: int = 300
     swap_fit_attempt_budget: int = 25
@@ -489,6 +498,9 @@ class AnalysisSettings:
             raise ValueError("missing_intensity_max must be between 0 and 1")
         if not isinstance(self.oxidizing_synthesis, bool):
             raise ValueError("oxidizing_synthesis must be a boolean")
+        for flag in ("anisotropic_lattice_scale", "candidate_dedupe", "residual_rerank"):
+            if not isinstance(getattr(self, flag), bool):
+                raise ValueError(f"{flag} must be a boolean")
         if self.allowed_elements is not None:
             from phasentic.domain.formula import normalize_elements
 
@@ -653,6 +665,9 @@ class ReferencePhase:
     parent_family_group_id: str | None = None
     equivalence_kind: str | None = None
     equivalence_confidence: str | None = None
+    # Unit cell (a, b, c in Å; alpha, beta, gamma in degrees) when the store
+    # provides one; lets matching stretch each axis separately.
+    cell: tuple[float, float, float, float, float, float] | None = None
 
 
 @dataclass(frozen=True)
@@ -686,6 +701,9 @@ class CandidateMatch:
     # Per-phase isotropic d-spacing scale chosen from peak positions (1.0 =
     # database cell). Screening adjustment only; not a refined lattice.
     d_spacing_scale: float = 1.0
+    # Per-axis (a, b, c) cell scales when anisotropic matching was used;
+    # ``d_spacing_scale`` then holds their geometric mean.
+    axis_scales: tuple[float, float, float] | None = None
 
 
 @dataclass(frozen=True)

@@ -52,7 +52,9 @@ from phasentic.search.displacement import correct_angles, estimate_sample_displa
 from phasentic.search.matcher import (
     candidate_ranking_profile,
     candidate_retention_profile,
+    collapse_same_material,
     match_references,
+    scale_reference_axes,
     select_fitter_shortlist,
 )
 from phasentic.search.mixtures import (
@@ -228,9 +230,12 @@ def _query_reference_candidates(
     return _filter_by_elements(fetched, allowed_elements, oxidizing=oxidizing)
 
 
-def _scaled_reference(reference: ReferencePhase, scale: float) -> ReferencePhase:
-    """Apply the matcher's per-phase d-spacing scale (screening adjustment)."""
+def _scaled_reference(reference: ReferencePhase, match: CandidateMatch) -> ReferencePhase:
+    """Apply the matcher's per-phase cell scaling (screening adjustment)."""
 
+    if match.axis_scales is not None:
+        return scale_reference_axes(reference, match.axis_scales)
+    scale = match.d_spacing_scale
     if scale == 1.0:
         return reference
     return replace(
@@ -643,6 +648,7 @@ def analyze_file(
             use_intensity=bool(intensity_policy.get("intensity_scoring", True)),
             collapse_groups=False,
             d_scale_tolerance=resolved_settings.lattice_scale_tolerance,
+            anisotropic=resolved_settings.anisotropic_lattice_scale,
         )
         ranked_candidates, qualx_search_receipt = _qualx_rank(
             peaks,
@@ -656,6 +662,8 @@ def analyze_file(
         ranked_with_evidence = tuple(match for match in ranked_candidates if match.matched_peaks > 0)
         if not ranked_with_evidence:
             ranked_with_evidence = ranked_candidates
+        if resolved_settings.candidate_dedupe:
+            ranked_with_evidence = collapse_same_material(ranked_with_evidence)
         raw_candidates, fitter_shortlist_receipt = select_fitter_shortlist(
             ranked_with_evidence,
             peaks,
@@ -663,7 +671,7 @@ def analyze_file(
         )
         candidate_by_id = _references_by_id_first_wins(retrieved_candidate_phases)
         candidate_phases = tuple(
-            _scaled_reference(candidate_by_id[match.reference_id], match.d_spacing_scale)
+            _scaled_reference(candidate_by_id[match.reference_id], match)
             for match in raw_candidates
             if match.reference_id in candidate_by_id
         )
@@ -773,6 +781,7 @@ def analyze_file(
                             use_intensity=bool(intensity_policy.get("intensity_scoring", True)),
                             collapse_groups=False,
                             d_scale_tolerance=resolved_settings.lattice_scale_tolerance,
+                            anisotropic=resolved_settings.anisotropic_lattice_scale,
                         )
                         ranked_residual_matches, residual_qualx_receipt = _qualx_rank(
                             residual_peaks,
@@ -790,6 +799,8 @@ def analyze_file(
                         )
                         if not residual_ranked_with_evidence:
                             residual_ranked_with_evidence = ranked_residual_matches
+                        if resolved_settings.candidate_dedupe:
+                            residual_ranked_with_evidence = collapse_same_material(residual_ranked_with_evidence)
                         residual_matches, residual_shortlist_receipt = select_fitter_shortlist(
                             residual_ranked_with_evidence,
                             residual_peaks,
@@ -797,7 +808,7 @@ def analyze_file(
                         )
                         fetched_by_id = _references_by_id_first_wins(fetched)
                         fetched_shortlist = tuple(
-                            _scaled_reference(fetched_by_id[match.reference_id], match.d_spacing_scale)
+                            _scaled_reference(fetched_by_id[match.reference_id], match)
                             for match in residual_matches
                             if match.reference_id in fetched_by_id
                         )
@@ -854,6 +865,7 @@ def analyze_file(
                             use_intensity=bool(intensity_policy.get("intensity_scoring", True)),
                             collapse_groups=False,
                             d_scale_tolerance=resolved_settings.lattice_scale_tolerance,
+                            anisotropic=resolved_settings.anisotropic_lattice_scale,
                         )
                         exact_residual_count = sum(
                             match.matched_peaks > 0 for match in ranked_residual_matches
@@ -863,6 +875,8 @@ def analyze_file(
                         )
                         if not residual_ranked_with_evidence:
                             residual_ranked_with_evidence = ranked_residual_matches
+                        if resolved_settings.candidate_dedupe:
+                            residual_ranked_with_evidence = collapse_same_material(residual_ranked_with_evidence)
                         residual_matches, residual_shortlist_receipt = select_fitter_shortlist(
                             residual_ranked_with_evidence,
                             residual_peaks,
@@ -870,7 +884,7 @@ def analyze_file(
                         )
                         fetched_by_id = _references_by_id_first_wins(fetched)
                         fetched_shortlist = tuple(
-                            _scaled_reference(fetched_by_id[match.reference_id], match.d_spacing_scale)
+                            _scaled_reference(fetched_by_id[match.reference_id], match)
                             for match in residual_matches
                             if match.reference_id in fetched_by_id
                         )
@@ -918,6 +932,7 @@ def analyze_file(
                     ambiguity_margin=resolved_settings.ambiguity_margin,
                     abstain_when_ambiguous=resolved_settings.abstain_when_ambiguous,
                     missing_intensity_max=resolved_settings.missing_intensity_max,
+                    residual_rerank=resolved_settings.residual_rerank,
                     noise_sigma=(
                         float(peak_detection_receipt["median_noise_sigma"])
                         if isinstance(peak_detection_receipt.get("median_noise_sigma"), float)

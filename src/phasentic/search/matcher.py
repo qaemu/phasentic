@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import math
 from typing import Iterable, Protocol
 
@@ -299,6 +299,226 @@ def best_d_spacing_scale(
     return best_scale
 
 
+def parse_hkl(text: str | None) -> tuple[int, int, int] | None:
+    """Miller indices from a stored hkl string ("1 0 4", "104", "2 -1 6", "1 0 -1 4")."""
+
+    if not text:
+        return None
+    parts = text.split()
+    if len(parts) == 1 and len(text) == 3 and text.isdigit():
+        parts = list(text)
+    try:
+        values = [int(part) for part in parts]
+    except ValueError:
+        return None
+    if len(values) == 4:  # hexagonal (h k i l): i = -(h + k) is redundant
+        values = [values[0], values[1], values[3]]
+    return (values[0], values[1], values[2]) if len(values) == 3 else None
+
+
+def _reciprocal_metric(cell: tuple[float, float, float, float, float, float]) -> np.ndarray | None:
+    a, b, c, alpha, beta, gamma = cell
+    cos_a, cos_b, cos_g = (math.cos(math.radians(value)) for value in (alpha, beta, gamma))
+    metric = np.array(
+        [[a * a, a * b * cos_g, a * c * cos_b], [a * b * cos_g, b * b, b * c * cos_a], [a * c * cos_b, b * c * cos_a, c * c]]
+    )
+    try:
+        inverse = np.linalg.inv(metric)
+    except np.linalg.LinAlgError:
+        return None
+    return inverse if np.all(np.isfinite(inverse)) else None
+
+
+def _axis_groups(cell: tuple[float, float, float, float, float, float]) -> tuple[tuple[int, ...], ...]:
+    """Axes with equal lengths (cubic, tetragonal, hexagonal) must stretch together."""
+
+    groups: list[list[int]] = []
+    for axis in range(3):
+        for group in groups:
+            if abs(cell[axis] - cell[group[0]]) <= 1e-4 * max(cell[axis], 1e-9):
+                group.append(axis)
+                break
+        else:
+            groups.append([axis])
+    return tuple(tuple(group) for group in groups)
+
+
+def _axis_ratio_terms(lines: tuple[ReferenceLine, ...], cell) -> tuple[np.ndarray, np.ndarray] | None:
+    """Per-line reciprocal-metric terms so d(f) / d(1) can be evaluated for axis scales f.
+
+    Returns (terms, usable): terms[i] holds the six products G*_jk h_j h_k of
+    line i; lines whose hkl is missing or does not reproduce the stored
+    d-spacing within 1% (other setting) are marked unusable and follow the
+    isotropic mean scale instead.
+    """
+
+    if cell is None or any(not math.isfinite(value) or value <= 0 for value in cell):
+        return None
+    inverse = _reciprocal_metric(cell)
+    if inverse is None:
+        return None
+    terms = np.zeros((len(lines), 6))
+    usable = np.zeros(len(lines), dtype=bool)
+    pairs = ((0, 0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2))
+    for index, line in enumerate(lines):
+        hkl = parse_hkl(line.hkl)
+        if hkl is None:
+            continue
+        row = np.array([inverse[j, k] * hkl[j] * hkl[k] * (1.0 if j == k else 2.0) for j, k in pairs])
+        inverse_d_squared = float(row.sum())
+        if inverse_d_squared <= 0:
+            continue
+        if abs(1.0 / math.sqrt(inverse_d_squared) - line.d_spacing_angstrom) <= 0.01 * line.d_spacing_angstrom:
+            terms[index] = row
+            usable[index] = True
+    return (terms, usable) if usable.sum() >= 3 else None
+
+
+def _axis_d_ratios(terms: np.ndarray, usable: np.ndarray, factors: np.ndarray) -> np.ndarray:
+    """d(scaled cell) / d(cell) per line for axis factors (shape [..., 3])."""
+
+    f = np.asarray(factors, dtype=float)
+    fa, fb, fc = f[..., 0:1], f[..., 1:2], f[..., 2:3]
+    divisors = np.stack([fa * fa, fb * fb, fc * fc, fa * fb, fa * fc, fb * fc], axis=-1)
+    base = terms.sum(axis=1)
+    scaled = (terms / divisors).sum(axis=-1)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        ratio = np.sqrt(np.where(scaled > 0, base / scaled, 1.0))
+    mean_scale = np.cbrt(fa * fb * fc)
+    return np.where(usable, ratio, mean_scale)
+
+
+def _alignment_scores(
+    d_values: np.ndarray,
+    line_weights: np.ndarray,
+    observed: np.ndarray,
+    observed_weights: np.ndarray,
+    wavelength: float,
+    tolerance_deg: float,
+) -> np.ndarray:
+    """best_d_spacing_scale's score for each row of candidate d-spacings."""
+
+    argument = wavelength / (2.0 * d_values)
+    predicted = np.where(argument < 1.0, np.degrees(2.0 * np.arcsin(np.clip(argument, 0.0, 1.0))), np.nan)
+    distance = np.abs(observed[None, :, None] - predicted[:, None, :])
+    hits = np.nan_to_num(distance, nan=np.inf) <= tolerance_deg
+    return (hits.any(axis=1) * line_weights[None, :]).sum(axis=1) + (hits.any(axis=2) * observed_weights[None, :]).sum(axis=1)
+
+
+ANISOTROPIC_GRID_POINTS = 9
+ANISOTROPIC_SWEEPS = 2
+
+
+def best_axis_scales(
+    lines: tuple[ReferenceLine, ...],
+    cell,
+    peaks: tuple[Peak, ...],
+    radiation: Radiation,
+    tolerance_deg: float,
+    scale_tolerance: float,
+    start_scale: float,
+    *,
+    strongest_lines: int = 12,
+) -> tuple[float, float, float] | None:
+    """Per-axis cell scales (within ``scale_tolerance`` of 1) refining an isotropic start.
+
+    Coordinate search over independent axis groups, scored like
+    ``best_d_spacing_scale``; returns None when the cell or hkl cannot be used
+    or anisotropy does not beat the isotropic scale.
+    """
+
+    if scale_tolerance <= 0.0 or not lines or not peaks or cell is None:
+        return None
+    strong = tuple(sorted(lines, key=lambda line: -line.relative_intensity)[:strongest_lines])
+    prepared = _axis_ratio_terms(strong, cell)
+    groups = _axis_groups(cell)
+    if prepared is None or len(groups) < 2:
+        return None
+    terms, usable = prepared
+    d_values = np.array([line.d_spacing_angstrom for line in strong], dtype=float)
+    line_weights = np.array([max(line.relative_intensity, 0.0) for line in strong], dtype=float)
+    if line_weights.sum() <= 0:
+        return None
+    line_weights /= line_weights.sum()
+    observed = np.array([peak.position_deg for peak in peaks], dtype=float)
+    observed_weights = np.array([max(peak.intensity, 0.0) for peak in peaks], dtype=float)
+    observed_weights = observed_weights / max(float(observed_weights.sum()), 1e-12)
+    wavelength = radiation_spectral_components(radiation)[0][0]
+
+    def scores(candidates: np.ndarray) -> np.ndarray:
+        return _alignment_scores(
+            d_values[None, :] * _axis_d_ratios(terms, usable, candidates),
+            line_weights, observed, observed_weights, wavelength, tolerance_deg,
+        )
+
+    factors = np.full(3, float(start_scale))
+    start_score = float(scores(factors[None, :])[0])
+    best_score = start_score
+    grid = np.linspace(1.0 - scale_tolerance, 1.0 + scale_tolerance, ANISOTROPIC_GRID_POINTS)
+    for _sweep in range(ANISOTROPIC_SWEEPS):
+        for group in groups:
+            trial = np.repeat(factors[None, :], grid.size, axis=0)
+            trial[:, list(group)] = grid[:, None]
+            values = scores(trial)
+            order = np.lexsort((np.abs(grid - factors[group[0]]), -values))
+            if values[order[0]] > best_score + 1e-12:
+                best_score = float(values[order[0]])
+                factors[list(group)] = grid[order[0]]
+    if best_score <= start_score + 1e-12:
+        return None
+    return (float(factors[0]), float(factors[1]), float(factors[2]))
+
+
+def scale_reference_axes(reference: ReferencePhase, factors: tuple[float, float, float]) -> ReferencePhase:
+    """Apply per-axis cell scales to every line (isotropic mean for lines without usable hkl)."""
+
+    prepared = _axis_ratio_terms(reference.lines, reference.cell)
+    mean_scale = float(np.cbrt(factors[0] * factors[1] * factors[2]))
+    if prepared is None:
+        ratios = np.full(len(reference.lines), mean_scale)
+    else:
+        ratios = _axis_d_ratios(prepared[0], prepared[1], np.array(factors))
+    return replace(
+        reference,
+        lines=tuple(
+            ReferenceLine(line.d_spacing_angstrom * float(ratio), line.relative_intensity, line.hkl)
+            for line, ratio in zip(reference.lines, ratios, strict=True)
+        ),
+    )
+
+
+def material_key(formula: str, space_group: str) -> tuple | None:
+    """Composition (heavy atoms, fractions to 0.01) plus space group; None when unknown."""
+
+    from phasentic.domain.formula import composition_fractions, normalize_space_group_symbol
+
+    fractions = composition_fractions(formula, ignore_hydrogen=True)
+    symbol = normalize_space_group_symbol(space_group)
+    if not fractions or symbol is None:
+        return None
+    return (tuple(sorted((element, round(value, 2)) for element, value in fractions.items())), symbol)
+
+
+def collapse_same_material(matches: Iterable[CandidateMatch]) -> tuple[CandidateMatch, ...]:
+    """Keep the best-ranked entry per composition and space group (input is rank-ordered).
+
+    The database holds many entries for common phases (repeated measurements,
+    temperatures, settings); without this they fill the fitter shortlist and
+    push distinct phases out of it.
+    """
+
+    kept: list[CandidateMatch] = []
+    seen: set[tuple] = set()
+    for match in matches:
+        key = material_key(match.formula, match.space_group)
+        if key is not None:
+            if key in seen:
+                continue
+            seen.add(key)
+        kept.append(match)
+    return tuple(kept)
+
+
 def _status(score: float, matched: int) -> str:
     if matched < 2 or score < 0.35:
         return "unresolved"
@@ -437,6 +657,7 @@ def match_references(
     use_intensity: bool = True,
     collapse_groups: bool = True,
     d_scale_tolerance: float = 0.0,
+    anisotropic: bool = False,
 ) -> tuple[CandidateMatch, ...]:
     """Rank reference phases against detected peaks.
 
@@ -512,7 +733,19 @@ def match_references(
         d_scale = best_d_spacing_scale(
             expected_in_range, observed_in_range, radiation, tolerance_deg, d_scale_tolerance
         )
-        if d_scale != 1.0:
+        axis_scales = (
+            best_axis_scales(
+                expected_in_range, reference.cell, observed_in_range, radiation, tolerance_deg, d_scale_tolerance, d_scale
+            )
+            if anisotropic
+            else None
+        )
+        if axis_scales is not None:
+            expected_in_range = scale_reference_axes(
+                replace(reference, lines=expected_in_range), axis_scales
+            ).lines
+            d_scale = float(np.cbrt(axis_scales[0] * axis_scales[1] * axis_scales[2]))
+        elif d_scale != 1.0:
             expected_in_range = tuple(
                 ReferenceLine(line.d_spacing_angstrom * d_scale, line.relative_intensity, line.hkl)
                 for line in expected_in_range
@@ -536,6 +769,7 @@ def match_references(
             parent_family_group_id=reference.parent_family_group_id,
             equivalence_kind=reference.equivalence_kind,
             equivalence_confidence=reference.equivalence_confidence,
+            cell=reference.cell,
         )
         matches = _nearest_matches(
             observed_in_range,
@@ -624,6 +858,7 @@ def match_references(
                     sorted({match.observed_index for match in matches})
                 ),
                 d_spacing_scale=d_scale,
+                axis_scales=axis_scales,
             )
         )
     ranked = sorted(candidates, key=lambda item: (-item.score, item.reference_id))
