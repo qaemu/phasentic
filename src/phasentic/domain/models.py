@@ -457,6 +457,9 @@ class AnalysisSettings:
     # (Dara's automatic threshold) instead of always taking candidate_pool;
     # candidate_pool stays the upper bound.
     adaptive_pool: bool = False
+    # Database entries the operator fixed (chosen from the phase alternatives);
+    # the mixture search keeps them and only searches the remaining phases.
+    pinned_reference_ids: tuple[str, ...] = ()
     d_spacing_scale_tolerance: float = 0.0
     max_fit_attempts: int = 300
     swap_fit_attempt_budget: int = 25
@@ -519,6 +522,10 @@ class AnalysisSettings:
         for flag in ("anisotropic_lattice_scale", "candidate_dedupe", "residual_rerank", "polymorph_guard", "adaptive_pool"):
             if not isinstance(getattr(self, flag), bool):
                 raise ValueError(f"{flag} must be a boolean")
+        if not isinstance(self.pinned_reference_ids, tuple) or len(self.pinned_reference_ids) > self.max_phases or any(
+            not isinstance(item, str) or not 0 < len(item) <= 200 for item in self.pinned_reference_ids
+        ):
+            raise ValueError("pinned_reference_ids must be at most max_phases reference IDs")
         if self.allowed_elements is not None:
             from phasentic.domain.formula import normalize_elements
 

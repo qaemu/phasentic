@@ -33,6 +33,10 @@ const translations = {
     mixtureQueryCandidatePool: "Candidate pool", mixtureQueryRequeries: "Residual re-queries", mixtureQueryMaxFitAttempts: "Max fit attempts",
     mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
     mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
+    alternatives: "Alternatives per phase",
+    altIntro: "Other materials that fit about as well in a phase's place (selected phase = 100%; other entries of the same material are left out). Choosing one fixes it and searches the smaller phases again.",
+    altFit: "Fit", altUse: "Use this", altNone: "No other material fits within 80%.", altSelected: "selected",
+    pinned: "Fixed by you:", unpin: "Clear and analyze again",
     stale: "A setting changed, so the previous result was cleared.",
     footer: "Runs on this computer; scans are not uploaded anywhere.", footerAi: "Open source (MIT). No AI model is used to analyse scans.",
   },
@@ -70,6 +74,10 @@ const translations = {
     mixtureQueryCandidatePool: "Conjunto de candidatos", mixtureQueryRequeries: "Nuevas consultas por residual", mixtureQueryMaxFitAttempts: "Máximo de intentos de ajuste",
     mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
     mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
+    alternatives: "Alternativas por fase",
+    altIntro: "Otros materiales que ajustan casi igual en el lugar de una fase (fase seleccionada = 100%; se omiten otras entradas del mismo material). Elegir una la fija y vuelve a buscar las fases menores.",
+    altFit: "Ajuste", altUse: "Usar esta", altNone: "Ningún otro material ajusta dentro del 80%.", altSelected: "seleccionada",
+    pinned: "Fijadas por usted:", unpin: "Quitar y analizar de nuevo",
     stale: "Cambió una configuración, así que se borró el resultado anterior.",
     footer: "Se ejecuta en esta computadora; los escaneos no se suben a ningún lado.", footerAi: "Código abierto (MIT). No se usa ningún modelo de IA para analizar escaneos.",
   },
@@ -84,6 +92,7 @@ let calibrationRequest = 0;
 let latestReport = null;
 let analysisRequest = 0;
 let activeAnalysisController = null;
+let pinnedIds = [];  // phases the operator fixed from the alternatives
 
 function currentLanguage() {
   return translations[$("language").value] || translations.en;
@@ -186,6 +195,32 @@ function renderMixtureSummary(parent, report) {
   parent.appendChild(details);
 }
 
+// Per selected phase: materials that fit nearly as well in its place, best first.
+// "Use this" fixes that entry plus the larger phases listed before it, then
+// analyses again so the smaller phases are searched around the choice.
+function renderAlternatives(parent, report) {
+  const L = currentLanguage();
+  const m = report.mixture || {};
+  const best = selectedHypothesis(report) || (m.hypotheses || [])[0];
+  const alts = m.phase_alternatives && typeof m.phase_alternatives === "object" ? m.phase_alternatives : {};
+  const comps = best ? (best.components || []).filter((c) => c.reference_id in alts) : [];
+  $("alternatives-part").hidden = !comps.length && !pinnedIds.length;
+  const pinnedNote = pinnedIds.length ? `<p class="note">${esc(L.pinned)} ${pinnedIds.map((id) => R().codLink(id)).join(", ")} <button type="button" class="secondary" data-unpin="1">${esc(L.unpin)}</button></p>` : "";
+  const blocks = comps.map((c, index) => {
+    const list = alts[c.reference_id] || [];
+    const row = (a, own) => `<tr${own ? ' class="selected"' : ""}><td class="f">${R().formula(a.formula)}</td><td>${R().spaceGroup(a.space_group)}</td><td>${R().codLink(a.reference_id)}</td><td class="num"><span class="bar" style="width:${Math.max(2, Math.min(110, Number(a.fit_percent) * 1.1)).toFixed(0)}px"></span>${Number(a.fit_percent).toFixed(1)}%</td><td>${own ? `<span class="tag">${esc(L.altSelected)}</span>` : `<button type="button" class="secondary" data-pin="${esc(a.reference_id)}" data-phase="${index}">${esc(L.altUse)}</button>`}</td></tr>`;
+    const body = [row({ ...c, fit_percent: 100 }, true), ...list.map((a) => row(a, false))].join("");
+    return `<h3>${R().formula(c.formula)}</h3><table><thead><tr><th>${esc(L.candPhase)}</th><th>${esc(L.candSg)}</th><th>${esc(L.candRef)}</th><th class="num">${esc(L.altFit)}</th><th></th></tr></thead><tbody>${body}</tbody></table>${list.length ? "" : `<p class="note">${esc(L.altNone)}</p>`}`;
+  }).join("");
+  setHTML(parent, `${pinnedNote}<p class="note">${esc(L.altIntro)}</p>${blocks}`);
+  parent.querySelectorAll("[data-pin]").forEach((button) => button.addEventListener("click", () => {
+    const index = Number(button.dataset.phase);
+    pinnedIds = [...comps.slice(0, index).map((c) => c.reference_id), button.dataset.pin];
+    form.requestSubmit();
+  }));
+  parent.querySelectorAll("[data-unpin]").forEach((button) => button.addEventListener("click", () => { pinnedIds = []; form.requestSubmit(); }));
+}
+
 function renderCandidates(parent, report) {
   const L = currentLanguage();
   const list = (report.candidates || []).slice(0, 10);
@@ -257,6 +292,7 @@ function renderReport(report) {
   setHTML($("phase-evidence"), evidence);
   $("evidence-fold").hidden = !evidence;
   renderMixtureSummary($("mixture-content"), report);
+  renderAlternatives($("alternatives-content"), report);
   renderCandidates($("candidate-list"), report);
   renderDiagnostics($("diagnostic-content"), report);
 }
@@ -264,7 +300,7 @@ function renderReport(report) {
 function clearRenderedReport() {
   latestReport = null;
   $("result").hidden = true; $("empty-state").hidden = false;
-  ["plot", "phase-evidence", "phase-summary", "mixture-content", "candidate-list", "diagnostic-content"].forEach((id) => { $(id).replaceChildren(); });
+  ["plot", "phase-evidence", "phase-summary", "mixture-content", "alternatives-content", "candidate-list", "diagnostic-content"].forEach((id) => { $(id).replaceChildren(); });
   $("decision").textContent = "—"; $("analysis-id").textContent = "";
 }
 
@@ -278,6 +314,7 @@ $("validated-preset").addEventListener("change", syncPreset);
 syncPreset();
 
 function invalidateAnalysis(message = translations[$("language").value].stale) {
+  pinnedIds = [];
   analysisRequest += 1;
   if (activeAnalysisController) activeAnalysisController.abort();
   activeAnalysisController = null;
@@ -438,6 +475,7 @@ form.addEventListener("submit", async (event) => {
   const settings = $("validated-preset").checked
     ? { ...common, preset: "validated" }
     : { ...common, peak_tolerance_deg: Number($("tolerance").value), analysis_mode: $("analysis-mode").value, max_phases: Number($("max-phases").value) };
+  if (pinnedIds.length) settings.pinned_reference_ids = pinnedIds;
   data.append("settings_json", JSON.stringify(settings));
   data.append("calibration_json", JSON.stringify(calibrationResult || {}));
   try {

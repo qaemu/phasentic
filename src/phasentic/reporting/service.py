@@ -232,6 +232,22 @@ def _query_reference_candidates(
     return _filter_by_elements(fetched, allowed_elements, oxidizing=oxidizing)
 
 
+def _pinned_references(store: object, settings: AnalysisSettings, radiation: Radiation) -> tuple[ReferencePhase, ...]:
+    """Load the operator-fixed entries by ID; an unknown ID is an error, not a silent skip."""
+
+    found = []
+    for reference_id in settings.pinned_reference_ids:
+        try:
+            found.append(
+                store.get(reference_id, radiation=radiation)
+                if _provider_accepts_keyword(store.get, "radiation")
+                else store.get(reference_id)
+            )
+        except (KeyError, LookupError) as exc:
+            raise ValueError(f"pinned reference not found: {reference_id}") from exc
+    return tuple(found)
+
+
 def _shortlist_limit(matches: tuple[CandidateMatch, ...], settings: AnalysisSettings) -> int:
     if settings.adaptive_pool:
         return adaptive_pool_size(matches, settings.candidate_pool)
@@ -929,6 +945,9 @@ def analyze_file(
                         return _mixture_inputs(resolved.references)
 
                     residual_candidate_provider = _query_residual_universe
+            pinned_phases = _pinned_references(store, resolved_settings, effective_radiation)
+            candidate_source_phases.update({phase.reference_id: phase for phase in pinned_phases})
+            residual_candidates.update({phase.reference_id: phase for phase in pinned_phases})
             mixture = select_mixture_hypotheses(
                 processed.angles_deg,
                 processed.raw_intensities,
@@ -968,6 +987,7 @@ def analyze_file(
                 background_intensities=processed.background,
                 weight_provenance="trapezoidal-grid from acquired angle spacing",
                 residual_candidate_provider=residual_candidate_provider,
+                pinned_references=_mixture_inputs(pinned_phases),
             )
             if residual_candidates:
                 by_id = {reference.reference_id: reference for reference in candidate_phases}
@@ -1198,6 +1218,7 @@ def analyze_file(
                 "residual_rerank": resolved_settings.residual_rerank,
                 "lattice_change_penalty": resolved_settings.lattice_change_penalty,
                 "entry_count_prior": resolved_settings.entry_count_prior,
+                "pinned_reference_ids": list(resolved_settings.pinned_reference_ids),
                 "polymorph_guard": resolved_settings.polymorph_guard,
                 "adaptive_pool": resolved_settings.adaptive_pool,
                 "d_spacing_scale_tolerance": resolved_settings.d_spacing_scale_tolerance,
