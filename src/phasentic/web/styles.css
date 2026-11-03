@@ -135,6 +135,8 @@ td { padding: 7px 10px 7px 0; border-bottom: 1px solid var(--rule); vertical-ali
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 td.f { font-family: var(--serif); font-size: 15px; }
 tr.selected td { background: var(--accent-soft); }
+tr[data-preview-ref]:not([data-preview-ref=""]):hover td { background: var(--paper); }
+.preview-note { margin: 0 0 4px; font-weight: 600; }
 .bar { display: inline-block; height: 6px; border-radius: 1px; background: #c3c8cf; vertical-align: middle; margin-right: 8px; }
 tr.selected .bar { background: var(--ink); }
 .tag { font: 11px var(--sans); color: var(--muted); margin-left: 4px; }

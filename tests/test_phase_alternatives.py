@@ -58,6 +58,9 @@ def test_alternatives_and_pinning():
     assert "p" not in major_alts, "poor fit listed"
     payload = result.to_dict()["phase_alternatives"][major_id]
     assert payload["fit_percent"] == selected_fit and "fit_percent" in payload["alternatives"][0]
+    preview = payload["alternatives"][0]["preview"]
+    assert len(preview["contribution"]) == len(result.residual_trace.angles_deg) and max(preview["contribution"]) > 0
+    assert set(preview["other_scale_ratios"]) == ids - {major_id}
 
     pinned = run(pinned_references=(B,))
     best = pinned.hypotheses[0]

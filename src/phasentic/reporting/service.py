@@ -1441,7 +1441,20 @@ def _bound_mixture_result(result: MixtureResult, limit: int = 2000) -> MixtureRe
             else ()
         ),
     )
-    return replace(result, residual_trace=bounded)
+    alternatives = tuple(
+        (
+            reference_id,
+            fit,
+            tuple(
+                replace(item, contribution=tuple(item.contribution[index] for index in indices))
+                if len(item.contribution) == count
+                else item
+                for item in items
+            ),
+        )
+        for reference_id, fit, items in result.phase_alternatives
+    )
+    return replace(result, residual_trace=bounded, phase_alternatives=alternatives)
 
 
 def _quality_report(

@@ -34,9 +34,9 @@ const translations = {
     mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
     mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
     alternatives: "Alternatives per phase",
-    altIntro: "How well each entry fits in a phase's place (100% = perfect fit), with the other materials within 80% of the best one; other entries of the same material are left out. Choosing one fixes it and searches the smaller phases again.",
+    altIntro: "How well each entry fits in a phase's place (100% = perfect fit), with the other materials within 80% of the best one; other entries of the same material are left out. Hover a row to preview the fit; choosing one fixes it and searches the smaller phases again.",
     altFit: "Fit", altUse: "Use this", altNone: "No other material fits within 80% of the best.", altSelected: "selected",
-    pinned: "Fixed by you:", unpin: "Clear and analyze again",
+    pinned: "Fixed by you:", previewing: "Preview:", inPlaceOf: "in place of", unpin: "Clear and analyze again",
     stale: "A setting changed, so the previous result was cleared.",
     footer: "Runs on this computer; scans are not uploaded anywhere.", footerAi: "Open source (MIT). No AI model is used to analyse scans.",
   },
@@ -75,9 +75,9 @@ const translations = {
     mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
     mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
     alternatives: "Alternativas por fase",
-    altIntro: "Qué tan bien ajusta cada entrada en el lugar de una fase (100% = ajuste perfecto), con los otros materiales dentro del 80% del mejor; se omiten otras entradas del mismo material. Elegir una la fija y vuelve a buscar las fases menores.",
+    altIntro: "Qué tan bien ajusta cada entrada en el lugar de una fase (100% = ajuste perfecto), con los otros materiales dentro del 80% del mejor; se omiten otras entradas del mismo material. Pase el cursor sobre una fila para ver el ajuste; elegir una la fija y vuelve a buscar las fases menores.",
     altFit: "Ajuste", altUse: "Usar esta", altNone: "Ningún otro material ajusta dentro del 80% del mejor.", altSelected: "seleccionada",
-    pinned: "Fijadas por usted:", unpin: "Quitar y analizar de nuevo",
+    pinned: "Fijadas por usted:", previewing: "Vista previa:", inPlaceOf: "en lugar de", unpin: "Quitar y analizar de nuevo",
     stale: "Cambió una configuración, así que se borró el resultado anterior.",
     footer: "Se ejecuta en esta computadora; los escaneos no se suben a ningún lado.", footerAi: "Código abierto (MIT). No se usa ningún modelo de IA para analizar escaneos.",
   },
@@ -209,7 +209,7 @@ function renderAlternatives(parent, report) {
   const blocks = comps.map((c, index) => {
     const entry = alts[c.reference_id];
     const list = Array.isArray(entry.alternatives) ? entry.alternatives : [];
-    const row = (a, own) => `<tr${own ? ' class="selected"' : ""}><td class="f">${R().formula(a.formula)}</td><td>${R().spaceGroup(a.space_group)}</td><td>${R().codLink(a.reference_id)}</td><td class="num"><span class="bar" style="width:${Math.max(2, Number(a.fit_percent) * 1.1).toFixed(0)}px"></span>${Number(a.fit_percent).toFixed(1)}%</td><td>${own ? `<span class="tag">${esc(L.altSelected)}</span>` : `<button type="button" class="secondary" data-pin="${esc(a.reference_id)}" data-phase="${index}">${esc(L.altUse)}</button>`}</td></tr>`;
+    const row = (a, own) => `<tr${own ? ' class="selected"' : ""} data-preview-phase="${index}" data-preview-ref="${own ? "" : esc(a.reference_id)}"><td class="f">${R().formula(a.formula)}</td><td>${R().spaceGroup(a.space_group)}</td><td>${R().codLink(a.reference_id)}</td><td class="num"><span class="bar" style="width:${Math.max(2, Number(a.fit_percent) * 1.1).toFixed(0)}px"></span>${Number(a.fit_percent).toFixed(1)}%</td><td>${own ? `<span class="tag">${esc(L.altSelected)}</span>` : `<button type="button" class="secondary" data-pin="${esc(a.reference_id)}" data-phase="${index}">${esc(L.altUse)}</button>`}</td></tr>`;
     // Selected and alternatives in one list, best fit first.
     const body = [{ ...c, fit_percent: entry.fit_percent, own: true }, ...list]
       .sort((x, y) => Number(y.fit_percent) - Number(x.fit_percent))
@@ -217,12 +217,50 @@ function renderAlternatives(parent, report) {
     return `<h3>${R().formula(c.formula)}</h3><table><thead><tr><th>${esc(L.candPhase)}</th><th>${esc(L.candSg)}</th><th>${esc(L.candRef)}</th><th class="num">${esc(L.altFit)}</th><th></th></tr></thead><tbody>${body}</tbody></table>${list.length ? "" : `<p class="note">${esc(L.altNone)}</p>`}`;
   }).join("");
   setHTML(parent, `${pinnedNote}<p class="note">${esc(L.altIntro)}</p>${blocks}`);
+  // Hover a row: the fit figure shows the mixture refitted with that entry; leaving restores it.
+  parent.querySelectorAll("tr[data-preview-phase]").forEach((tr) => {
+    tr.addEventListener("mouseenter", () => {
+      const comp = comps[Number(tr.dataset.previewPhase)];
+      const alt = (alts[comp.reference_id].alternatives || []).find((a) => a.reference_id === tr.dataset.previewRef);
+      const preview = alt && previewReport(report, best, comp, alt);
+      setHTML($("plot"), preview ? `<p class="note preview-note">${esc(L.previewing)} ${R().formula(alt.formula)} ${R().spaceGroup(alt.space_group)} ${esc(L.inPlaceOf)} ${R().formula(comp.formula)} ${R().spaceGroup(comp.space_group)}</p>${R().figures.fit(preview)}` : R().figures.fit(report));
+    });
+    tr.addEventListener("mouseleave", () => setHTML($("plot"), R().figures.fit(report)));
+  });
   parent.querySelectorAll("[data-pin]").forEach((button) => button.addEventListener("click", () => {
     const index = Number(button.dataset.phase);
     pinnedIds = [...comps.slice(0, index).map((c) => c.reference_id), button.dataset.pin];
     form.requestSubmit();
   }));
   parent.querySelectorAll("[data-unpin]").forEach((button) => button.addEventListener("click", () => { pinnedIds = []; form.requestSubmit(); }));
+}
+
+// The report as it would look with `alt` in place of `comp`: model, difference curve,
+// per-phase traces and tick rows rebuilt from the alternative's refitted preview.
+function previewReport(report, hyp, comp, alt) {
+  const t = report.mixture && report.mixture.residual_trace;
+  const p = alt.preview || {};
+  if (!t || !Array.isArray(p.contribution) || p.contribution.length !== t.angles_deg.length) return null;
+  const ratios = p.other_scale_ratios || {};
+  const traces = [];
+  (t.component_traces || []).forEach((c) => {
+    if (c.reference_id === comp.reference_id) traces.push({ reference_id: alt.reference_id, calculated_intensities: p.contribution });
+    else traces.push({ ...c, calculated_intensities: c.calculated_intensities.map((v) => v * (ratios[c.reference_id] ?? 1)) });
+  });
+  const calculated = t.angles_deg.map((_, i) => traces.reduce((acc, c) => acc + c.calculated_intensities[i], 0));
+  const residual = t.residual_intensities.map((r, i) => r + t.calculated_intensities[i] - calculated[i]);
+  const components = hyp.components.map((c) => (c.reference_id === comp.reference_id ? { ...alt, matched_peak_indices: alt.matched_peak_indices || [] } : c));
+  const assigned = new Set(components.flatMap((c) => c.matched_peak_indices || []));
+  const unexplained = (report.peaks || []).filter((_, i) => !assigned.has(i)).map((peak) => peak.position_deg);
+  return {
+    ...report,
+    mixture: {
+      ...report.mixture,
+      selected_hypothesis_id: hyp.hypothesis_id,
+      hypotheses: [{ ...hyp, components, unexplained_peak_positions: unexplained }],
+      residual_trace: { ...t, calculated_intensities: calculated, residual_intensities: residual, component_traces: traces },
+    },
+  };
 }
 
 function renderCandidates(parent, report) {
