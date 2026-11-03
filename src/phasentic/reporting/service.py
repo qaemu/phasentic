@@ -52,6 +52,7 @@ from phasentic.search.displacement import correct_angles, estimate_sample_displa
 from phasentic.search.matcher import (
     candidate_ranking_profile,
     candidate_retention_profile,
+    adaptive_pool_size,
     apply_entry_count_prior,
     collapse_same_material,
     match_references,
@@ -229,6 +230,12 @@ def _query_reference_candidates(
     # Generic post-filter so every store honours the constraint, including
     # stores that cannot filter inside their own index.
     return _filter_by_elements(fetched, allowed_elements, oxidizing=oxidizing)
+
+
+def _shortlist_limit(matches: tuple[CandidateMatch, ...], settings: AnalysisSettings) -> int:
+    if settings.adaptive_pool:
+        return adaptive_pool_size(matches, settings.candidate_pool)
+    return settings.candidate_pool
 
 
 def _scaled_reference(reference: ReferencePhase, match: CandidateMatch) -> ReferencePhase:
@@ -670,7 +677,7 @@ def analyze_file(
         raw_candidates, fitter_shortlist_receipt = select_fitter_shortlist(
             ranked_with_evidence,
             peaks,
-            limit=resolved_settings.candidate_pool,
+            limit=_shortlist_limit(ranked_with_evidence, resolved_settings),
         )
         candidate_by_id = _references_by_id_first_wins(retrieved_candidate_phases)
         candidate_phases = tuple(
@@ -809,7 +816,7 @@ def analyze_file(
                         residual_matches, residual_shortlist_receipt = select_fitter_shortlist(
                             residual_ranked_with_evidence,
                             residual_peaks,
-                            limit=resolved_settings.candidate_pool,
+                            limit=_shortlist_limit(residual_ranked_with_evidence, resolved_settings),
                         )
                         fetched_by_id = _references_by_id_first_wins(fetched)
                         fetched_shortlist = tuple(
@@ -887,7 +894,7 @@ def analyze_file(
                         residual_matches, residual_shortlist_receipt = select_fitter_shortlist(
                             residual_ranked_with_evidence,
                             residual_peaks,
-                            limit=resolved_settings.candidate_pool,
+                            limit=_shortlist_limit(residual_ranked_with_evidence, resolved_settings),
                         )
                         fetched_by_id = _references_by_id_first_wins(fetched)
                         fetched_shortlist = tuple(
@@ -1192,6 +1199,7 @@ def analyze_file(
                 "lattice_change_penalty": resolved_settings.lattice_change_penalty,
                 "entry_count_prior": resolved_settings.entry_count_prior,
                 "polymorph_guard": resolved_settings.polymorph_guard,
+                "adaptive_pool": resolved_settings.adaptive_pool,
                 "d_spacing_scale_tolerance": resolved_settings.d_spacing_scale_tolerance,
                 "max_fit_attempts": resolved_settings.max_fit_attempts,
                 "swap_fit_attempt_budget": resolved_settings.swap_fit_attempt_budget,
@@ -1294,6 +1302,7 @@ def _analysis_id(
             "lattice_change_penalty": settings.lattice_change_penalty,
             "entry_count_prior": settings.entry_count_prior,
             "polymorph_guard": settings.polymorph_guard,
+            "adaptive_pool": settings.adaptive_pool,
             "d_spacing_scale_tolerance": settings.d_spacing_scale_tolerance,
             "max_fit_attempts": settings.max_fit_attempts,
             "swap_fit_attempt_budget": settings.swap_fit_attempt_budget,

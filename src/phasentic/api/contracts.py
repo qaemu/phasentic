@@ -112,6 +112,7 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
         "lattice_change_penalty",
         "entry_count_prior",
         "polymorph_guard",
+        "adaptive_pool",
         "d_spacing_scale_tolerance",
         "max_fit_attempts",
         "swap_fit_attempt_budget",

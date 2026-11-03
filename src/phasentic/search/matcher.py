@@ -505,6 +505,30 @@ def material_key(formula: str, space_group: str) -> tuple | None:
     return (tuple(sorted((element, round(value, 2)) for element, value in fractions.items())), symbol)
 
 
+ADAPTIVE_POOL_FLOOR = 20
+
+
+def adaptive_pool_size(matches: Iterable[CandidateMatch], cap: int, *, floor: int = ADAPTIVE_POOL_FLOOR) -> int:
+    """Dara-style automatic cut: keep candidates above the knee of the sorted score curve.
+
+    The knee is the point farthest from the straight line between the best
+    and the worst score (Kneedle), i.e. where high-scoring candidates give way
+    to the long tail of poor ones. Bounded to [floor, cap].
+    """
+
+    scores = np.array([float(match.score) for match in matches], dtype=float)
+    if scores.size <= floor:
+        return max(1, min(cap, int(scores.size) or 1))
+    scores = np.sort(scores)[::-1]
+    x = np.linspace(0.0, 1.0, scores.size)
+    span = scores[0] - scores[-1]
+    if span <= 1e-12:
+        return min(cap, int(scores.size))
+    y = (scores - scores[-1]) / span
+    knee = int(np.argmax((1.0 - x) - y)) + 1  # distance below the diagonal from (0,1) to (1,0)
+    return int(min(cap, max(floor, knee)))
+
+
 ENTRY_COUNT_SATURATION = 20
 
 
