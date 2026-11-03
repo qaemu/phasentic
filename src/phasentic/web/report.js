@@ -320,58 +320,47 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(reportId)}: ${esc(input.file_name || "phase identification")}</title>
 <style>
-@page { size: A4; margin: 20mm 18mm 20mm 18mm;
-  @top-right { content: "${esc(reportId)}"; font: 8pt "Times New Roman", "Liberation Serif", Times, serif; color: #444; }
-  @bottom-center { content: counter(page) " / " counter(pages); font: 9pt "Times New Roman", "Liberation Serif", Times, serif; } }
-* { box-sizing: border-box; }
-html { background: #e9e9e9; }
-body { margin: 0; color: #000; font: 10pt/1.38 "Times New Roman", "Liberation Serif", "Nimbus Roman", Times, serif; hyphens: auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-.page { background: #fff; max-width: 210mm; margin: 24px auto; padding: 20mm 18mm; box-shadow: 0 1px 4px rgba(0,0,0,.15); }
-@media print { html { background: #fff; } .page { margin: 0; padding: 0; box-shadow: none; max-width: none; } .hint { display: none; } a { color: inherit; text-decoration: none; } }
-.hint { max-width: 210mm; margin: 16px auto 0; font: 9pt sans-serif; color: #555; text-align: center; }
-a { color: inherit; }
-.kicker { font-size: 8.5pt; text-transform: uppercase; letter-spacing: .08em; margin: 0 0 10pt; border-bottom: .5pt solid #000; padding-bottom: 3pt; display: flex; justify-content: space-between; }
-h1 { font-size: 17pt; font-weight: 700; line-height: 1.2; margin: 6pt 0 8pt; text-align: center; }
-.authors { text-align: center; font-size: 10.5pt; margin: 0; }
-.affil { text-align: center; font-size: 8.5pt; font-style: italic; margin: 2pt 0 0; }
-.dates { text-align: center; font-size: 8.5pt; margin: 6pt 0 12pt; }
-.abstract { margin: 0 8mm 6pt; font-size: 9.5pt; text-align: justify; }
-.abstract b { font-size: 9.5pt; }
-.keywords { margin: 0 8mm 10pt; font-size: 9pt; }
-.notice { margin: 0 8mm 12pt; font-size: 8.5pt; font-style: italic; border-top: .5pt solid #000; border-bottom: .5pt solid #000; padding: 4pt 0; }
-.body { column-count: 2; column-gap: 7mm; text-align: justify; }
-.body p { margin: 0; text-indent: 1.2em; }
-.body h2 + p, .body h3 + p, .body p.first { text-indent: 0; } .body p.data { text-align: left; overflow-wrap: anywhere; }
-h2 { font-size: 10.5pt; font-weight: 700; margin: 10pt 0 4pt; break-after: avoid; }
-h3 { font-size: 10pt; font-weight: 400; font-style: italic; margin: 7pt 0 3pt; break-after: avoid; }
-.span { column-span: all; margin: 8pt 0; break-inside: avoid; }
-table { width: 100%; border-collapse: collapse; font-size: 9pt; border-top: 1pt solid #000; border-bottom: 1pt solid #000; }
-caption { caption-side: top; text-align: left; font-size: 9pt; padding-bottom: 4pt; }
-caption b { font-weight: 700; }
-thead th { font-weight: 400; font-style: italic; text-align: left; border-bottom: .5pt solid #000; padding: 3pt 8pt 3pt 0; }
-td { padding: 2pt 8pt 2pt 0; vertical-align: baseline; }
-tr.group td { padding-top: 5pt; }
-td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
-.tnote { font-size: 8pt; margin: 3pt 0 0; }
+@page { size: A4; margin: 20mm;
+  @bottom-center { content: "${esc(reportId)}  —  page " counter(page) " of " counter(pages); font: 9pt "Times New Roman", "Liberation Serif", Times, serif; } }
+body { margin: 0; color: #000; background: #fff; font: 11pt/1.4 "Times New Roman", "Liberation Serif", "Nimbus Roman", Times, serif; }
+.page { max-width: 170mm; margin: 0 auto; padding: 20mm 0; }
+@media print { .page { padding: 0; max-width: none; } .hint { display: none; } }
+.hint { font: 9pt sans-serif; color: #555; text-align: center; margin: 8px 0 0; }
+a { color: inherit; text-decoration: none; }
+.kicker { font-size: 10pt; margin: 0 0 12pt; }
+.kicker span + span::before { content: " — "; }
+h1 { font-size: 15pt; font-weight: 700; margin: 0 0 6pt; }
+.authors, .affil, .dates { margin: 0; font-size: 11pt; }
+.dates { margin-bottom: 12pt; }
+.abstract, .keywords, .notice { margin: 0 0 8pt; }
+h2 { font-size: 12pt; font-weight: 700; margin: 14pt 0 4pt; break-after: avoid; }
+h3 { font-size: 11pt; font-weight: 700; margin: 10pt 0 3pt; break-after: avoid; }
+p { margin: 0 0 6pt; }
+.span { margin: 8pt 0; break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+caption { caption-side: top; text-align: left; padding-bottom: 3pt; }
+th, td { border: .5pt solid #000; padding: 2pt 5pt; text-align: left; vertical-align: top; }
+thead th { font-weight: 700; }
+td.n, th.n { text-align: right; }
+.tnote { font-size: 10pt; margin: 3pt 0 0; }
 figure { margin: 0; }
 svg { width: 100%; height: auto; display: block; font-family: "Times New Roman", "Liberation Serif", Times, serif; }
-svg .grid { stroke: #e6e6e6; stroke-width: .7; } svg .axis { stroke: #000; stroke-width: .7; }
-svg .bg { fill: none; stroke: #999; stroke-width: .8; stroke-dasharray: 3 3; }
+svg .grid { stroke: #ddd; stroke-width: .6; } svg .axis { stroke: #000; stroke-width: .7; }
+svg .bg { fill: none; stroke: #888; stroke-width: .8; stroke-dasharray: 3 3; }
 svg .tick { font-size: 9px; fill: #000; } svg .label { font-size: 10px; fill: #000; } svg .panel { font-size: 10px; fill: #000; font-weight: 700; }
-figcaption { font-size: 9pt; margin-top: 4pt; text-align: justify; } figcaption b { font-weight: 700; }
-.legend { display: flex; flex-wrap: wrap; gap: 2pt 12pt; font-size: 8.5pt; margin-top: 3pt; }
+figcaption { font-size: 10pt; margin-top: 4pt; }
+.legend { font-size: 9pt; margin-top: 3pt; }
+.legend span { margin-right: 12pt; }
 .legend i { display: inline-block; width: 14pt; vertical-align: middle; margin-right: 4pt; }
-.legend i.dash { border-top: 1px dashed #999; } .legend i.tickkey { width: 2pt; height: 8pt; }
-figure.narrow svg { max-width: 150mm; margin: 0 auto; }
-.refs { margin: 0; padding-left: 1.6em; font-size: 8.5pt; text-align: left; } .refs li { margin-bottom: 2pt; overflow-wrap: anywhere; }
-.mono { font-family: "Courier New", "Liberation Mono", monospace; font-size: 7.5pt; overflow-wrap: anywhere; }
-.appendix { margin-top: 10pt; } .appendix tr, .sign { break-inside: avoid; }
-.appendix th[scope=row] { font-weight: 400; font-style: italic; text-align: left; width: 42%; padding: 2pt 8pt 2pt 0; vertical-align: top; }
-.appendix td { border-bottom: .3pt solid #bbb; height: 15pt; } .appendix tr:last-child td { border-bottom: none; }
-.sign { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10mm; margin-top: 20pt; }
-.sign div { border-top: .5pt solid #000; padding-top: 2pt; font-size: 8pt; }
-.statement { font-size: 8pt; margin-top: 8pt; text-align: justify; }
-.end { text-align: center; font-size: 8.5pt; margin-top: 12pt; letter-spacing: .05em; }
+.legend i.dash { border-top: 1px dashed #888; } .legend i.tickkey { width: 2pt; height: 8pt; }
+.refs { margin: 0; padding-left: 1.6em; } .refs li { margin-bottom: 3pt; overflow-wrap: anywhere; }
+.mono { font-family: "Courier New", "Liberation Mono", monospace; font-size: 9pt; overflow-wrap: anywhere; }
+.appendix th[scope=row] { font-weight: 400; width: 40%; }
+.appendix td { height: 16pt; }
+.sign { margin-top: 24pt; break-inside: avoid; }
+.sign div { margin-top: 22pt; border-top: .5pt solid #000; width: 80mm; padding-top: 2pt; font-size: 10pt; }
+.statement { margin-top: 10pt; }
+.end { text-align: center; margin-top: 14pt; }
 </style></head>
 <body><p class="hint">To save as PDF: File → Print → Save as PDF (A4). This line does not print.</p><main class="page">
 <div class="kicker"><span>Phase identification report · powder X-ray diffraction</span><span>Report no. ${esc(reportId)}</span></div>
