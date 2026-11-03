@@ -33,7 +33,7 @@
     let t = String(text || "").trim().split(/\s+/);
     if (!t[0]) return "—";
     if (t.length === 4 && t[1] === "1" && t[3] === "1") t = [t[0], t[2]];
-    return t.map((s) => esc(s).replace(/-(\d)/g, "$1&#773;").replace(/^(\d)(\d)/, "$1<sub>$2</sub>")).join("");
+    return t.map((s) => esc(s).replace(/-(\d)/g, "$1&#773;").replace(/^(\d)(\d)/, "$1<sub>$2</sub>").replace(/(\d)_(\d)/g, "$1<sub>$2</sub>")).join("").replace(/([A-Za-z])(?![^<]*>)/g, "<i>$1</i>");
   }
 
   // HTML subscripts -> Unicode, for SVG text.
@@ -72,9 +72,12 @@
     (report.peaks || []).forEach((pk) => { g += `<line x1="${sx(pk.position_deg)}" x2="${sx(pk.position_deg)}" y1="${tickY - 4}" y2="${tickY + 4}" stroke="${MUTED}" stroke-width="1.4"/>`; });
     g += `<line x1="${L}" x2="${W - R}" y1="${tickY + 9}" y2="${tickY + 9}" class="axis"/>`;
     ticks(xmin, xmax, 10).forEach((v) => { g += `<text x="${sx(v)}" y="${tickY + 21}" class="tick" text-anchor="middle">${v}</text>`; });
-    g += `<text x="${(L + W - R) / 2}" y="${H - 1}" class="label" text-anchor="middle">2θ (°), ${esc(report.radiation?.label || "")}</text>`;
+    g += `<text x="${(L + W - R) / 2}" y="${H - 1}" class="label" text-anchor="middle">2θ / °  (${esc(report.radiation?.label || "")})</text>`;
     return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Measured pattern and detected peaks">${g}</svg><figcaption>${num1(1)}Measured pattern. Ticks mark the ${(report.peaks || []).length} detected peaks; no mixture fit was selected.</figcaption></figure>`;
   }
+
+  // A database name worth printing (not just the entry ID or the formula again).
+  const realName = (c) => Boolean(c.name) && c.name !== c.formula && !/^(cod|powcod)[: ]/i.test(c.name);
 
   function selectedHypothesis(report) {
     const m = report.mixture || {};
@@ -127,11 +130,11 @@
     g += `<path d="${path(x, res, sx, sd)}" fill="none" stroke="${MUTED}" stroke-width="0.8" clip-path="url(#fit-diff)"/>`;
     g += `<text x="${L - 6}" y="${diffTop + 8}" class="tick" text-anchor="end">Δ</text>`;
     g += `<line x1="${L}" x2="${W - R}" y1="${diffTop + diffH}" y2="${diffTop + diffH}" class="axis"/>`;
-    g += `<text x="${(L + W - R) / 2}" y="${H - 2}" class="label" text-anchor="middle">2θ (°), ${esc(report.radiation?.label || "")}, corrected for sample displacement</text>`;
-    g += `<text x="12" y="${top + mainH / 2}" class="label" text-anchor="middle" transform="rotate(-90 12 ${top + mainH / 2})">Intensity (counts)</text>`;
+    g += `<text x="${(L + W - R) / 2}" y="${H - 2}" class="label" text-anchor="middle">2θ / °  (${esc(report.radiation?.label || "")}, corrected for specimen displacement)</text>`;
+    g += `<text x="12" y="${top + mainH / 2}" class="label" text-anchor="middle" transform="rotate(-90 12 ${top + mainH / 2})">Intensity / counts</text>`;
     const legend = `<div class="legend"><span><i style="background:${OBS};height:2px"></i>Measured</span><span><i style="background:${MODEL};height:1px"></i>Model (background + phases)</span><span><i class="dash"></i>Background</span>${phases.map((p, k) => `<span><i class="tickkey" style="background:${p.color}"></i>${k + 1} ${formula(p.component.formula)}</span>`).join("")}<span><i style="background:${MUTED};height:1px"></i>Δ measured − model</span></div>`;
     const zoom = `data-zoom="${[L, W - R, top, mainH, diffTop + diffH, xmin, xmax, ymin, ymax].join(",")}"`;
-    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Measured pattern, fitted model and difference curve" ${zoom}>${g}</svg>${legend}<figcaption>${num1(1)} Measured pattern and screening fit. Tick rows mark the detected peaks assigned to each phase; the lower panel is the difference between measurement and model.</figcaption></figure>`;
+    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Measured pattern, fitted model and difference curve" ${zoom}>${g}</svg>${legend}<figcaption>${num1(1)} Observed (grey), calculated (black, background plus phases) and difference (lower panel, observed − calculated) profiles. Tick rows mark the detected peaks assigned to each phase; ▼ marks detected peaks no selected phase explains.</figcaption></figure>`;
   }
 
   // Figure 2: one small panel per phase: background-subtracted signal vs that phase's contribution.
@@ -164,7 +167,7 @@
       g += `<text x="${W - R}" y="${y0 - 4}" class="tick" text-anchor="end">${mi} peaks matched · ${ie} only this phase explains</text>`;
     });
     ticks(xmin, xmax, 10).forEach((v) => { g += `<text x="${sx(v)}" y="${H - 2}" class="tick" text-anchor="middle">${v}</text>`; });
-    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Contribution of each phase">${g}</svg><figcaption>${num1(2)} Evidence for each phase (2θ, °). Filled: the phase’s fitted contribution. Grey: the measurement minus background and all other selected phases, i.e. what this phase must explain. Own scale per panel; heights are not weight fractions.</figcaption></figure>`;
+    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Contribution of each phase">${g}</svg><figcaption>${num1(2)} Evidence for each phase (abscissa 2θ / °). Filled: the phase’s fitted contribution. Grey: the measurement minus background and all other selected phases, i.e. what this phase must explain. Own scale per panel; heights are not weight fractions.</figcaption></figure>`;
   }
 
   // Figure 3: competing hypotheses by selection score (lower is better).
@@ -187,17 +190,20 @@
     return `<figure class="narrow"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Competing phase hypotheses">${g}</svg><figcaption>${num1(3)} Retained hypotheses by selection score (weighted misfit plus a penalty per added phase; lower is better). Close bars mean the data barely separate them.</figcaption></figure>`;
   }
 
+  // Printable report. Structure: ISO/IEC 17025:2017 §7.8 (report content, opinions marked, decision
+  // rule, authorisation), ANSI/NISO Z39.18 (summary, scope, methods, results, conclusions, references,
+  // symbols), IUCr powder-diffraction reporting (measurement conditions, data processing, observed /
+  // calculated / difference plot, numeric data as pdCIF) and ISO 80000 quantity/unit notation.
   function build(report, opts = {}) {
     const r = report && report.result ? report.result : report;
     const p = r.provenance || {}, s = p.settings || {}, q = r.quality || {}, input = r.input || {};
     const meta = (p.input_source && p.input_source.metadata) || {};
-    const rad = meta.source_radiation || {};
+    const rad = meta.source_radiation || {}, acq = meta.acquisition || {};
     const sel = selectedHypothesis(r);
     const phases = phasesOf(r);
     const generated = opts.date || new Date();
     const dateText = generated.toISOString().slice(0, 10);
     const reportId = `PHX-${r.analysis_id || "unknown"}`;
-    const trace = p.measurement_trace || {};
     const points = Number(input.point_count) || 0;
     const step = points > 1 ? (Number(input.angle_max_deg) - Number(input.angle_min_deg)) / (points - 1) : NaN;
     const disp = p.coordinate_correction || {};
@@ -211,37 +217,69 @@
     const unexplained = sel ? (sel.unexplained_peak_positions || []).length : 0;
     const altClose = (() => { const hs = (r.mixture?.hypotheses || []).filter((h) => h !== sel && Number.isFinite(h.selection_score)); if (!sel || !hs.length) return null; const best = Math.min(...hs.map((h) => h.selection_score)); return (best - sel.selection_score) / sel.selection_score; })();
     const isPowcod = (p.reference_source || s.reference_source) === "pow_cod";
-    const preset = isPowcod && (opts.preset || (s.candidate_pool === 100 && s.max_fit_attempts === 300 && s.complexity_penalty === 0.02 && s.oxidizing_synthesis === true ? "validated" : null));
+    const preset = isPowcod && opts.preset === "validated";
     const elements = (s.allowed_elements || []).join(", ");
-
     const release = String(p.powcod_release || "");
+    const isPowcodRelease = isPowcod && !release.includes("COD");
     const dbShort = release.includes("COD") ? esc(release) : `POW_COD ${esc(release)}`;
     const dbName = !isPowcod ? "Built-in demo subset (three phases; not for real samples)"
-      : release.includes("COD") ? `${dbShort} (calculated from the Crystallography Open Database)` : `${dbShort} (CNR, from COD)`;
-    // A candidate that matched no detected peak is noise, not a ranked phase.
-    const fallbackRows = (r.candidates || []).filter((c) => Number(c.matched_peaks) > 0).slice(0, 5).map((c, k) => `<tr><td>${k + 1}</td><td class="f">${formula(c.formula)}</td><td>${spaceGroup(c.space_group)}</td><td>${codLink(c.reference_id)}</td><td class="n">${esc(c.matched_peaks ?? "—")}</td><td class="n">score ${num(c.score, 2)}</td></tr>`).join("");
+      : release.includes("COD") ? `${dbShort}, powder patterns calculated from the Crystallography Open Database [2]` : `${dbShort} (CNR) [3], from the Crystallography Open Database [2]`;
+    const pct = (v, d = 1) => (Number.isFinite(Number(v)) ? `${Number(v).toFixed(d)}&#8201;%` : "—");  // ISO 80000: space before %
+    const pinned = Array.isArray(s.pinned_reference_ids) ? s.pinned_reference_ids : [];
+    const mq = (r.mixture && r.mixture.query) || {};
+    const lab = String(opts.laboratory || "").trim();
+
+    // Table 1: identified phases.
+    const fallback = (r.candidates || []).filter((c) => Number(c.matched_peaks) > 0).slice(0, 5);
+    const phaseName = (c) => (realName(c) ? esc(c.name) : "");
     const phaseRows = phases.map((ph, k) => {
       const c = ph.component;
-      return `<tr><td><span class="sw" style="background:${ph.color}"></span>${k + 1}</td><td class="f">${formula(c.formula)}</td><td>${spaceGroup(c.space_group)}</td><td>${codLink(c.reference_id)}</td><td class="n">${(c.matched_peak_indices || []).length}</td><td class="n">${(c.independent_evidence_peak_indices || []).length}</td></tr>`;
+      return `<tr><td><span class="sw" style="background:${ph.color}"></span>${k + 1}</td><td class="f">${formula(c.formula)}</td><td>${phaseName(c)}</td><td>${spaceGroup(c.space_group)}</td><td>${codLink(c.reference_id)}${pinned.includes(c.reference_id) ? " ‡" : ""}</td><td class="n">${(c.matched_peak_indices || []).length}</td><td class="n">${(c.independent_evidence_peak_indices || []).length}</td></tr>`;
     }).join("");
+    const fallbackRows = fallback.map((c, k) => `<tr><td>${k + 1}</td><td class="f">${formula(c.formula)}</td><td>${phaseName(c)}</td><td>${spaceGroup(c.space_group)}</td><td>${codLink(c.reference_id)}</td><td class="n">${esc(c.matched_peaks ?? "—")}</td><td class="n">—</td></tr>`).join("");
 
-    const interpretation = [];
-    if (phases.length) interpretation.push(`The pattern is best explained by ${phases.length === 1 ? "one phase" : `${phases.length} phases`}: ${phases.map((ph) => formula(ph.component.formula)).join(" and ")}.`);
-    if (sel) interpretation.push(unexplained ? `${unexplained} detected peak${unexplained > 1 ? "s remain" : " remains"} unexplained (marked ▼ in Figure 1), which suggests an additional, unidentified phase.` : "Every detected peak is assigned to a selected phase (assignment by position; it does not prove the phase is present).");
-    if (altClose !== null && altClose < 0.1) interpretation.push(`The runner-up hypothesis scores within ${(altClose * 100).toFixed(1)}% of the selected one (Figure 3), so the choice between them is weak and should be confirmed.`);
-    if (missing) interpretation.push(`${missing} reference reflections expected in the measured range were not detected. Weak lines are often lost in noise; strong missing lines would argue against a phase.`);
-
-    const pinned = Array.isArray(s.pinned_reference_ids) ? s.pinned_reference_ids : [];
-    if (pinned.length) interpretation.unshift(`<b>Operator choice:</b> ${pinned.map(codLink).join(", ")} ${pinned.length > 1 ? "were" : "was"} fixed by the operator from the alternatives, not selected automatically; the remaining phases were searched around ${pinned.length > 1 ? "them" : "it"}.`);
+    // Table 2: alternatives per phase.
     const alts = r.mixture && r.mixture.phase_alternatives && typeof r.mixture.phase_alternatives === "object" ? r.mixture.phase_alternatives : {};
     const altRows = phases.filter((ph) => alts[ph.component.reference_id]).map((ph) => {
       const entry = alts[ph.component.reference_id];
       const rows = [{ ...ph.component, fit_percent: entry.fit_percent, own: true }, ...(entry.alternatives || [])]
         .sort((a, b) => Number(b.fit_percent) - Number(a.fit_percent));
-      return rows.map((a, k) => `<tr>${k === 0 ? `<td rowspan="${rows.length}"><span class="sw" style="background:${ph.color}"></span>${phases.indexOf(ph) + 1}</td>` : ""}<td class="f">${formula(a.formula)}${a.own ? " <small>(selected)</small>" : ""}</td><td>${spaceGroup(a.space_group)}</td><td>${codLink(a.reference_id)}</td><td class="n">${num(a.fit_percent, 1)}%</td></tr>`).join("");
+      return rows.map((a, k) => `<tr>${k === 0 ? `<td rowspan="${rows.length}"><span class="sw" style="background:${ph.color}"></span>${phases.indexOf(ph) + 1}</td>` : ""}<td class="f">${formula(a.formula)}${a.own ? " <small>(selected)</small>" : ""}</td><td>${spaceGroup(a.space_group)}</td><td>${codLink(a.reference_id)}</td><td class="n">${pct(a.fit_percent)}</td></tr>`).join("");
     }).join("");
+
+    const interpretation = [];
+    if (pinned.length) interpretation.push(`<b>Operator choice:</b> ${pinned.map(codLink).join(", ")} ${pinned.length > 1 ? "were" : "was"} fixed by the operator from the alternatives (Table 2), not selected automatically; the remaining phases were searched around ${pinned.length > 1 ? "them" : "it"}. Marked ‡ in Table 1.`);
+    if (phases.length) interpretation.push(`The pattern is best explained by ${phases.length === 1 ? "one phase" : `${phases.length} phases`}: ${phases.map((ph) => formula(ph.component.formula)).join(" and ")}.`);
+    if (sel) interpretation.push(unexplained ? `${unexplained} detected peak${unexplained > 1 ? "s remain" : " remains"} unexplained (marked ▼ in Figure 1), which suggests an additional, unidentified phase.` : "Every detected peak is assigned to a selected phase (assignment by position; it does not prove the phase is present).");
+    if (altClose !== null && altClose < 0.1) interpretation.push(`The runner-up hypothesis scores within ${pct(altClose * 100)} of the selected one (Figure 3), so the choice between them is weak and should be confirmed.`);
+    if (missing) interpretation.push(`${missing} reference reflections expected in the measured range were not detected. Weak lines are often lost in noise; strong missing lines would argue against a phase.`);
+
+    const phaseList = phases.map((ph) => `${formula(ph.component.formula)} (${spaceGroup(ph.component.space_group)})`).join(", ");
+    const summary = phases.length
+      ? `The powder X-ray diffraction pattern ${esc(input.file_name || "")} was compared with ${isPowcod ? "reference patterns calculated from the Crystallography Open Database" : "a demonstration reference set"}${elements ? `, restricted to the elements ${esc(elements)}` : ""}. The best-supported phase set is ${phaseList}; decision: <b>${decisionText}</b>${pinned.length ? ", with a phase fixed by the operator" : ""}. ${unexplained ? `${unexplained} detected peak${unexplained > 1 ? "s are" : " is"} not explained by these phases. ` : ""}This is a qualitative identification without refinement or phase quantities, produced automatically and not yet reviewed.`
+      : `The powder X-ray diffraction pattern ${esc(input.file_name || "")} was compared with ${isPowcod ? "reference patterns calculated from the Crystallography Open Database" : "a demonstration reference set"}. No phase set explained the pattern well enough to be reported; decision: <b>${decisionText}</b>. This result was produced automatically and has not been reviewed.`;
+    const conclusion = phases.length
+      ? `${phaseList} ${phases.length > 1 ? "are" : "is"} identified as ${r.decision === "supported" ? "present (supported)" : "the most plausible phase set (tentative, to be confirmed by an analyst)"}. No other conclusion should be drawn from this report without review.`
+      : "No phase is identified. Check the scan quality, the stated chemistry and whether the expected phases are in the reference database.";
+
     const warnings = (q.warnings || []).map(esc).join(" ");
     const kv = (k, v) => `<div class="kv"><dt>${k}</dt><dd>${v}</dd></div>`;
+    const or = (v, fallbackText = "not recorded") => (v ? esc(v) : `<span class="muted">${fallbackText}</span>`);
+    const blank = "&nbsp;";
+    const fmtDate = (v) => (v ? esc(String(v).replace("T", " ")) : "");
+    const lambda = `${rad.ka1_angstrom ? `<i>λ</i>(K<i>α</i><sub>1</sub>) = ${num(rad.ka1_angstrom, 6)} Å` : ""}${rad.ka2_angstrom ? `, <i>λ</i>(K<i>α</i><sub>2</sub>) = ${num(rad.ka2_angstrom, 6)} Å` : ""}${rad.ka2_to_ka1_intensity_ratio != null ? `, <i>I</i>(K<i>α</i><sub>2</sub>)/<i>I</i>(K<i>α</i><sub>1</sub>) = ${num(rad.ka2_to_ka1_intensity_ratio, 3)}` : ""}`;
+    const slits = [acq.divergence_slit, acq.mask, acq.incident_soller, acq.antiscatter_slit, acq.diffracted_soller].filter(Boolean).map(esc).join("; ");
+    const filters = [acq.incident_filter, acq.diffracted_filter, acq.monochromator].filter(Boolean).map(esc).join("; ");
+    const eta = Number(s.profile_eta);
+    const widthModel = p.reference_query?.candidate_query_stats?.profile_width;
+    const references = [
+      `[1] Phasentic ${esc(opts.version || "")}, open-source powder X-ray diffraction phase identification software. Available from: https://github.com/qaemu/phasentic`,
+      `[2] GRAŽULIS, S., DAŠKEVIČ, A., MERKYS, A., CHATEIGNER, D., LUTTEROTTI, L., QUIRÓS, M., SEREBRYANAYA, N. R., MOECK, P., DOWNS, R. T. and LE BAIL, A. Crystallography Open Database (COD): an open-access collection of crystal structures and platform for world-wide collaboration. <i>Nucleic Acids Research</i>. 2012, 40, D420–D427. DOI: 10.1093/nar/gkr900`,
+      `[3] ALTOMARE, A., CORRIERO, N., CUOCCI, C., FALCICCHIO, A., MOLITERNI, A. and RIZZI, R. QUALX2.0: a qualitative phase analysis software using the freely available database POW_COD. <i>Journal of Applied Crystallography</i>. 2015, 48, 598–603. DOI: 10.1107/S1600576715002319`,
+      `[4] ISO/IEC 17025:2017. <i>General requirements for the competence of testing and calibration laboratories</i>. Geneva: ISO, 2017.`,
+      `[5] EN 13925-1:2003. <i>Non-destructive testing — X-ray diffraction from polycrystalline and amorphous material — Part 1: General principles</i>. Brussels: CEN, 2003.`,
+    ];
+    const dataFiles = opts.files || {};
 
     return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -298,106 +336,216 @@ dl.one { grid-template-columns: 1fr; } dl.one .kv { grid-template-columns: 34mm 
 .hint { max-width: 210mm; margin: 16px auto 0; font: 9pt system-ui, sans-serif; color: var(--muted); text-align: center; }
 @media print { .hint { display: none; } }
 .statement { font-size: 8pt; color: var(--muted); margin-top: 6pt; }
+.muted { color: var(--muted); }
+caption { caption-side: top; text-align: left; font-size: 8.5pt; color: var(--muted); padding-bottom: 2pt; } caption b { color: var(--ink); }
+.refs { font-size: 8pt; padding-left: 0; list-style: none; } .refs li { margin-bottom: 3pt; text-indent: -14pt; padding-left: 14pt; overflow-wrap: anywhere; }
+.end { text-align: center; font-variant: small-caps; letter-spacing: .12em; font-size: 8.5pt; margin-top: 10pt; border-top: .6pt solid var(--ink); padding-top: 4pt; }
+.summary { font-size: 9.5pt; }
+h3 { font-size: 9pt; font-weight: 600; margin: 6pt 0 2pt; }
 </style></head>
 <body><p class="hint">To save as PDF: File → Print → Save as PDF (A4). This line does not print.</p><main class="sheet">
 <header>
-  <div class="brand">Phasentic · powder X-ray diffraction</div>
+  <div class="brand">${lab ? esc(lab.split("\n")[0]) : "Phasentic · powder X-ray diffraction"}</div>
   <h1>Phase Identification Report</h1>
-  <div class="idline">Report <b>${esc(reportId)}</b> · issued ${esc(dateText)} · sample file <b>${esc(input.file_name || "—")}</b></div>
+  <div class="idline">Powder X-ray diffraction, qualitative phase analysis · Report no. <b>${esc(reportId)}</b> · date of issue ${esc(dateText)} · item <b>${esc(input.file_name || "—")}</b></div>
 </header>
-<aside class="auto" role="note"><b>Automated analysis — not reviewed by a person.</b> Every result, figure and interpretation in this report was produced by the Phasentic software directly from the measurement file. It is not a human-refined result: no analyst has checked it and no Rietveld refinement was performed. No AI model is used; the analysis is a fixed, reproducible algorithm. Treat it as a screening result until a qualified analyst confirms it and signs below.</aside>
+<aside class="auto" role="note"><b>Automated analysis — not reviewed by a person.</b> Every result, figure and interpretation in this report was produced by the Phasentic software [1] directly from the measurement file. No analyst has checked it and no Rietveld refinement was performed. No AI model is used; the analysis is a fixed, reproducible algorithm. Treat it as a screening result until a qualified analyst confirms it and signs section 11.</aside>
 
 <section>
-  <h2>Report details</h2>
+  <h2>Summary</h2>
+  <p class="summary">${summary}</p>
+</section>
+
+<section>
+  <h2>1 Report and item details</h2>
   <div class="fields">
-    ${kv("Laboratory", "&nbsp;")}${kv("Customer", "&nbsp;")}
-    ${kv("Sample description", "&nbsp;")}${kv("Date received / measured", "&nbsp;")}
+    ${kv("Laboratory (name, address)", lab ? esc(lab).replace(/\n/g, "<br>") : blank)}${kv("Location of measurement", blank)}
+    ${kv("Customer (name, contact)", blank)}${kv("External provider", blank)}
+    ${kv("Item description and condition", blank)}${kv("Item identification", or(acq.sample_id || acq.sample_name, blank))}
+    ${kv("Date of receipt", blank)}${kv("Date of measurement", acq.measured_start ? fmtDate(acq.measured_start) : blank)}
+    ${kv("Sampling", "not performed by the laboratory; results apply to the item as received")}${kv("Specimen preparation", or(acq.prepared_by ? `prepared by ${acq.prepared_by}` : "", blank))}
   </div>
 </section>
 
 <section>
-  <h2>Result</h2>
+  <h2>2 Purpose and scope</h2>
+  <p>Qualitative identification of the crystalline phases in the item by comparing its powder diffraction pattern with reference patterns [2${isPowcodRelease ? ", 3" : ""}], following the general principles of EN 13925-1 [5]. Out of scope: phase quantities, lattice parameters, crystallite size, amorphous content and Rietveld refinement.</p>
+</section>
+
+<section>
+  <h2>3 Result</h2>
   <div class="result">
     <div class="verdict">${decisionText}<small>decision</small></div>
-    <p>${esc(decisionNote)} ${!sel ? (fallbackRows ? "No mixture was selected; the table lists the best-ranked single candidates instead." : "No mixture was selected and no candidate matched a detected peak.") : unexplained ? "" : "No detected peak is left unexplained."}</p>
+    <p>${esc(decisionNote)} ${!sel ? (fallbackRows ? "No mixture was selected; Table 1 lists the best-ranked single candidates instead." : "No mixture was selected and no candidate matched a detected peak.") : unexplained ? "" : "No detected peak is left unexplained."}</p>
   </div>
   <table>
-    <thead><tr><th>#</th><th>Phase</th><th>Space group</th><th>Reference</th><th class="n">Peaks matched</th><th class="n">Unique evidence</th></tr></thead>
-    <tbody>${phaseRows || fallbackRows || `<tr><td colspan="6">No candidate phases.</td></tr>`}</tbody>
+    <caption><b>Table 1.</b> ${sel ? "Identified phases" : "Best-ranked single-phase candidates"}. Reference = database entry used for the calculated pattern; peaks matched = detected peaks assigned to the phase; unique = peaks no other selected phase explains.</caption>
+    <thead><tr><th>No.</th><th>Formula</th><th>Name</th><th>Space group</th><th>Reference</th><th class="n">Peaks matched</th><th class="n">Unique</th></tr></thead>
+    <tbody>${phaseRows || fallbackRows || `<tr><td colspan="7">No candidate phases.</td></tr>`}</tbody>
   </table>
-  <p class="note">Phases are ranked hypotheses from the ${isPowcod ? dbShort : "demo"} reference database, not certainties. “Unique evidence” counts detected peaks that no other selected phase explains. No phase fractions are reported.</p>
+  <p class="note">Phases are ranked hypotheses, not certainties. No phase fractions are reported.${pinned.length ? " ‡ fixed by the operator." : ""}</p>
 </section>
 
 ${phases.length ? fitFigure(r, phases) : measuredFigure(r)}
-
-<section>
-  <h2>Interpretation <span class="label-op">· opinion, not a measured result</span></h2>
-  <ul>${interpretation.map((t) => `<li>${t}</li>`).join("")}</ul>
-</section>
-
 ${phaseFigure(r, phases)}
 ${alternativesFigure(r)}
 ${altRows ? `<section>
-  <h2>Alternatives per phase</h2>
   <table>
-    <thead><tr><th>#</th><th>Entry</th><th>Space group</th><th>Reference</th><th class="n">Fit</th></tr></thead>
+    <caption><b>Table 2.</b> Alternatives per phase. Fit: share of the signal left by the other phases that the entry explains when refitted in that phase's place (100&#8201;% = perfect). Listed: materials within 80&#8201;% of the best entry; other entries of the same material are omitted.</caption>
+    <thead><tr><th>No.</th><th>Entry</th><th>Space group</th><th>Reference</th><th class="n">Fit</th></tr></thead>
     <tbody>${altRows}</tbody>
   </table>
-  <p class="note">Fit: share of the signal left by the other phases that the entry explains when refitted in that phase's place (100% = perfect). Listed: materials within 80% of the best entry; other entries of the same material are left out.</p>
 </section>` : ""}
 
 <section>
-  <h2>Method and measurement</h2>
+  <h2>4 Interpretation <span class="label-op">· opinion, not a measured result (ISO/IEC 17025 §7.8.7)</span></h2>
+  <ul>${interpretation.map((t) => `<li>${t}</li>`).join("")}</ul>
+</section>
+
+<section>
+  <h2>5 Conclusions</h2>
+  <p>${conclusion}</p>
+</section>
+
+<section>
+  <h2>6 Method</h2>
   <dl>
-    ${kv("Method", `Phasentic ${esc(opts.version || "")}${preset ? ", validated method" : ", custom settings (not validated)"}`)}
+    ${kv("Method", `Phasentic ${esc(opts.version || "")} [1]${preset ? ", validated method" : ", custom settings (not validated)"}`)}
     ${kv("Reference database", dbName)}
     ${kv("Sample chemistry", elements ? `restricted to ${esc(elements)}` : "not restricted")}
-    ${kv("Radiation", `${esc(r.radiation?.label || "")}${rad.ka1_angstrom ? `, λ(Kα₁) ${num(rad.ka1_angstrom, 6)} Å` : ""}${rad.ka2_angstrom ? `, λ(Kα₂) ${num(rad.ka2_angstrom, 6)} Å` : ""}`)}
-    ${kv("Scan range", `${num(input.angle_min_deg, 2)}–${num(input.angle_max_deg, 2)}° 2θ`)}
-    ${kv("Step / points", `${num(step, 4)}° / ${points}`)}
-    ${kv("Data format", `${esc(input.file_extension || "")}${meta.format_owner ? ` (${esc(meta.format_owner)})` : ""}`)}
-    ${kv("Instrument", s.instrument ? esc(JSON.stringify(s.instrument)) : "not provided")}
-    ${kv("Displacement correction", Number.isFinite(disp.sample_displacement_deg) ? `${num(disp.sample_displacement_deg, 3)}° (Δ2θ = D·cos θ)` : "none")}
-    ${kv("Line-position calibration", esc(q.calibration_status || "unverified"))}
-    ${kv("Operator choices", pinned.length ? `phases fixed by the operator: ${pinned.map(codLink).join(", ")}` : "none (fully automatic selection)")}
-    ${kv("Detected peaks", `${(r.peaks || []).length} (noise-aware, S/N ≥ ${num(s.peak_min_snr, 0)})`)}
-    ${kv("Signal-to-noise", num(q.signal_to_noise, 0))}
-    ${kv("Matching tolerance", `${num(s.peak_tolerance_deg, 2)}° 2θ`)}
+    ${kv("Matching tolerance", `${num(s.peak_tolerance_deg, 2)}° in 2<i>θ</i>`)}
     ${kv("Phases allowed", `up to ${esc(s.max_phases ?? "—")}`)}
+    ${kv("Operator choices", pinned.length ? `phases fixed by the operator: ${pinned.map(codLink).join(", ")}` : "none (fully automatic selection)")}
   </dl>
-  ${warnings ? `<p class="note" style="margin-top:5pt"><b>Quality warnings.</b> ${warnings}</p>` : ""}
+  <h3>Decision rule (ISO/IEC 17025 §7.8.6)</h3>
+  <p class="note"><b>Supported:</b> the selected phase set explains the pattern and the line positions passed calibration against a certified standard. <b>Tentative:</b> the most plausible phase set, without passed calibration or with weak separation from alternatives. <b>Unresolved:</b> no phase set explains the pattern well enough. The rule is applied automatically; it does not account for the consequences of a wrong identification, which the authorising analyst must judge.</p>
 </section>
 
 <section>
-  <h2>Limitations</h2>
-  <p class="note">Identification only: no Rietveld refinement, phase fractions or lattice parameters. Only phases in the reference database and allowed by the stated chemistry can be found; minor phases (below a few weight percent) and weakly scattering phases next to heavy-element phases are often missed. The uncertainty of an individual identification is not estimated; on a sealed test of 200 synthesis products the validated method found the exact phases in 37% of samples and the right compounds in 49.5%, with accuracy falling sharply for three or more phases.</p>
+  <h2>7 Measurement conditions</h2>
+  <dl>
+    ${kv("Diffractometer", or([acq.instrument_id && `instrument ${acq.instrument_id}`, acq.instrument_software].filter(Boolean).join(", "), s.instrument ? esc(JSON.stringify(s.instrument)) : "not recorded"))}
+    ${kv("Geometry", or([acq.sample_mode, acq.goniometer_radius && `goniometer radius ${acq.goniometer_radius}`].filter(Boolean).join(", ")))}
+    ${kv("X-ray source", or([acq.tube, acq.tube_voltage, acq.tube_current].filter(Boolean).join(", "), esc(r.radiation?.label || "not recorded")))}
+    ${kv("Wavelength", lambda || esc(r.radiation?.label || "—"))}
+    ${kv("Kβ filter / monochromator", filters || or(""))}
+    ${kv("Slits", slits || or(""))}
+    ${kv("Detector", or([acq.detector, acq.detector_mode && `${acq.detector_mode.toLowerCase()} mode`].filter(Boolean).join(", ")))}
+    ${kv("Scan", `${acq.scan_mode ? `${esc(acq.scan_mode.toLowerCase())}, ` : ""}2<i>θ</i> = ${num(input.angle_min_deg, 3)}° to ${num(input.angle_max_deg, 3)}°, step ${num(step, 4)}°, ${points} points`)}
+    ${kv("Counting time", or(acq.counting_time ? `${acq.counting_time} per step` : ""))}
+    ${kv("Specimen rotation", or(acq.sample_spinning ? `${acq.sample_spinning} per revolution` : ""))}
+    ${kv("Measured", or([acq.measured_start, acq.measured_end].filter(Boolean).map((v) => String(v).replace("T", " ")).join(" to ")))}
+    ${kv("Operator (from file)", or(acq.operator))}
+    ${kv("Temperature, atmosphere", "ambient unless stated; not recorded in the file")}
+    ${kv("Data format", `${esc(input.file_extension || "")}${meta.format_owner ? ` (${esc(meta.format_owner)})` : ""}`)}
+  </dl>
 </section>
 
 <section>
-  <h2>Traceability</h2>
+  <h2>8 Data processing</h2>
+  <dl>
+    ${kv("Background", "estimated (rolling 20th percentile, smoothed) and subtracted for fitting; shown dashed in Figure 1")}
+    ${kv("Peak search", `${(r.peaks || []).length} peaks, noise-aware, S/N ≥ ${num(s.peak_min_snr, 0)}`)}
+    ${kv("Specimen displacement", Number.isFinite(disp.sample_displacement_deg) ? `${num(disp.sample_displacement_deg, 3)}° (Δ2<i>θ</i> = <i>D</i> cos <i>θ</i>)` : "not corrected")}
+    ${kv("Line-position calibration", esc(q.calibration_status || "unverified"))}
+    ${kv("Reference patterns", "calculated stick patterns, broadened with a pseudo-Voigt profile" + (Number.isFinite(eta) ? ` (Lorentzian fraction <i>η</i> = ${num(eta, 2)})` : ""))}
+    ${kv("Peak width", widthModel && widthModel.status === "estimated" ? `FWHM(2<i>θ</i>) = <i>a</i> + <i>b</i> tan <i>θ</i>, estimated from ${esc(widthModel.peaks_used ?? "")} peaks: <i>a</i> = ${num(widthModel.a_deg, 4)}°, <i>b</i> = ${num(widthModel.b_deg, 4)}°` : `fixed FWHM ${num(s.profile_width_deg, 2)}°`)}
+    ${kv("Fit", "non-negative least squares of the calculated profiles against the background-subtracted pattern; weights from the 2<i>θ</i> grid spacing; no structural refinement")}
+    ${kv("Phase-set search", `bounded beam search, at most ${esc(s.max_phases ?? "—")} phases, ${esc(mq.fit_attempts ?? "—")} fits tried`)}
+    ${kv("Signal-to-noise", num(q.signal_to_noise, 0))}
+  </dl>
+  ${warnings ? `<p class="note"><b>Quality warnings.</b> ${warnings}</p>` : ""}
+</section>
+
+<section>
+  <h2>9 Limitations and uncertainty</h2>
+  <p class="note">The result is qualitative, so no numerical measurement uncertainty is stated (ISO/IEC 17025 §7.8.3.1 c). Only phases in the reference database and allowed by the stated chemistry can be found; minor phases (below a few mass percent) and weakly scattering phases next to strongly scattering ones are often missed. As a measure of reliability: on a sealed test of 200 synthesis products the validated method found the exact phases in 37&#8201;% of samples and the right compounds in 49.5&#8201;%, with accuracy falling sharply for three or more phases.</p>
+</section>
+
+<section>
+  <h2>10 Traceability and data</h2>
   <dl class="one">
     ${kv("Analysis ID", `<span class="mono">${esc(r.analysis_id)}</span>`)}
-    ${kv("Input SHA-256", `<span class="mono">${esc(input.sha256)}</span>`)}
+    ${kv("Input file SHA-256", `<span class="mono">${esc(input.sha256)}</span>`)}
     ${kv("Engine", `<span class="mono">${esc(p.algorithm_version)}</span>`)}
     ${kv("Mixture search", `<span class="mono">${esc(r.mixture?.algorithm_version)}</span>`)}
     ${kv("Database SHA-256", `<span class="mono">${esc(p.powcod_database_sha256 || "—")}</span>`)}
     ${kv("Report schema", `<span class="mono">${esc(r.schema_version)}</span>`)}
+    ${kv("Measurement file", `${esc(input.file_name || "—")}${dataFiles.scan ? `, archived as <span class="mono">${esc(dataFiles.scan)}</span>` : ""}`)}
+    ${kv("Numeric data", dataFiles.cif ? `observed, calculated and background profiles in <span class="mono">${esc(dataFiles.cif)}</span> (IUCr powder CIF); all settings in <span class="mono">${esc(dataFiles.json || "")}</span>` : "observed, calculated and background profiles, and all settings, are in the JSON analysis report with the same analysis ID")}
   </dl>
-  <p class="note">Every setting and intermediate result is in the JSON report with the same analysis ID.</p>
 </section>
 
 <section>
-  <h2>Authorisation</h2>
-  <div class="sign"><div>Analysed by — name, signature, date</div><div>Reviewed by — name, signature, date</div><div>Authorised by — name, signature, date</div></div>
-  <p class="statement">Results relate only to the item tested. This report shall not be reproduced except in full without the written approval of the issuing laboratory. Produced automatically by Phasentic; until the signature fields above are completed, this is an unreviewed screening result, not a laboratory finding.</p>
+  <h2>References</h2>
+  <ol class="refs">${references.map((ref) => `<li>${ref}</li>`).join("")}</ol>
+</section>
+
+<section>
+  <h2>Symbols and abbreviations</h2>
+  <p class="note">2<i>θ</i>: diffraction angle; <i>θ</i>: Bragg angle; <i>λ</i>: wavelength; K<i>α</i><sub>1</sub>, K<i>α</i><sub>2</sub>: characteristic emission lines of the anode; <i>D</i>: specimen-displacement coefficient; <i>η</i>: Lorentzian fraction of the pseudo-Voigt profile; FWHM: full width at half maximum; S/N: signal-to-noise ratio; COD: Crystallography Open Database; CIF: Crystallographic Information File; space groups in Hermann–Mauguin notation. Units: degree (°) for angles, ångström (Å = 0.1 nm) for wavelengths, counts for intensities.</p>
+</section>
+
+<section>
+  <h2>11 Authorisation</h2>
+  <div class="sign"><div>Analysed by — name, signature, date</div><div>Reviewed by — name, signature, date</div><div>Authorised by — name, function, signature, date</div></div>
+  <p class="statement">Results relate only to the item tested, as received. This report shall not be reproduced except in full without the written approval of the issuing laboratory. Produced automatically by Phasentic; until the signature fields above are completed, this is an unreviewed screening result, not a laboratory finding.</p>
+  <p class="end">End of report ${esc(reportId)}</p>
 </section>
 </main></body></html>`;
+  }
+
+  // Powder CIF (IUCr pdCIF 1.0) with the observed, background and calculated profiles of the
+  // selected phase set, for archiving the numeric data behind Figure 1.
+  function cif(report, opts = {}) {
+    const r = report && report.result ? report.result : report;
+    const t = (r.mixture && r.mixture.residual_trace) || {};
+    const p = r.provenance || {}, meta = (p.input_source && p.input_source.metadata) || {};
+    const rad = meta.source_radiation || {}, input = r.input || {};
+    // CIF 1.1 text is ASCII: Greek letters as CIF markup (\\a = alpha), anything else dropped.
+    const q = (v) => `'${String(v ?? "?").replace(/'/g, "").replace(/[\r\n]+/g, " ").replace(/[^\x20-\x7e]/g, (c) => ({ "α": "\\a", "β": "\\b", "θ": "\\q", "λ": "\\l" }[c] || ""))}'`;
+    const n = (v, d) => (Number.isFinite(Number(v)) ? Number(v).toFixed(d) : "?");
+    const phases = phasesOf(r).map((ph) => ph.component);
+    const block = String(r.analysis_id || "phasentic").replace(/[^A-Za-z0-9_]/g, "_");
+    const x = t.angles_deg || [];
+    const lines = [
+      `# Powder CIF written by Phasentic ${opts.version || ""}; qualitative screening fit, not a Rietveld refinement.`,
+      `# Profiles on the fit grid: ${x.length} of ${input.point_count ?? "?"} measured points. The complete measurement is the original`,
+      `# file ${String(input.file_name || "").replace(/[^\x20-\x7e]/g, "?")} (SHA-256 ${input.sha256 || "?"}).`,
+      `data_${block}`,
+      `_audit_creation_date ${(opts.date || new Date()).toISOString().slice(0, 10)}`,
+      `_audit_creation_method ${q(`Phasentic ${opts.version || ""}, analysis ${r.analysis_id}`)}`,
+      `_pd_spec_description ${q(input.file_name)}`,
+      `_diffrn_radiation_type ${q(r.radiation?.label)}`,
+      ...(rad.ka1_angstrom ? [`_diffrn_radiation_wavelength ${n(rad.ka1_angstrom, 6)}`] : []),
+      `_pd_meas_2theta_range_min ${n(input.angle_min_deg, 4)}`,
+      `_pd_meas_2theta_range_max ${n(input.angle_max_deg, 4)}`,
+      `_pd_proc_ls_profile_function ${q("pseudo-Voigt profiles of calculated reference patterns, non-negative least-squares scale factors")}`,
+      `_pd_proc_ls_background_function ${q("rolling 20th percentile, smoothed; subtracted before fitting")}`,
+      `_refine_ls_weighting_scheme calc`,
+      `_refine_ls_weighting_details ${q("trapezoidal 2theta-grid weights")}`,
+      "",
+      "loop_",
+      "_pd_phase_id",
+      "_pd_phase_name",
+      ...phases.map((c, i) => `${i + 1} ${q(`${c.formula}, ${c.space_group}, ${String(c.reference_id).replace("powcod:", "COD ")}${realName(c) ? `, ${c.name}` : ""}`)}`),
+      "",
+      "loop_",
+      "_pd_proc_2theta_corrected",
+      "_pd_meas_intensity_total",
+      "_pd_proc_intensity_bkg_calc",
+      "_pd_calc_intensity_total",
+      ...x.map((v, i) => `${n(v, 4)} ${n(t.observed_intensities[i], 2)} ${n(t.background_intensities[i], 2)} ${n(t.calculated_intensities[i] + (t.background_intensities[i] || 0), 2)}`),
+      "",
+    ];
+    return lines.join("\n");
   }
 
   // Figures without "Figure N." numbering, for the web interface.
   const unnumbered = (fn) => (...args) => { numbered = false; try { return fn(...args); } finally { numbered = true; } };
   const api = {
     build,
+    cif,
     formula,
     spaceGroup,
     codLink,

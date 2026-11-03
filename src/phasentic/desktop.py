@@ -20,6 +20,14 @@ class _Api:
         if chosen:
             Path(chosen if isinstance(chosen, str) else chosen[0]).write_text(text, encoding="utf-8")
 
+    def choose_folder(self) -> str | None:
+        import webview
+
+        chosen = webview.windows[0].create_file_dialog(webview.FileDialog.FOLDER)
+        if not chosen:
+            return None
+        return chosen if isinstance(chosen, str) else chosen[0]
+
     def open_url(self, url: str) -> None:
         if url.startswith(("http://", "https://")):
             webbrowser.open(url)

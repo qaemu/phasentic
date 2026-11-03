@@ -123,6 +123,24 @@
           <p id="capability-status" class="note" aria-live="polite"></p>
         </div>
 
+        <details id="reports-fold" class="fold block">
+          <summary data-i18n="reportsTitle">Reports</summary>
+          <div class="fold-body">
+            <label class="field"><span data-i18n="laboratory">Laboratory name and address</span>
+              <textarea id="laboratory" rows="2" maxlength="500"></textarea>
+            </label>
+            <label class="field"><span data-i18n="reportFolder">Save every report to this folder</span>
+              <input id="report-folder" type="text" maxlength="1000" placeholder="C:\Users\you\Documents\XRD reports" autocomplete="off" spellcheck="false" />
+              <small data-i18n="reportFolderHint">Full path. Each analysis saves its report (.html), powder CIF (.cif), data (.json) and a copy of the scan. Leave empty to turn off.</small>
+            </label>
+            <div class="pair">
+              <button id="choose-folder" class="secondary" type="button" data-i18n="chooseFolder" hidden>Choose folder…</button>
+              <button id="save-report-settings" class="secondary" type="button" data-i18n="saveSettings">Save</button>
+            </div>
+            <p id="report-settings-status" class="note" aria-live="polite"></p>
+          </div>
+        </details>
+
         <details id="history-fold" class="fold block">
           <summary data-i18n="history">Recent analyses</summary>
           <div id="history-list" class="fold-body"></div>
@@ -157,6 +175,7 @@
             </div>
             <div class="actions">
               <button id="download-pdf-report" class="primary" type="button" data-i18n="downloadReport">Download report</button>
+              <button id="download-cif" class="secondary" type="button">CIF</button>
               <button id="download-report" class="secondary" type="button" data-i18n="download">JSON</button>
             </div>
           </div>

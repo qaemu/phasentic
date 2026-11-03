@@ -33,6 +33,10 @@ const translations = {
     mixtureQueryCandidatePool: "Candidate pool", mixtureQueryRequeries: "Residual re-queries", mixtureQueryMaxFitAttempts: "Max fit attempts",
     mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
     mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
+    reportsTitle: "Reports", laboratory: "Laboratory name and address", reportFolder: "Save every report to this folder",
+    reportFolderHint: "Full path. Each analysis saves its report (.html), powder CIF (.cif), data (.json) and a copy of the scan. Leave empty to turn off.",
+    chooseFolder: "Choose folder…", saveSettings: "Save", settingsSaved: "Saved.", autoSaveOff: "Reports are not saved automatically.", autoSaveOn: (f) => `Reports are saved to ${f}.`,
+    reportSaved: (f) => `Report saved to ${f}.`, reportNotSaved: (m) => `Report not saved: ${m}`,
     cancel: "Cancel", cancelled: "Cancelled.", zoomHint: "Drag over the graph to zoom; double-click to reset.",
     stages: { started: "reading the scan and finding peaks", import_and_peak_detection: "opening the reference database", store_open_and_displacement: "looking up candidates", candidate_lookup: "scoring candidates", matching_and_qualx: "grouping equivalent entries", equivalence: "fitting phase mixtures (slowest step)", mixture_search: "writing the report" },
     history: "Recent analyses", historyEmpty: "Analyses you run are kept here, on this computer.", historyPinned: "phases fixed by you", historyNoScan: "Opened from history: to refit with a chosen alternative, select the scan again.",
@@ -78,6 +82,10 @@ const translations = {
     mixtureQueryCandidatePool: "Conjunto de candidatos", mixtureQueryRequeries: "Nuevas consultas por residual", mixtureQueryMaxFitAttempts: "Máximo de intentos de ajuste",
     mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
     mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
+    reportsTitle: "Informes", laboratory: "Nombre y dirección del laboratorio", reportFolder: "Guardar cada informe en esta carpeta",
+    reportFolderHint: "Ruta completa. Cada análisis guarda su informe (.html), CIF de polvo (.cif), datos (.json) y una copia del escaneo. Déjela vacía para desactivarlo.",
+    chooseFolder: "Elegir carpeta…", saveSettings: "Guardar", settingsSaved: "Guardado.", autoSaveOff: "Los informes no se guardan automáticamente.", autoSaveOn: (f) => `Los informes se guardan en ${f}.`,
+    reportSaved: (f) => `Informe guardado en ${f}.`, reportNotSaved: (m) => `Informe no guardado: ${m}`,
     cancel: "Cancelar", cancelled: "Cancelado.", zoomHint: "Arrastre sobre el gráfico para ampliar; doble clic para restablecer.",
     stages: { started: "leyendo el escaneo y buscando picos", import_and_peak_detection: "abriendo la base de referencias", store_open_and_displacement: "buscando candidatos", candidate_lookup: "puntuando candidatos", matching_and_qualx: "agrupando entradas equivalentes", equivalence: "ajustando mezclas de fases (el paso más lento)", mixture_search: "escribiendo el informe" },
     history: "Análisis recientes", historyEmpty: "Los análisis que ejecute se guardan aquí, en esta computadora.", historyPinned: "fases fijadas por usted", historyNoScan: "Abierto desde el historial: para reajustar con una alternativa, seleccione el escaneo otra vez.",
@@ -104,6 +112,7 @@ let pinnedIds = [];  // phases the operator fixed from the alternatives
 let currentFile = null;  // scan behind the shown report (null when opened from history)
 let fitView = null;  // zoomed range of the fit figure
 let batchRows = [];  // {file, report, error, state}
+let reportSettings = { report_folder: "", laboratory: "" };
 
 function currentLanguage() {
   return translations[$("language").value] || translations.en;
@@ -411,8 +420,12 @@ let appVersion = "";
 fetch("/api/v1/health").then((r) => r.json()).then((d) => { appVersion = d.version || ""; }).catch(() => {});
 $("download-pdf-report").addEventListener("click", () => {
   if (!latestReport || !window.PhasenticReport) return;
-  const html = window.PhasenticReport.build(latestReport, { version: appVersion, preset: $("validated-preset").checked ? "validated" : null });
+  const html = window.PhasenticReport.build(latestReport, reportOptions());
   saveFile(`phasentic-report-${latestReport.analysis_id || "analysis"}.html`, html, "text/html");
+});
+$("download-cif").addEventListener("click", () => {
+  if (!latestReport) return;
+  saveFile(`${latestReport.analysis_id || "xrd-report"}.cif`, R().cif(latestReport, { version: appVersion }), "chemical/x-cif");
 });
 $("download-report").addEventListener("click", () => {
   if (!latestReport) return;
@@ -504,6 +517,70 @@ $("reference-source").addEventListener("change", () => {
   }
 });
 
+function reportOptions() {
+  return { version: appVersion, preset: $("validated-preset").checked ? "validated" : null, laboratory: reportSettings.laboratory };
+}
+
+// After each finished analysis: report (.html), powder CIF and JSON into the chosen folder, if one is set.
+// Returns {ok, text}, or null when saving is off.
+async function autoSave(report, file) {
+  if (!reportSettings.report_folder || !report) return null;
+  const L = currentLanguage();
+  const stem = String((report.input && report.input.file_name) || "scan").replace(/\.[^.]+$/, "");
+  const base = `${stem}_${report.analysis_id || "analysis"}`;
+  try {
+    const scanExtension = file ? (file.name.match(/\.(xy|xrdml|raw)$/i) || [])[1] : null;
+    const files = {
+      html: R().build(report, { ...reportOptions(), files: { cif: `${base}.cif`, json: `${base}.json`, scan: scanExtension ? `${base}.${scanExtension.toLowerCase()}` : null } }),
+      cif: R().cif(report, { version: appVersion }),
+      json: JSON.stringify(report, null, 1),
+    };
+    if (scanExtension) {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      let binary = "";
+      for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+      files.scan = btoa(binary);
+    }
+    const response = await fetch("/api/v1/save-report", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ base_name: base, files, scan_extension: scanExtension ? scanExtension.toLowerCase() : null }) });
+    const payload = await fetchJsonOrThrow(response, "could not write the files");
+    return { ok: true, text: L.reportSaved(payload.data.folder) };
+  } catch (error) {
+    return { ok: false, text: L.reportNotSaved(error instanceof Error ? error.message : String(error)) };
+  }
+}
+
+async function loadReportSettings() {
+  try {
+    reportSettings = (await fetchJsonOrThrow(await fetch("/api/v1/report-settings"), "Report settings unavailable")).data;
+  } catch (_error) { /* keep defaults */ }
+  $("laboratory").value = reportSettings.laboratory || "";
+  $("report-folder").value = reportSettings.report_folder || "";
+  const L = currentLanguage();
+  $("report-settings-status").textContent = reportSettings.report_folder ? L.autoSaveOn(reportSettings.report_folder) : L.autoSaveOff;
+}
+
+$("save-report-settings").addEventListener("click", async () => {
+  const L = currentLanguage();
+  try {
+    const response = await fetch("/api/v1/report-settings", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ report_folder: $("report-folder").value.trim(), laboratory: $("laboratory").value.trim() }),
+    });
+    reportSettings = (await fetchJsonOrThrow(response, "Could not save the settings")).data;
+    $("report-folder").value = reportSettings.report_folder;
+    $("report-settings-status").textContent = `${L.settingsSaved} ${reportSettings.report_folder ? L.autoSaveOn(reportSettings.report_folder) : L.autoSaveOff}`;
+  } catch (error) { $("report-settings-status").textContent = error.message; }
+});
+
+// The app window can show a native folder picker; the browser cannot hand out paths.
+window.addEventListener("pywebviewready", () => { $("choose-folder").hidden = false; });
+$("choose-folder").addEventListener("click", async () => {
+  if (!window.pywebview || !window.pywebview.api || !window.pywebview.api.choose_folder) return;
+  const chosen = await window.pywebview.api.choose_folder();
+  if (chosen) $("report-folder").value = chosen;
+});
+void loadReportSettings();
+
 // Settings for one request, from the form; a string is a message for the user.
 function formSettings() {
   const instrument = {};
@@ -572,6 +649,8 @@ async function analyzeSingle(file) {
     if (requestId !== analysisRequest) return;
     currentFile = file; fitView = null;
     renderReport(report); $("form-status").textContent = currentLanguage().done;
+    const saved = await autoSave(report, file);
+    if (saved && requestId === analysisRequest) $("form-status").textContent += ` ${saved.text}`;
     void loadHistory();
   } catch (error) {
     if (requestId !== analysisRequest) return;
@@ -605,6 +684,7 @@ async function analyzeBatch(files) {
       try {
         row.report = await requestAnalysis(row.file, settings, controller.signal);
         row.state = "batchDone";
+        row.saved = await autoSave(row.report, row.file);
       } catch (error) {
         if (error && error.name === "AbortError") { row.state = "batchWaiting"; break; }
         row.error = error instanceof Error ? error.message : "Analysis failed"; row.state = "batchFailed";
@@ -617,7 +697,9 @@ async function analyzeBatch(files) {
     if (requestId === analysisRequest) {
       activeAnalysisController = null; setRunning(false);
       const ok = batchRows.filter((row) => row.report).length;
-      $("form-status").textContent = controller.signal.aborted ? currentLanguage().cancelled : currentLanguage().batchFinished(ok, batchRows.length);
+      const unsaved = batchRows.find((row) => row.saved && !row.saved.ok);
+      const savedNote = unsaved ? unsaved.saved.text : batchRows.some((row) => row.saved && row.saved.ok) ? currentLanguage().autoSaveOn(reportSettings.report_folder) : "";
+      $("form-status").textContent = `${controller.signal.aborted ? currentLanguage().cancelled : currentLanguage().batchFinished(ok, batchRows.length)} ${savedNote}`.trim();
       renderBatch();
       void loadHistory();
     }

@@ -54,8 +54,8 @@ small, .note { color: var(--muted); font-size: 12px; }
 .field > span { font-size: 12px; font-weight: 600; color: var(--ink); }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .pair.source-pair { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
-input, select, button { font: inherit; color: var(--ink); }
-input[type=text], input[type=number], select {
+input, select, button, textarea { font: inherit; color: var(--ink); }
+input[type=text], input[type=number], select, textarea {
   width: 100%; min-width: 0; padding: 7px 9px; background: var(--sheet);
   border: 1px solid #c9ced5; border-radius: 3px;
 }
@@ -186,3 +186,4 @@ tr.clickable:hover td { background: var(--paper); }
 .history-item b { font-size: 12px; overflow-wrap: anywhere; }
 .history-item small { color: var(--muted); font-size: 11px; }
 .submit #cancel-button { width: 100%; margin-top: 6px; }
+textarea { resize: vertical; font-size: 13px; }

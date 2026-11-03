@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import hashlib
 import hmac
 import tempfile
@@ -310,6 +311,78 @@ def create_app() -> Any:
             raise HTTPException(status_code=404, detail="Analysis not found in history")
         saved = json.loads(await run_in_threadpool(path.read_text, encoding="utf-8"))
         return {"success": True, "data": saved.get("report")}
+
+    settings_path = phasentic_home() / "report-settings.json"
+
+    def _report_settings() -> dict[str, str]:
+        try:
+            saved = json.loads(settings_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            saved = {}
+        return {"report_folder": str(saved.get("report_folder") or ""), "laboratory": str(saved.get("laboratory") or "")}
+
+    @app.get("/api/v1/report-settings")
+    async def get_report_settings() -> dict[str, Any]:
+        return {"success": True, "data": _report_settings()}
+
+    @app.post("/api/v1/report-settings")
+    async def set_report_settings(request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except ValueError:
+            payload = None
+        if not isinstance(payload, dict):
+            raise HTTPException(status_code=400, detail="Report settings must be a JSON object")
+        folder = str(payload.get("report_folder") or "").strip()
+        laboratory = str(payload.get("laboratory") or "").strip()
+        if len(laboratory) > 500 or len(folder) > 1000:
+            raise HTTPException(status_code=400, detail="Report settings are too long")
+        if folder:
+            path = Path(folder).expanduser()
+            if not path.is_absolute() or not path.is_dir():
+                raise HTTPException(status_code=400, detail="The report folder must be an existing folder (full path)")
+            folder = str(path.resolve())
+        settings_path.parent.mkdir(parents=True, exist_ok=True)
+        settings_path.write_text(json.dumps({"report_folder": folder, "laboratory": laboratory}), encoding="utf-8")
+        return {"success": True, "data": _report_settings()}
+
+    @app.post("/api/v1/save-report")
+    async def save_report(request: Request) -> dict[str, Any]:
+        """Write a finished report (HTML, powder CIF, JSON, original scan) into the configured report folder."""
+        body = await request.body()
+        if len(body) > 64 * 1024 * 1024:
+            raise HTTPException(status_code=413, detail="Report is too large")
+        try:
+            payload = json.loads(body)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="Report must be JSON") from exc
+        folder = _report_settings()["report_folder"]
+        if not folder or not Path(folder).is_dir():
+            raise HTTPException(status_code=400, detail="No report folder is set, or it no longer exists")
+        base = re.sub(r"[^A-Za-z0-9._ -]", "_", str(payload.get("base_name") or "")).strip(" .")[:120]
+        files = payload.get("files")
+        if not base or not isinstance(files, dict):
+            raise HTTPException(status_code=400, detail="Report name and files are required")
+        written = []
+        # The original scan travels with its report (raw data for the record); only scan formats are accepted.
+        scan_extension = str(payload.get("scan_extension") or "").lower()
+        extensions = ("html", "cif", "json") + ((scan_extension,) if scan_extension in {"xy", "xrdml", "raw"} else ())
+        for extension in extensions:
+            is_scan = extension == scan_extension
+            content = files.get("scan" if is_scan else extension)
+            if not isinstance(content, str) or not content:
+                continue
+            target = Path(folder) / f"{base}.{extension}"
+            if is_scan:  # byte-exact copy (base64), so its SHA-256 matches the report
+                try:
+                    data = base64.b64decode(content, validate=True)
+                except ValueError as exc:
+                    raise HTTPException(status_code=400, detail="Scan copy is not valid base64") from exc
+                await run_in_threadpool(target.write_bytes, data)
+            else:
+                await run_in_threadpool(target.write_text, content, encoding="utf-8")
+            written.append(target.name)
+        return {"success": True, "data": {"folder": folder, "files": written}}
 
     @app.get("/api/v1/health")
     async def health() -> dict[str, str]:
