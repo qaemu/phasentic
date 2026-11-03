@@ -187,3 +187,4 @@ tr.clickable:hover td { background: var(--paper); }
 .history-item small { color: var(--muted); font-size: 11px; }
 .submit #cancel-button { width: 100%; margin-top: 6px; }
 textarea { resize: vertical; font-size: 13px; }
+.submit .auto-pdf { margin-top: 8px; }

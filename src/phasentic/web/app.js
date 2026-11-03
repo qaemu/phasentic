@@ -33,6 +33,7 @@ const translations = {
     mixtureQueryCandidatePool: "Candidate pool", mixtureQueryRequeries: "Residual re-queries", mixtureQueryMaxFitAttempts: "Max fit attempts",
     mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
     mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
+    autoPdf: "Create PDF after analysis", autoPdfHint: "Several files: one ZIP with a PDF per file.", pdfFailed: (m) => `PDF not created: ${m}`,
     reportsTitle: "Reports", laboratory: "Laboratory name and address", reportFolder: "Save every report to this folder",
     reportFolderHint: "Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.",
     chooseFolder: "Choose folder…", saveSettings: "Save", settingsSaved: "Saved.", autoSaveOff: "Reports are not saved automatically.", autoSaveOn: (f) => `Reports are saved to ${f}.`,
@@ -82,6 +83,7 @@ const translations = {
     mixtureQueryCandidatePool: "Conjunto de candidatos", mixtureQueryRequeries: "Nuevas consultas por residual", mixtureQueryMaxFitAttempts: "Máximo de intentos de ajuste",
     mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
     mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
+    autoPdf: "Crear PDF después del análisis", autoPdfHint: "Varios archivos: un ZIP con un PDF por archivo.", pdfFailed: (m) => `PDF no creado: ${m}`,
     reportsTitle: "Informes", laboratory: "Nombre y dirección del laboratorio", reportFolder: "Guardar cada informe en esta carpeta",
     reportFolderHint: "Ruta completa. Cada análisis guarda un informe PDF, un CIF de polvo (.cif), los datos (.json) y una copia del escaneo. Déjela vacía para desactivarlo.",
     chooseFolder: "Elegir carpeta…", saveSettings: "Guardar", settingsSaved: "Guardado.", autoSaveOff: "Los informes no se guardan automáticamente.", autoSaveOn: (f) => `Los informes se guardan en ${f}.`,
@@ -424,23 +426,46 @@ $("download-pdf-report").addEventListener("click", () => {
   saveFile(`phasentic-report-${latestReport.analysis_id || "analysis"}.html`, html, "text/html");
 });
 // Plain PDF, rendered by the local server from the saved analysis.
+// Binary download: save dialog in the app window, a normal download in the browser.
+async function saveBlob(blob, name) {
+  if (window.pywebview && window.pywebview.api && window.pywebview.api.save_bytes) {
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    let binary = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    await window.pywebview.api.save_bytes(name, btoa(binary));
+  } else {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a"); link.href = url; link.download = name; link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+}
+
+async function downloadPdf(report) {
+  const response = await fetch(`/api/v1/history/${encodeURIComponent(report.analysis_id)}/pdf`);
+  if (!response.ok) throw new Error("could not make the PDF");
+  const name = `${String(report.input?.file_name || "scan").replace(/\.[^.]+$/, "")}_${report.analysis_id}.pdf`;
+  await saveBlob(await response.blob(), name);
+}
+
+// One ZIP for a batch: a PDF per analysed file, named by creation date (set by the server).
+async function downloadZip(reports) {
+  const response = await fetch("/api/v1/reports-zip", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ analysis_ids: reports.map((report) => report.analysis_id) }),
+  });
+  if (!response.ok) throw new Error("could not make the ZIP");
+  const name = (response.headers.get("Content-Disposition") || "").match(/filename="([^"]+)"/)?.[1] || "phasentic-reports.zip";
+  await saveBlob(await response.blob(), name);
+}
+
 $("download-pdf").addEventListener("click", async () => {
   if (!latestReport) return;
+  try { await downloadPdf(latestReport); } catch (error) { $("form-status").textContent = currentLanguage().pdfFailed(error.message); }
+});
+$("auto-pdf").addEventListener("change", async () => {
   try {
-    const response = await fetch(`/api/v1/history/${encodeURIComponent(latestReport.analysis_id)}/pdf`);
-    if (!response.ok) throw new Error("Could not make the PDF");
-    const blob = await response.blob();
-    const name = `${String(latestReport.input?.file_name || "scan").replace(/\.[^.]+$/, "")}_${latestReport.analysis_id}.pdf`;
-    if (window.pywebview && window.pywebview.api && window.pywebview.api.save_bytes) {
-      const bytes = new Uint8Array(await blob.arrayBuffer());
-      let binary = "";
-      for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-      await window.pywebview.api.save_bytes(name, btoa(binary));
-    } else {
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a"); link.href = url; link.download = name; link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    }
+    const response = await fetch("/api/v1/report-settings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ auto_pdf: $("auto-pdf").checked }) });
+    reportSettings = (await fetchJsonOrThrow(response, "Could not save the setting")).data;
   } catch (error) { $("form-status").textContent = error.message; }
 });
 $("download-cif").addEventListener("click", () => {
@@ -574,6 +599,7 @@ async function loadReportSettings() {
   } catch (_error) { /* keep defaults */ }
   $("laboratory").value = reportSettings.laboratory || "";
   $("report-folder").value = reportSettings.report_folder || "";
+  $("auto-pdf").checked = reportSettings.auto_pdf === true;
   const L = currentLanguage();
   $("report-settings-status").textContent = reportSettings.report_folder ? L.autoSaveOn(reportSettings.report_folder) : L.autoSaveOff;
 }
@@ -670,6 +696,9 @@ async function analyzeSingle(file) {
     renderReport(report); $("form-status").textContent = currentLanguage().done;
     const saved = await autoSave(report, file);
     if (saved && requestId === analysisRequest) $("form-status").textContent += ` ${saved.text}`;
+    if ($("auto-pdf").checked) {
+      try { await downloadPdf(report); } catch (error) { $("form-status").textContent += ` ${currentLanguage().pdfFailed(error.message)}`; }
+    }
     void loadHistory();
   } catch (error) {
     if (requestId !== analysisRequest) return;
@@ -719,6 +748,10 @@ async function analyzeBatch(files) {
       const unsaved = batchRows.find((row) => row.saved && !row.saved.ok);
       const savedNote = unsaved ? unsaved.saved.text : batchRows.some((row) => row.saved && row.saved.ok) ? currentLanguage().autoSaveOn(reportSettings.report_folder) : "";
       $("form-status").textContent = `${controller.signal.aborted ? currentLanguage().cancelled : currentLanguage().batchFinished(ok, batchRows.length)} ${savedNote}`.trim();
+      const done = batchRows.filter((row) => row.report).map((row) => row.report);
+      if ($("auto-pdf").checked && done.length && !controller.signal.aborted) {
+        downloadZip(done).catch((error) => { $("form-status").textContent += ` ${currentLanguage().pdfFailed(error.message)}`; });
+      }
       renderBatch();
       void loadHistory();
     }

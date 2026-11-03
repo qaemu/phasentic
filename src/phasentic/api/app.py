@@ -317,6 +317,42 @@ def create_app() -> Any:
         data = await run_in_threadpool(report_pdf, report)
         return Response(data, media_type="application/pdf", headers={"Content-Disposition": f'attachment; filename="{analysis_id}.pdf"'})
 
+    @app.post("/api/v1/reports-zip")
+    async def reports_zip(request: Request) -> Any:
+        """One plain PDF per analysis (from history), zipped and named by creation date."""
+        import io
+        import zipfile
+        from datetime import datetime
+
+        from fastapi.responses import Response
+
+        from phasentic.reporting.pdf import report_pdf
+
+        try:
+            payload = await request.json()
+        except ValueError:
+            payload = None
+        ids = payload.get("analysis_ids") if isinstance(payload, dict) else None
+        if not isinstance(ids, list) or not ids or len(ids) > HISTORY_LIMIT:
+            raise HTTPException(status_code=400, detail=f"analysis_ids must list 1 to {HISTORY_LIMIT} analyses")
+        paths = [_history_path(str(analysis_id)) for analysis_id in ids]
+        if not all(path.is_file() for path in paths):
+            raise HTTPException(status_code=404, detail="An analysis is not in the history")
+
+        def build() -> bytes:
+            buffer = io.BytesIO()
+            with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+                for path in paths:
+                    report = json.loads(path.read_text(encoding="utf-8")).get("report") or {}
+                    stem = Path(str((report.get("input") or {}).get("file_name") or "scan")).stem
+                    stem = re.sub(r"[^A-Za-z0-9._ -]", "_", stem)[:100] or "scan"
+                    archive.writestr(f"{stem}_{report.get('analysis_id', path.stem)}.pdf", report_pdf(report))
+            return buffer.getvalue()
+
+        data = await run_in_threadpool(build)
+        name = f"phasentic-reports_{datetime.now():%Y-%m-%d_%H%M}.zip"
+        return Response(data, media_type="application/zip", headers={"Content-Disposition": f'attachment; filename="{name}"'})
+
     @app.get("/api/v1/history/{analysis_id}")
     async def history_item(analysis_id: str) -> dict[str, Any]:
         path = _history_path(analysis_id)
@@ -327,12 +363,16 @@ def create_app() -> Any:
 
     settings_path = phasentic_home() / "report-settings.json"
 
-    def _report_settings() -> dict[str, str]:
+    def _report_settings() -> dict[str, Any]:
         try:
             saved = json.loads(settings_path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             saved = {}
-        return {"report_folder": str(saved.get("report_folder") or ""), "laboratory": str(saved.get("laboratory") or "")}
+        return {
+            "report_folder": str(saved.get("report_folder") or ""),
+            "laboratory": str(saved.get("laboratory") or ""),
+            "auto_pdf": saved.get("auto_pdf") is True,
+        }
 
     @app.get("/api/v1/report-settings")
     async def get_report_settings() -> dict[str, Any]:
@@ -346,8 +386,12 @@ def create_app() -> Any:
             payload = None
         if not isinstance(payload, dict):
             raise HTTPException(status_code=400, detail="Report settings must be a JSON object")
-        folder = str(payload.get("report_folder") or "").strip()
-        laboratory = str(payload.get("laboratory") or "").strip()
+        current = _report_settings()  # fields left out keep their saved value
+        folder = str(payload.get("report_folder", current["report_folder"]) or "").strip()
+        laboratory = str(payload.get("laboratory", current["laboratory"]) or "").strip()
+        auto_pdf = payload.get("auto_pdf", current["auto_pdf"])
+        if not isinstance(auto_pdf, bool):
+            raise HTTPException(status_code=400, detail="auto_pdf must be true or false")
         if len(laboratory) > 500 or len(folder) > 1000:
             raise HTTPException(status_code=400, detail="Report settings are too long")
         if folder:
@@ -356,7 +400,7 @@ def create_app() -> Any:
                 raise HTTPException(status_code=400, detail="The report folder must be an existing folder (full path)")
             folder = str(path.resolve())
         settings_path.parent.mkdir(parents=True, exist_ok=True)
-        settings_path.write_text(json.dumps({"report_folder": folder, "laboratory": laboratory}), encoding="utf-8")
+        settings_path.write_text(json.dumps({"report_folder": folder, "laboratory": laboratory, "auto_pdf": auto_pdf}), encoding="utf-8")
         return {"success": True, "data": _report_settings()}
 
     @app.post("/api/v1/save-report")
