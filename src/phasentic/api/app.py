@@ -304,6 +304,19 @@ def create_app() -> Any:
 
         return {"success": True, "data": await run_in_threadpool(entries) if history_dir.is_dir() else []}
 
+    @app.get("/api/v1/history/{analysis_id}/pdf")
+    async def history_pdf(analysis_id: str) -> Any:
+        from fastapi.responses import Response
+
+        from phasentic.reporting.pdf import report_pdf
+
+        path = _history_path(analysis_id)
+        if not path.is_file():
+            raise HTTPException(status_code=404, detail="Analysis not found in history")
+        report = json.loads(await run_in_threadpool(path.read_text, encoding="utf-8")).get("report") or {}
+        data = await run_in_threadpool(report_pdf, report)
+        return Response(data, media_type="application/pdf", headers={"Content-Disposition": f'attachment; filename="{analysis_id}.pdf"'})
+
     @app.get("/api/v1/history/{analysis_id}")
     async def history_item(analysis_id: str) -> dict[str, Any]:
         path = _history_path(analysis_id)
@@ -348,7 +361,7 @@ def create_app() -> Any:
 
     @app.post("/api/v1/save-report")
     async def save_report(request: Request) -> dict[str, Any]:
-        """Write a finished report (HTML, powder CIF, JSON, original scan) into the configured report folder."""
+        """Write a finished report (PDF, powder CIF, JSON, original scan) into the configured report folder."""
         body = await request.body()
         if len(body) > 64 * 1024 * 1024:
             raise HTTPException(status_code=413, detail="Report is too large")
@@ -366,7 +379,7 @@ def create_app() -> Any:
         written = []
         # The original scan travels with its report (raw data for the record); only scan formats are accepted.
         scan_extension = str(payload.get("scan_extension") or "").lower()
-        extensions = ("html", "cif", "json") + ((scan_extension,) if scan_extension in {"xy", "xrdml", "raw"} else ())
+        extensions = ("cif", "json") + ((scan_extension,) if scan_extension in {"xy", "xrdml", "raw"} else ())
         for extension in extensions:
             is_scan = extension == scan_extension
             content = files.get("scan" if is_scan else extension)
@@ -381,6 +394,16 @@ def create_app() -> Any:
                 await run_in_threadpool(target.write_bytes, data)
             else:
                 await run_in_threadpool(target.write_text, content, encoding="utf-8")
+            written.append(target.name)
+        if isinstance(files.get("json"), str):  # the plain PDF report, rendered here from the JSON report
+            from phasentic.reporting.pdf import report_pdf
+
+            try:
+                report = json.loads(files["json"])
+            except ValueError as exc:
+                raise HTTPException(status_code=400, detail="Report JSON is invalid") from exc
+            target = Path(folder) / f"{base}.pdf"
+            await run_in_threadpool(target.write_bytes, await run_in_threadpool(report_pdf, report))
             written.append(target.name)
         return {"success": True, "data": {"folder": folder, "files": written}}
 

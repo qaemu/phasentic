@@ -31,6 +31,8 @@ dependencies = [
   # tie-break between equivalent POW_COD entries: the validated result needs both.
   "gemmi>=0.7,<1",
   "pymatgen>=2024.10,<2027",
+  # Plain PDF reports (already required by pymatgen).
+  "matplotlib>=3.7,<4",
   # Local web interface
   "fastapi>=0.115,<1",
   "python-multipart>=0.0.9,<1",

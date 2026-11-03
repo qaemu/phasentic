@@ -131,7 +131,7 @@
             </label>
             <label class="field"><span data-i18n="reportFolder">Save every report to this folder</span>
               <input id="report-folder" type="text" maxlength="1000" placeholder="C:\Users\you\Documents\XRD reports" autocomplete="off" spellcheck="false" />
-              <small data-i18n="reportFolderHint">Full path. Each analysis saves its report (.html), powder CIF (.cif), data (.json) and a copy of the scan. Leave empty to turn off.</small>
+              <small data-i18n="reportFolderHint">Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.</small>
             </label>
             <div class="pair">
               <button id="choose-folder" class="secondary" type="button" data-i18n="chooseFolder" hidden>Choose folder…</button>
@@ -174,7 +174,8 @@
               <div id="phase-summary" class="phase-summary"></div>
             </div>
             <div class="actions">
-              <button id="download-pdf-report" class="primary" type="button" data-i18n="downloadReport">Download report</button>
+              <button id="download-pdf" class="primary" type="button">PDF</button>
+              <button id="download-pdf-report" class="secondary" type="button" data-i18n="downloadReport">Formal report</button>
               <button id="download-cif" class="secondary" type="button">CIF</button>
               <button id="download-report" class="secondary" type="button" data-i18n="download">JSON</button>
             </div>

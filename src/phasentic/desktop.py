@@ -20,6 +20,15 @@ class _Api:
         if chosen:
             Path(chosen if isinstance(chosen, str) else chosen[0]).write_text(text, encoding="utf-8")
 
+    def save_bytes(self, name: str, data_base64: str) -> None:
+        import base64
+
+        import webview
+
+        chosen = webview.windows[0].create_file_dialog(webview.FileDialog.SAVE, save_filename=name)
+        if chosen:
+            Path(chosen if isinstance(chosen, str) else chosen[0]).write_bytes(base64.b64decode(data_base64))
+
     def choose_folder(self) -> str | None:
         import webview
 

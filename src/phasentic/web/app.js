@@ -17,7 +17,7 @@ const translations = {
     emptyTitle: "No analysis yet",
     emptyText: "Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.",
     decisionLabel: "Decision", selected: "Selected phases", noMixture: "No mixture selected",
-    downloadReport: "Download report", download: "JSON",
+    downloadReport: "Formal report", download: "JSON",
     hypotheses: "Phase hypotheses", phaseEvidence: "Evidence per phase", candidates: "Single-phase candidates", diagnostics: "Quality and provenance",
     decisions: { supported: "Supported", tentative: "Tentative", unresolved: "Unresolved", rejected: "Rejected" },
     hypSet: "Phase set", hypStatus: "Status", hypScore: "Selection score (lower is better)", hypUnexplained: "Unexplained peaks", hypMissing: "Missing lines", selectedTag: "selected",
@@ -34,7 +34,7 @@ const translations = {
     mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
     mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
     reportsTitle: "Reports", laboratory: "Laboratory name and address", reportFolder: "Save every report to this folder",
-    reportFolderHint: "Full path. Each analysis saves its report (.html), powder CIF (.cif), data (.json) and a copy of the scan. Leave empty to turn off.",
+    reportFolderHint: "Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.",
     chooseFolder: "Choose folder…", saveSettings: "Save", settingsSaved: "Saved.", autoSaveOff: "Reports are not saved automatically.", autoSaveOn: (f) => `Reports are saved to ${f}.`,
     reportSaved: (f) => `Report saved to ${f}.`, reportNotSaved: (m) => `Report not saved: ${m}`,
     cancel: "Cancel", cancelled: "Cancelled.", zoomHint: "Drag over the graph to zoom; double-click to reset.",
@@ -66,7 +66,7 @@ const translations = {
     emptyTitle: "Todavía no hay análisis",
     emptyText: "Elija un escaneo, escriba las fórmulas de precursores y objetivo, mantenga el método validado y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y un informe imprimible aparecerán aquí.",
     decisionLabel: "Decisión", selected: "Fases seleccionadas", noMixture: "No se seleccionó una mezcla",
-    downloadReport: "Descargar informe", download: "JSON",
+    downloadReport: "Informe formal", download: "JSON",
     hypotheses: "Hipótesis de fases", phaseEvidence: "Evidencia por fase", candidates: "Candidatos de una sola fase", diagnostics: "Calidad y procedencia",
     decisions: { supported: "Respaldada", tentative: "Tentativa", unresolved: "Sin resolver", rejected: "Rechazada" },
     hypSet: "Conjunto de fases", hypStatus: "Estado", hypScore: "Puntuación de selección (menor es mejor)", hypUnexplained: "Picos sin explicar", hypMissing: "Líneas ausentes", selectedTag: "seleccionada",
@@ -83,7 +83,7 @@ const translations = {
     mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
     mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
     reportsTitle: "Informes", laboratory: "Nombre y dirección del laboratorio", reportFolder: "Guardar cada informe en esta carpeta",
-    reportFolderHint: "Ruta completa. Cada análisis guarda su informe (.html), CIF de polvo (.cif), datos (.json) y una copia del escaneo. Déjela vacía para desactivarlo.",
+    reportFolderHint: "Ruta completa. Cada análisis guarda un informe PDF, un CIF de polvo (.cif), los datos (.json) y una copia del escaneo. Déjela vacía para desactivarlo.",
     chooseFolder: "Elegir carpeta…", saveSettings: "Guardar", settingsSaved: "Guardado.", autoSaveOff: "Los informes no se guardan automáticamente.", autoSaveOn: (f) => `Los informes se guardan en ${f}.`,
     reportSaved: (f) => `Informe guardado en ${f}.`, reportNotSaved: (m) => `Informe no guardado: ${m}`,
     cancel: "Cancelar", cancelled: "Cancelado.", zoomHint: "Arrastre sobre el gráfico para ampliar; doble clic para restablecer.",
@@ -423,6 +423,26 @@ $("download-pdf-report").addEventListener("click", () => {
   const html = window.PhasenticReport.build(latestReport, reportOptions());
   saveFile(`phasentic-report-${latestReport.analysis_id || "analysis"}.html`, html, "text/html");
 });
+// Plain PDF, rendered by the local server from the saved analysis.
+$("download-pdf").addEventListener("click", async () => {
+  if (!latestReport) return;
+  try {
+    const response = await fetch(`/api/v1/history/${encodeURIComponent(latestReport.analysis_id)}/pdf`);
+    if (!response.ok) throw new Error("Could not make the PDF");
+    const blob = await response.blob();
+    const name = `${String(latestReport.input?.file_name || "scan").replace(/\.[^.]+$/, "")}_${latestReport.analysis_id}.pdf`;
+    if (window.pywebview && window.pywebview.api && window.pywebview.api.save_bytes) {
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      let binary = "";
+      for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+      await window.pywebview.api.save_bytes(name, btoa(binary));
+    } else {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a"); link.href = url; link.download = name; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+  } catch (error) { $("form-status").textContent = error.message; }
+});
 $("download-cif").addEventListener("click", () => {
   if (!latestReport) return;
   saveFile(`${latestReport.analysis_id || "xrd-report"}.cif`, R().cif(latestReport, { version: appVersion }), "chemical/x-cif");
@@ -531,7 +551,6 @@ async function autoSave(report, file) {
   try {
     const scanExtension = file ? (file.name.match(/\.(xy|xrdml|raw)$/i) || [])[1] : null;
     const files = {
-      html: R().build(report, { ...reportOptions(), files: { cif: `${base}.cif`, json: `${base}.json`, scan: scanExtension ? `${base}.${scanExtension.toLowerCase()}` : null } }),
       cif: R().cif(report, { version: appVersion }),
       json: JSON.stringify(report, null, 1),
     };
