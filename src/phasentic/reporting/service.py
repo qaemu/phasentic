@@ -8,7 +8,7 @@ import inspect
 import json
 import math
 from pathlib import Path
-from typing import Iterable
+from typing import Callable, Iterable
 
 import numpy as np
 
@@ -365,7 +365,8 @@ def _resolve_radiation_spectrum(
 class _StageTimer:
     """Wall-clock stage durations for provenance (diagnostic, not reproducible)."""
 
-    def __init__(self) -> None:
+    def __init__(self, progress: Callable[[str], None] | None = None) -> None:
+        self._progress = progress
         self._started = time.perf_counter()
         self._last = self._started
         self._stages: dict[str, float] = {}
@@ -375,6 +376,8 @@ class _StageTimer:
         now = time.perf_counter()
         self._stages[stage] = self._stages.get(stage, 0.0) + (now - self._last)
         self._last = now
+        if self._progress is not None:
+            self._progress(stage)  # the stage that just finished
 
     def add(self, stage: str, seconds: float) -> None:
         self._stages[stage] = self._stages.get(stage, 0.0) + float(seconds)
@@ -401,9 +404,10 @@ def analyze_file(
     powcod_equivalence_path: str | Path | None = None,
     reference_store: object | None = None,
     original_filename: str | None = None,
+    progress: Callable[[str], None] | None = None,
 ) -> AnalysisReport:
     resolved_settings = validate_settings(settings or AnalysisSettings())
-    stage_timer = _StageTimer()
+    stage_timer = _StageTimer(progress)
     input_path = Path(path)
     file_hash_before = _sha256(input_path)
     pattern = import_pattern(input_path, radiation=resolved_settings.radiation)
@@ -1324,6 +1328,7 @@ def _analysis_id(
             "entry_count_prior": settings.entry_count_prior,
             "polymorph_guard": settings.polymorph_guard,
             "adaptive_pool": settings.adaptive_pool,
+            **({"pinned_reference_ids": list(settings.pinned_reference_ids)} if settings.pinned_reference_ids else {}),
             "d_spacing_scale_tolerance": settings.d_spacing_scale_tolerance,
             "max_fit_attempts": settings.max_fit_attempts,
             "swap_fit_attempt_budget": settings.swap_fit_attempt_budget,

@@ -82,42 +82,56 @@
   }
 
   // Figure 1: observed vs model with difference curve and assigned-peak ticks per phase.
-  function fitFigure(report, phases) {
+  // view = {x0, x1, y0?, y1?} zooms the figure (web interface); omitted for the full range.
+  function fitFigure(report, phases, view) {
     const t = report.mixture && report.mixture.residual_trace;
     if (!t || !t.angles_deg) return "";
-    const x = t.angles_deg, obs = t.observed_intensities, bg = t.background_intensities;
-    const model = t.calculated_intensities.map((v, i) => v + bg[i]);
-    const res = t.residual_intensities;
+    const all = t.angles_deg;
+    // Keep the points inside the x range plus one neighbour each side; clip paths trim the rest.
+    let i0 = 0, i1 = all.length - 1;
+    if (view) {
+      while (i0 < all.length - 1 && all[i0 + 1] < view.x0) i0++;
+      while (i1 > 0 && all[i1 - 1] > view.x1) i1--;
+    }
+    const cut = (a) => a.slice(i0, i1 + 1);
+    const x = cut(all), obs = cut(t.observed_intensities), bg = cut(t.background_intensities);
+    const model = cut(t.calculated_intensities).map((v, i) => v + bg[i]);
+    const res = cut(t.residual_intensities);
     const W = 680, L = 52, R = 12, top = 8, mainH = 148, gap = 7, tickRow = 11, diffH = 38;
     const tickTop = top + mainH + gap, diffTop = tickTop + phases.length * tickRow + 8, H = diffTop + diffH + 30;
-    const xmin = x[0], xmax = x[x.length - 1];
-    const ymax = Math.max(...obs, ...model) * 1.04, ymin = Math.min(0, ...obs);
-    const rmax = Math.max(...res.map(Math.abs)) || 1;
+    const xmin = view ? view.x0 : x[0], xmax = view ? view.x1 : x[x.length - 1];
+    const inside = x.map((v) => v >= xmin && v <= xmax);
+    const seen = (a) => a.filter((_, i) => inside[i]);
+    const zoomY = view && Number.isFinite(view.y0) && Number.isFinite(view.y1);
+    const ymax = zoomY ? view.y1 : Math.max(...seen(obs), ...seen(model)) * 1.04, ymin = zoomY ? view.y0 : Math.min(0, ...seen(obs));
+    const rmax = Math.max(...seen(res).map(Math.abs)) || 1;
     const sx = (v) => L + ((v - xmin) / (xmax - xmin)) * (W - L - R);
     const sy = (v) => top + mainH - ((v - ymin) / (ymax - ymin)) * mainH;
     const sd = (v) => diffTop + diffH / 2 - (v / rmax) * (diffH / 2);
-    const xt = ticks(xmin, xmax, 10), yt = ticks(0, ymax, niceStep(ymax, 4));
-    let g = "";
+    const xt = ticks(xmin, xmax, view ? niceStep(xmax - xmin, 8) : 10), yt = ticks(Math.max(0, ymin), ymax, niceStep(ymax - Math.max(0, ymin), 4));
+    const inX = (v) => v >= xmin && v <= xmax;
+    let g = `<defs><clipPath id="fit-main"><rect x="${L}" y="${top}" width="${W - L - R}" height="${mainH}"/></clipPath><clipPath id="fit-diff"><rect x="${L}" y="${diffTop}" width="${W - L - R}" height="${diffH}"/></clipPath></defs>`;
     yt.forEach((v) => { g += `<line x1="${L}" x2="${W - R}" y1="${sy(v)}" y2="${sy(v)}" class="grid"/><text x="${L - 6}" y="${sy(v) + 3}" class="tick" text-anchor="end">${fmtCount(v)}</text>`; });
-    xt.forEach((v) => { g += `<line x1="${sx(v)}" x2="${sx(v)}" y1="${diffTop + diffH}" y2="${diffTop + diffH + 4}" class="axis"/><text x="${sx(v)}" y="${diffTop + diffH + 15}" class="tick" text-anchor="middle">${v}</text>`; });
-    g += `<path d="${path(x, bg, sx, sy)}" class="bg"/>`;
+    xt.forEach((v) => { g += `<line x1="${sx(v)}" x2="${sx(v)}" y1="${diffTop + diffH}" y2="${diffTop + diffH + 4}" class="axis"/><text x="${sx(v)}" y="${diffTop + diffH + 15}" class="tick" text-anchor="middle">${+v.toFixed(2)}</text>`; });
+    g += `<g clip-path="url(#fit-main)"><path d="${path(x, bg, sx, sy)}" class="bg"/>`;
     g += `<path d="${path(x, obs, sx, sy)}" fill="none" stroke="${OBS}" stroke-width="1.6"/>`;
-    g += `<path d="${path(x, model, sx, sy)}" fill="none" stroke="${MODEL}" stroke-width="1"/>`;
+    g += `<path d="${path(x, model, sx, sy)}" fill="none" stroke="${MODEL}" stroke-width="1"/></g>`;
     const peaks = report.peaks || [];
     phases.forEach((p, k) => {
       const y = tickTop + k * tickRow + tickRow / 2;
-      (p.component.matched_peak_indices || []).forEach((idx) => { const pk = peaks[idx]; if (pk) g += `<line x1="${sx(pk.position_deg)}" x2="${sx(pk.position_deg)}" y1="${y - 4}" y2="${y + 4}" stroke="${p.color}" stroke-width="1.6"/>`; });
+      (p.component.matched_peak_indices || []).forEach((idx) => { const pk = peaks[idx]; if (pk && inX(pk.position_deg)) g += `<line x1="${sx(pk.position_deg)}" x2="${sx(pk.position_deg)}" y1="${y - 4}" y2="${y + 4}" stroke="${p.color}" stroke-width="1.6"/>`; });
       g += `<text x="${L - 6}" y="${y + 3}" class="tick" text-anchor="end">${k + 1}</text>`;
     });
-    (selectedHypothesis(report)?.unexplained_peak_positions || []).forEach((pos) => { g += `<path d="M${sx(pos)},${tickTop - 6} l-3,-5 h6z" fill="${INK}"/>`; });
+    (selectedHypothesis(report)?.unexplained_peak_positions || []).filter(inX).forEach((pos) => { g += `<path d="M${sx(pos)},${tickTop - 6} l-3,-5 h6z" fill="${INK}"/>`; });
     g += `<line x1="${L}" x2="${W - R}" y1="${sd(0)}" y2="${sd(0)}" class="grid"/>`;
-    g += `<path d="${path(x, res, sx, sd)}" fill="none" stroke="${MUTED}" stroke-width="0.8"/>`;
+    g += `<path d="${path(x, res, sx, sd)}" fill="none" stroke="${MUTED}" stroke-width="0.8" clip-path="url(#fit-diff)"/>`;
     g += `<text x="${L - 6}" y="${diffTop + 8}" class="tick" text-anchor="end">Δ</text>`;
     g += `<line x1="${L}" x2="${W - R}" y1="${diffTop + diffH}" y2="${diffTop + diffH}" class="axis"/>`;
     g += `<text x="${(L + W - R) / 2}" y="${H - 2}" class="label" text-anchor="middle">2θ (°), ${esc(report.radiation?.label || "")}, corrected for sample displacement</text>`;
     g += `<text x="12" y="${top + mainH / 2}" class="label" text-anchor="middle" transform="rotate(-90 12 ${top + mainH / 2})">Intensity (counts)</text>`;
     const legend = `<div class="legend"><span><i style="background:${OBS};height:2px"></i>Measured</span><span><i style="background:${MODEL};height:1px"></i>Model (background + phases)</span><span><i class="dash"></i>Background</span>${phases.map((p, k) => `<span><i class="tickkey" style="background:${p.color}"></i>${k + 1} ${formula(p.component.formula)}</span>`).join("")}<span><i style="background:${MUTED};height:1px"></i>Δ measured − model</span></div>`;
-    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Measured pattern, fitted model and difference curve">${g}</svg>${legend}<figcaption>${num1(1)} Measured pattern and screening fit. Tick rows mark the detected peaks assigned to each phase; the lower panel is the difference between measurement and model.</figcaption></figure>`;
+    const zoom = `data-zoom="${[L, W - R, top, mainH, diffTop + diffH, xmin, xmax, ymin, ymax].join(",")}"`;
+    return `<figure><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Measured pattern, fitted model and difference curve" ${zoom}>${g}</svg>${legend}<figcaption>${num1(1)} Measured pattern and screening fit. Tick rows mark the detected peaks assigned to each phase; the lower panel is the difference between measurement and model.</figcaption></figure>`;
   }
 
   // Figure 2: one small panel per phase: background-subtracted signal vs that phase's contribution.
@@ -217,6 +231,15 @@
     if (altClose !== null && altClose < 0.1) interpretation.push(`The runner-up hypothesis scores within ${(altClose * 100).toFixed(1)}% of the selected one (Figure 3), so the choice between them is weak and should be confirmed.`);
     if (missing) interpretation.push(`${missing} reference reflections expected in the measured range were not detected. Weak lines are often lost in noise; strong missing lines would argue against a phase.`);
 
+    const pinned = Array.isArray(s.pinned_reference_ids) ? s.pinned_reference_ids : [];
+    if (pinned.length) interpretation.unshift(`<b>Operator choice:</b> ${pinned.map(codLink).join(", ")} ${pinned.length > 1 ? "were" : "was"} fixed by the operator from the alternatives, not selected automatically; the remaining phases were searched around ${pinned.length > 1 ? "them" : "it"}.`);
+    const alts = r.mixture && r.mixture.phase_alternatives && typeof r.mixture.phase_alternatives === "object" ? r.mixture.phase_alternatives : {};
+    const altRows = phases.filter((ph) => alts[ph.component.reference_id]).map((ph) => {
+      const entry = alts[ph.component.reference_id];
+      const rows = [{ ...ph.component, fit_percent: entry.fit_percent, own: true }, ...(entry.alternatives || [])]
+        .sort((a, b) => Number(b.fit_percent) - Number(a.fit_percent));
+      return rows.map((a, k) => `<tr>${k === 0 ? `<td rowspan="${rows.length}"><span class="sw" style="background:${ph.color}"></span>${phases.indexOf(ph) + 1}</td>` : ""}<td class="f">${formula(a.formula)}${a.own ? " <small>(selected)</small>" : ""}</td><td>${spaceGroup(a.space_group)}</td><td>${codLink(a.reference_id)}</td><td class="n">${num(a.fit_percent, 1)}%</td></tr>`).join("");
+    }).join("");
     const warnings = (q.warnings || []).map(esc).join(" ");
     const kv = (k, v) => `<div class="kv"><dt>${k}</dt><dd>${v}</dd></div>`;
 
@@ -314,6 +337,14 @@ ${phases.length ? fitFigure(r, phases) : measuredFigure(r)}
 
 ${phaseFigure(r, phases)}
 ${alternativesFigure(r)}
+${altRows ? `<section>
+  <h2>Alternatives per phase</h2>
+  <table>
+    <thead><tr><th>#</th><th>Entry</th><th>Space group</th><th>Reference</th><th class="n">Fit</th></tr></thead>
+    <tbody>${altRows}</tbody>
+  </table>
+  <p class="note">Fit: share of the signal left by the other phases that the entry explains when refitted in that phase's place (100% = perfect). Listed: materials within 80% of the best entry; other entries of the same material are left out.</p>
+</section>` : ""}
 
 <section>
   <h2>Method and measurement</h2>
@@ -328,6 +359,7 @@ ${alternativesFigure(r)}
     ${kv("Instrument", s.instrument ? esc(JSON.stringify(s.instrument)) : "not provided")}
     ${kv("Displacement correction", Number.isFinite(disp.sample_displacement_deg) ? `${num(disp.sample_displacement_deg, 3)}° (Δ2θ = D·cos θ)` : "none")}
     ${kv("Line-position calibration", esc(q.calibration_status || "unverified"))}
+    ${kv("Operator choices", pinned.length ? `phases fixed by the operator: ${pinned.map(codLink).join(", ")}` : "none (fully automatic selection)")}
     ${kv("Detected peaks", `${(r.peaks || []).length} (noise-aware, S/N ≥ ${num(s.peak_min_snr, 0)})`)}
     ${kv("Signal-to-noise", num(q.signal_to_noise, 0))}
     ${kv("Matching tolerance", `${num(s.peak_tolerance_deg, 2)}° 2θ`)}
@@ -363,7 +395,7 @@ ${alternativesFigure(r)}
   }
 
   // Figures without "Figure N." numbering, for the web interface.
-  const unnumbered = (fn) => (report) => { numbered = false; try { return fn(report); } finally { numbered = true; } };
+  const unnumbered = (fn) => (...args) => { numbered = false; try { return fn(...args); } finally { numbered = true; } };
   const api = {
     build,
     formula,
@@ -371,7 +403,7 @@ ${alternativesFigure(r)}
     codLink,
     PHASE_COLORS,
     figures: {
-      fit: unnumbered((r) => (phasesOf(r).length ? fitFigure(r, phasesOf(r)) : measuredFigure(r))),
+      fit: unnumbered((r, view) => (phasesOf(r).length ? fitFigure(r, phasesOf(r), view) : measuredFigure(r))),
       phases: unnumbered((r) => phaseFigure(r, phasesOf(r))),
       alternatives: unnumbered(alternativesFigure),
     },

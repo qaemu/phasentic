@@ -5,6 +5,7 @@ import tempfile
 import json
 import multiprocessing
 import os
+import re
 import secrets
 import threading
 import time
@@ -16,12 +17,18 @@ from phasentic.acquisition.calibration import calibrate_standard_file
 from phasentic.api.contracts import settings_from_payload
 from phasentic.domain.models import CalibrationResult
 from phasentic.importers import ImportErrorDetail
-from phasentic.references.factory import ReferenceConfigurationError, default_reference_source, reference_source_status
+from phasentic.references.factory import (
+    ReferenceConfigurationError,
+    default_reference_source,
+    phasentic_home,
+    reference_source_status,
+)
 from phasentic.references.powcod import PowCodError
 from phasentic.reporting.service import analyze_file
 from phasentic.search.mixtures import MIXTURE_ALGORITHM_VERSION
 
 LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
+HISTORY_LIMIT = 100
 
 
 # Jobs run in a separate worker process (see ``_isolated``). They are
@@ -35,6 +42,9 @@ def _calibration_job(path: Path, standard_id: str, radiation: str) -> tuple[int,
         return 400, str(exc)
 
 
+_progress: Callable[[str], None] | None = None  # set in the worker by _run_job
+
+
 def _analysis_job(path: Path, settings: Any, original_name: str) -> tuple[int, Any]:
     try:
         report = analyze_file(
@@ -44,6 +54,7 @@ def _analysis_job(path: Path, settings: Any, original_name: str) -> tuple[int, A
             powcod_cache_path=os.environ.get("PHASENTIC_POWCOD_CACHE_PATH"),
             powcod_equivalence_path=os.environ.get("PHASENTIC_POWCOD_EQUIVALENCE_PATH"),
             original_filename=original_name,
+            progress=_progress,
         )
         return 200, report.to_dict()
     except ImportErrorDetail as exc:
@@ -64,7 +75,9 @@ def _exit_with_parent() -> None:
 
 
 def _run_job(sender: Any, job: Callable[..., tuple[int, Any]], args: tuple[Any, ...]) -> None:
+    global _progress
     threading.Thread(target=_exit_with_parent, daemon=True).start()
+    _progress = lambda stage: sender.send(("progress", stage))  # noqa: E731
     try:
         outcome = job(*args)
     except Exception:  # anything unexpected stays a generic server error, as before
@@ -110,6 +123,8 @@ def create_app() -> Any:
     calibration_key = secrets.token_bytes(32)
     # ponytail: one heavy job at a time for a single local user; a queue if a server is ever shared.
     job_lock = asyncio.Lock()
+    job_state: dict[str, Any] = {"stage": None}
+    history_dir = phasentic_home() / "history"
 
     class RequestGuard:
         """Host/Origin checks and security headers as plain ASGI middleware.
@@ -206,7 +221,17 @@ def create_app() -> Any:
             deadline = time.monotonic() + timeout_seconds
             try:
                 # poll() also turns true when the worker dies, and recv() then raises EOFError.
-                while not receiver.poll():
+                job_state["stage"] = "started"
+                while True:
+                    while receiver.poll():
+                        message = await run_in_threadpool(receiver.recv)
+                        if message[0] != "progress":
+                            break
+                        job_state["stage"] = message[1]
+                    else:
+                        message = None
+                    if message is not None:
+                        break
                     if time.monotonic() > deadline:
                         raise HTTPException(
                             status_code=503,
@@ -215,10 +240,11 @@ def create_app() -> Any:
                     if await request.is_disconnected():
                         raise HTTPException(status_code=400, detail="The request was cancelled")
                     await asyncio.sleep(0.2)
-                status, body = await run_in_threadpool(receiver.recv)
+                status, body = message
             except EOFError as exc:
                 raise HTTPException(status_code=500, detail="The analysis worker stopped unexpectedly") from exc
             finally:
+                job_state["stage"] = None
                 receiver.close()
                 if worker.is_alive():
                     worker.kill()
@@ -226,6 +252,64 @@ def create_app() -> Any:
         if status != 200:
             raise HTTPException(status_code=status, detail=body)
         return body
+
+    @app.get("/api/v1/progress")
+    async def progress() -> dict[str, Any]:
+        """Last finished stage of the running analysis (None when idle)."""
+        return {"success": True, "data": {"stage": job_state["stage"]}}
+
+    def _history_path(analysis_id: str) -> Path:
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,100}", analysis_id):
+            raise HTTPException(status_code=400, detail="Invalid analysis ID")
+        return history_dir / f"{analysis_id}.json"
+
+    def _save_history(report: dict[str, Any]) -> None:
+        # ponytail: whole reports as JSON files, newest HISTORY_LIMIT kept; a database if anyone needs search.
+        try:
+            history_dir.mkdir(parents=True, exist_ok=True)
+            path = _history_path(str(report.get("analysis_id", "")))
+            path.write_text(json.dumps({"saved_at": time.time(), "report": report}), encoding="utf-8")
+            for old in sorted(history_dir.glob("*.json"), key=lambda item: item.stat().st_mtime)[:-HISTORY_LIMIT]:
+                old.unlink(missing_ok=True)
+        except (OSError, HTTPException):
+            pass  # history is a convenience; never fail the analysis over it
+
+    @app.get("/api/v1/history")
+    async def history() -> dict[str, Any]:
+        def entries() -> list[dict[str, Any]]:
+            out = []
+            for path in sorted(history_dir.glob("*.json"), key=lambda item: item.stat().st_mtime, reverse=True):
+                try:
+                    saved = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    continue
+                report = saved.get("report") or {}
+                mixture = report.get("mixture") or {}
+                selected = next(
+                    (h for h in mixture.get("hypotheses") or [] if h.get("hypothesis_id") == mixture.get("selected_hypothesis_id")),
+                    {},
+                )
+                out.append(
+                    {
+                        "analysis_id": report.get("analysis_id"),
+                        "saved_at": saved.get("saved_at"),
+                        "file_name": (report.get("input") or {}).get("file_name"),
+                        "decision": report.get("decision"),
+                        "phases": [c.get("formula") for c in selected.get("components") or []],
+                        "pinned": bool(((report.get("provenance") or {}).get("settings") or {}).get("pinned_reference_ids")),
+                    }
+                )
+            return out
+
+        return {"success": True, "data": await run_in_threadpool(entries) if history_dir.is_dir() else []}
+
+    @app.get("/api/v1/history/{analysis_id}")
+    async def history_item(analysis_id: str) -> dict[str, Any]:
+        path = _history_path(analysis_id)
+        if not path.is_file():
+            raise HTTPException(status_code=404, detail="Analysis not found in history")
+        saved = json.loads(await run_in_threadpool(path.read_text, encoding="utf-8"))
+        return {"success": True, "data": saved.get("report")}
 
     @app.get("/api/v1/health")
     async def health() -> dict[str, str]:
@@ -303,6 +387,7 @@ def create_app() -> Any:
         try:
             temporary_path, original_name = await _save_upload(file, suffix)
             report = await _isolated(request, _analysis_job, temporary_path, settings, original_name)
+            await run_in_threadpool(_save_history, report)
             return {"success": True, "data": report}
         finally:
             if temporary_path is not None:

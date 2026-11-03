@@ -26,8 +26,8 @@
         <section class="block">
           <h2 data-i18n="sample">Sample</h2>
           <label class="field"><span data-i18n="file">Pattern file</span>
-            <input id="file" name="file" type="file" accept=".xy,.xrdml,.raw" required />
-            <small data-i18n="fileHint">.xy, .xrdml or ASCII .raw, up to 10 MB</small>
+            <input id="file" name="file" type="file" accept=".xy,.xrdml,.raw" multiple required />
+            <small data-i18n="fileHint">.xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.</small>
           </label>
           <label class="field"><span data-i18n="chemistry">Precursor and target formulas</span>
             <input id="chemistry" type="text" maxlength="400" placeholder="Ag2O BaCO3 Ba2Ag2C2O7" autocomplete="off" spellcheck="false" />
@@ -118,9 +118,15 @@
 
         <div class="submit">
           <button type="submit" class="primary" data-i18n="analyze">Analyze</button>
+          <button id="cancel-button" type="button" class="secondary" data-i18n="cancel" hidden>Cancel</button>
           <p id="form-status" class="status" aria-live="polite"></p>
           <p id="capability-status" class="note" aria-live="polite"></p>
         </div>
+
+        <details id="history-fold" class="fold block">
+          <summary data-i18n="history">Recent analyses</summary>
+          <div id="history-list" class="fold-body"></div>
+        </details>
       </form>
 
       <main class="work">
@@ -129,6 +135,14 @@
         <section id="empty-state" class="empty">
           <h2 data-i18n="emptyTitle">No analysis yet</h2>
           <p data-i18n="emptyText">Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.</p>
+        </section>
+
+        <section id="batch" class="part" hidden>
+          <div class="batch-head">
+            <h2 data-i18n="batch">Batch</h2>
+            <button id="batch-csv" class="secondary" type="button" data-i18n="csv">CSV</button>
+          </div>
+          <div id="batch-content"></div>
         </section>
 
         <section id="result" class="result" hidden>
@@ -149,6 +163,7 @@
           <p id="analysis-id" class="note mono"></p>
 
           <div id="plot" class="fig"></div>
+          <p class="note" data-i18n="zoomHint">Drag over the graph to zoom; double-click to reset.</p>
 
           <section class="part">
             <h2 data-i18n="hypotheses">Phase hypotheses</h2>
