@@ -48,13 +48,16 @@ def test_alternatives_and_pinning():
     selected = next(h for h in result.hypotheses if h.hypothesis_id == result.selected_hypothesis_id)
     ids = {component.reference_id for component in selected.components}
     assert ids & {"a", "a2"} and "c" in ids, ids
-    alternatives = dict(result.phase_alternatives)
+    alternatives = {rid: (fit, items) for rid, fit, items in result.phase_alternatives}
     major_id = next(item for item in ids if item in {"a", "a2"})
-    major_alts = {item.reference_id: item.fit_percent for item in alternatives[major_id]}
-    assert "b" in major_alts and major_alts["b"] >= 80, major_alts
+    selected_fit, items = alternatives[major_id]
+    major_alts = {item.reference_id: item.fit_percent for item in items}
+    assert 0 < selected_fit <= 100 and all(0 <= v <= 100 for v in major_alts.values()), (selected_fit, major_alts)
+    assert "b" in major_alts and major_alts["b"] >= 0.8 * max(selected_fit, *major_alts.values()), major_alts
     assert not {"a", "a2"} & set(major_alts), "duplicate of the selected phase listed"
     assert "p" not in major_alts, "poor fit listed"
-    assert "fit_percent" in result.to_dict()["phase_alternatives"][major_id][0]
+    payload = result.to_dict()["phase_alternatives"][major_id]
+    assert payload["fit_percent"] == selected_fit and "fit_percent" in payload["alternatives"][0]
 
     pinned = run(pinned_references=(B,))
     best = pinned.hypotheses[0]

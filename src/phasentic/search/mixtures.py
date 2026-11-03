@@ -274,7 +274,7 @@ class PhaseAlternative:
             "formula": self.formula,
             "space_group": self.space_group,
             "fit_percent": self.fit_percent,
-            "fit_semantics": "signal explained in place of the selected phase, selected phase = 100",
+            "fit_semantics": "share of the signal left by the other phases that this entry explains; 100 = perfect",
         }
 
 
@@ -286,7 +286,7 @@ class MixtureResult:
     residual_trace: MixtureResidualTrace
     query: dict[str, object]
     # Per active phase of the best hypothesis: (reference_id, alternatives best first).
-    phase_alternatives: tuple[tuple[str, tuple[PhaseAlternative, ...]], ...] = ()
+    phase_alternatives: tuple[tuple[str, float, tuple[PhaseAlternative, ...]], ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -296,7 +296,8 @@ class MixtureResult:
             "residual_trace": self.residual_trace.to_dict(),
             "query": dict(self.query),
             "phase_alternatives": {
-                reference_id: [item.to_dict() for item in items] for reference_id, items in self.phase_alternatives
+                reference_id: {"fit_percent": fit, "alternatives": [item.to_dict() for item in items]}
+                for reference_id, fit, items in self.phase_alternatives
             },
         }
 
@@ -1005,7 +1006,7 @@ def select_mixture_hypotheses(
     )
 
 
-ALTERNATIVE_MIN_FIT = 0.8  # show entries explaining at least 80% of what the selected phase explains
+ALTERNATIVE_MIN_FIT = 0.8  # show entries reaching at least 80% of the best fit for that phase
 ALTERNATIVE_LIMIT = 50  # ponytail: payload bound only; raise if a scan ever has more near-equal materials
 
 
@@ -1020,14 +1021,15 @@ def _phase_alternatives(
     tolerance_deg: float,
     config: MixtureSettings,
     angles: np.ndarray,
-) -> tuple[tuple[str, tuple[PhaseAlternative, ...]], ...]:
-    """For each active phase, the other materials that fit nearly as well in its place.
+) -> tuple[tuple[str, float, tuple[PhaseAlternative, ...]], ...]:
+    """For each active phase, its fit and the other materials that fit nearly as well in its place.
 
-    fit = (misfit without the phase - misfit with the alternative) /
-          (misfit without the phase - misfit with the selected phase).
-    The selected phase is 1.0; the other phases are refitted with each
-    alternative. One entry per material (best-fitting entry); other entries of
-    a selected material (same composition and space group) are left out.
+    fit = 1 - misfit with the entry / misfit without it (the other phases are
+    refitted each time): the share of the signal left by the other phases that
+    the entry explains, 1.0 for a perfect fit. Alternatives within
+    ALTERNATIVE_MIN_FIT of the best entry (selected or not) are listed, one per
+    material; other entries of a selected material (same composition and space
+    group) are left out.
     """
 
     from phasentic.search.matcher import material_key
@@ -1041,10 +1043,10 @@ def _phase_alternatives(
             _scales, _calculated, without = _fit(np.column_stack(columns), target, weights)
         else:
             without = _objective(target, np.zeros_like(target), weights)
-        explained = without - branch.objective
+        selected_fit = 1.0 - branch.objective / without if without > 1e-12 else 0.0
         selected_keys = {material_key(item.formula, item.space_group) or item.reference_id for item in branch.references}
         best: dict[object, tuple[float, ReferencePhase]] = {}
-        if explained > 1e-12:
+        if selected_fit > 0.0:
             excluded = {item.reference_id for item in branch.references}
             for candidate in candidates:
                 if candidate.reference_id in excluded or candidate.reference_id not in profiles:
@@ -1053,8 +1055,8 @@ def _phase_alternatives(
                     continue
                 matrix = np.column_stack([*columns, profiles[candidate.reference_id]])
                 scales, _calculated, objective = _fit(matrix, target, weights)
-                fit = (without - objective) / explained
-                if fit < ALTERNATIVE_MIN_FIT:
+                fit = 1.0 - objective / without
+                if fit < ALTERNATIVE_MIN_FIT * selected_fit:
                     continue
                 # Same gate as the search: strong predicted lines must not be absent.
                 if config.missing_intensity_max < 1.0 and config.noise_sigma and _missing_visible_fraction(
@@ -1070,10 +1072,15 @@ def _phase_alternatives(
                 if key in selected_keys:
                     continue
                 best[key] = (fit, candidate)
-        ranked = sorted(best.values(), key=lambda item: (-item[0], item[1].reference_id))[:ALTERNATIVE_LIMIT]
+        top = max([selected_fit, *(fit for fit, _candidate in best.values())])
+        ranked = sorted(
+            (item for item in best.values() if item[0] >= ALTERNATIVE_MIN_FIT * top),
+            key=lambda item: (-item[0], item[1].reference_id),
+        )[:ALTERNATIVE_LIMIT]
         result.append(
             (
                 chosen.reference_id,
+                round(100.0 * selected_fit, 1),
                 tuple(
                     PhaseAlternative(
                         candidate.reference_id,

@@ -34,8 +34,8 @@ const translations = {
     mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
     mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
     alternatives: "Alternatives per phase",
-    altIntro: "Other materials that fit about as well in a phase's place (selected phase = 100%; other entries of the same material are left out). Choosing one fixes it and searches the smaller phases again.",
-    altFit: "Fit", altUse: "Use this", altNone: "No other material fits within 80%.", altSelected: "selected",
+    altIntro: "How well each entry fits in a phase's place (100% = perfect fit), with the other materials within 80% of the best one; other entries of the same material are left out. Choosing one fixes it and searches the smaller phases again.",
+    altFit: "Fit", altUse: "Use this", altNone: "No other material fits within 80% of the best.", altSelected: "selected",
     pinned: "Fixed by you:", unpin: "Clear and analyze again",
     stale: "A setting changed, so the previous result was cleared.",
     footer: "Runs on this computer; scans are not uploaded anywhere.", footerAi: "Open source (MIT). No AI model is used to analyse scans.",
@@ -75,8 +75,8 @@ const translations = {
     mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
     mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
     alternatives: "Alternativas por fase",
-    altIntro: "Otros materiales que ajustan casi igual en el lugar de una fase (fase seleccionada = 100%; se omiten otras entradas del mismo material). Elegir una la fija y vuelve a buscar las fases menores.",
-    altFit: "Ajuste", altUse: "Usar esta", altNone: "Ningún otro material ajusta dentro del 80%.", altSelected: "seleccionada",
+    altIntro: "Qué tan bien ajusta cada entrada en el lugar de una fase (100% = ajuste perfecto), con los otros materiales dentro del 80% del mejor; se omiten otras entradas del mismo material. Elegir una la fija y vuelve a buscar las fases menores.",
+    altFit: "Ajuste", altUse: "Usar esta", altNone: "Ningún otro material ajusta dentro del 80% del mejor.", altSelected: "seleccionada",
     pinned: "Fijadas por usted:", unpin: "Quitar y analizar de nuevo",
     stale: "Cambió una configuración, así que se borró el resultado anterior.",
     footer: "Se ejecuta en esta computadora; los escaneos no se suben a ningún lado.", footerAi: "Código abierto (MIT). No se usa ningún modelo de IA para analizar escaneos.",
@@ -203,13 +203,17 @@ function renderAlternatives(parent, report) {
   const m = report.mixture || {};
   const best = selectedHypothesis(report) || (m.hypotheses || [])[0];
   const alts = m.phase_alternatives && typeof m.phase_alternatives === "object" ? m.phase_alternatives : {};
-  const comps = best ? (best.components || []).filter((c) => c.reference_id in alts) : [];
+  const comps = best ? (best.components || []).filter((c) => alts[c.reference_id] && typeof alts[c.reference_id] === "object") : [];
   $("alternatives-part").hidden = !comps.length && !pinnedIds.length;
   const pinnedNote = pinnedIds.length ? `<p class="note">${esc(L.pinned)} ${pinnedIds.map((id) => R().codLink(id)).join(", ")} <button type="button" class="secondary" data-unpin="1">${esc(L.unpin)}</button></p>` : "";
   const blocks = comps.map((c, index) => {
-    const list = alts[c.reference_id] || [];
-    const row = (a, own) => `<tr${own ? ' class="selected"' : ""}><td class="f">${R().formula(a.formula)}</td><td>${R().spaceGroup(a.space_group)}</td><td>${R().codLink(a.reference_id)}</td><td class="num"><span class="bar" style="width:${Math.max(2, Math.min(110, Number(a.fit_percent) * 1.1)).toFixed(0)}px"></span>${Number(a.fit_percent).toFixed(1)}%</td><td>${own ? `<span class="tag">${esc(L.altSelected)}</span>` : `<button type="button" class="secondary" data-pin="${esc(a.reference_id)}" data-phase="${index}">${esc(L.altUse)}</button>`}</td></tr>`;
-    const body = [row({ ...c, fit_percent: 100 }, true), ...list.map((a) => row(a, false))].join("");
+    const entry = alts[c.reference_id];
+    const list = Array.isArray(entry.alternatives) ? entry.alternatives : [];
+    const row = (a, own) => `<tr${own ? ' class="selected"' : ""}><td class="f">${R().formula(a.formula)}</td><td>${R().spaceGroup(a.space_group)}</td><td>${R().codLink(a.reference_id)}</td><td class="num"><span class="bar" style="width:${Math.max(2, Number(a.fit_percent) * 1.1).toFixed(0)}px"></span>${Number(a.fit_percent).toFixed(1)}%</td><td>${own ? `<span class="tag">${esc(L.altSelected)}</span>` : `<button type="button" class="secondary" data-pin="${esc(a.reference_id)}" data-phase="${index}">${esc(L.altUse)}</button>`}</td></tr>`;
+    // Selected and alternatives in one list, best fit first.
+    const body = [{ ...c, fit_percent: entry.fit_percent, own: true }, ...list]
+      .sort((x, y) => Number(y.fit_percent) - Number(x.fit_percent))
+      .map((a) => row(a, a.own === true)).join("");
     return `<h3>${R().formula(c.formula)}</h3><table><thead><tr><th>${esc(L.candPhase)}</th><th>${esc(L.candSg)}</th><th>${esc(L.candRef)}</th><th class="num">${esc(L.altFit)}</th><th></th></tr></thead><tbody>${body}</tbody></table>${list.length ? "" : `<p class="note">${esc(L.altNone)}</p>`}`;
   }).join("");
   setHTML(parent, `${pinnedNote}<p class="note">${esc(L.altIntro)}</p>${blocks}`);
