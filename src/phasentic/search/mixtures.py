@@ -266,11 +266,6 @@ class PhaseAlternative:
     formula: str
     space_group: str | None
     fit_percent: float
-    # Preview of the refitted mixture on the residual-trace grid: this entry's
-    # contribution, and new/old scale of each other selected phase.
-    contribution: tuple[float, ...] = ()
-    other_scale_ratios: tuple[tuple[str, float], ...] = ()
-    matched_peak_indices: tuple[int, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -279,11 +274,6 @@ class PhaseAlternative:
             "formula": self.formula,
             "space_group": self.space_group,
             "fit_percent": self.fit_percent,
-            "matched_peak_indices": list(self.matched_peak_indices),
-            "preview": {
-                "contribution": list(self.contribution),
-                "other_scale_ratios": dict(self.other_scale_ratios),
-            },
             "fit_semantics": "share of the signal left by the other phases that this entry explains; 100 = perfect",
         }
 
@@ -1055,7 +1045,7 @@ def _phase_alternatives(
             without = _objective(target, np.zeros_like(target), weights)
         selected_fit = 1.0 - branch.objective / without if without > 1e-12 else 0.0
         selected_keys = {material_key(item.formula, item.space_group) or item.reference_id for item in branch.references}
-        best: dict[object, tuple[float, ReferencePhase, np.ndarray, np.ndarray]] = {}
+        best: dict[object, tuple[float, ReferencePhase]] = {}
         if selected_fit > 0.0:
             excluded = {item.reference_id for item in branch.references}
             for candidate in candidates:
@@ -1081,8 +1071,8 @@ def _phase_alternatives(
                 # that is exactly the choice the operator has to make.
                 if key in selected_keys:
                     continue
-                best[key] = (fit, candidate, scales, matrix[:, -1] * float(scales[-1]))
-        top = max([selected_fit, *(item[0] for item in best.values())])
+                best[key] = (fit, candidate)
+        top = max([selected_fit, *(fit for fit, _candidate in best.values())])
         ranked = sorted(
             (item for item in best.values() if item[0] >= ALTERNATIVE_MIN_FIT * top),
             key=lambda item: (-item[0], item[1].reference_id),
@@ -1098,18 +1088,8 @@ def _phase_alternatives(
                         candidate.formula,
                         candidate.space_group,
                         round(100.0 * fit, 1),
-                        contribution=tuple(round(float(value), 1) for value in contribution),
-                        other_scale_ratios=tuple(
-                            (item.reference_id, float(scales[k]) / float(branch.scales[position]) if branch.scales[position] > 0 else 0.0)
-                            for k, (position, item) in enumerate(
-                                (position, item) for position, item in enumerate(branch.references) if position != index
-                            )
-                        ),
-                        matched_peak_indices=tuple(
-                            sorted({peak for reflection in evidence[candidate.reference_id] for peak in reflection.peak_indices})
-                        ),
                     )
-                    for fit, candidate, scales, contribution in ranked
+                    for fit, candidate in ranked
                 ),
             )
         )
