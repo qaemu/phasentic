@@ -67,6 +67,7 @@ commit. The case lists and receipts remain in `validation/`.
 |---|---|---|---|---|
 | `heldout-200-v1` (seed 20260930) | frozen v1 | 64 / 200 (32%) | 84 / 200 (42%) | targets missed |
 | `heldout-200-v2` (seed 20261001) | frozen v2 | 74 / 200 (37%) | 99 / 200 (49.5%) | targets met |
+| `random-200-locked` (Nov 2026, PXRD_COD 2026.11) | tuned v3 (485 tuning scans) | 72 / 200 (36%) | 99 / 200 (49.5%) | untuned method on the same scans: 71 / 96 |
 
 After the first held-out run missed both targets, the misses were analysed on
 the development set only. Two fixes improved development results without

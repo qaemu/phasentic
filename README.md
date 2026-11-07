@@ -41,23 +41,24 @@ report. It runs locally, in the browser or from the command line.
 
 ## How accurate is it
 
-The method was frozen before testing, together with a declared target, and
-run once on 200 scans it had never seen (Precursor Genome, human-refined
-labels). Abstentions count as failures.
+The settings were tuned on 485 Precursor Genome scans (human-refined labels)
+and then run once on 200 locked scans that tuning never saw, with the
+COD-derived database PXRD_COD 2026.11. Abstentions count as failures.
 
-| Level | Correct | Rate | 95% interval (Wilson) | Declared target |
-|---|---|---|---|---|
-| Right compounds and crystal structures (strict) | 74 / 200 | 37.0% | 30.6–43.9% | ≥ 35% |
-| Right compounds, any polymorph (family) | 99 / 200 | 49.5% | 42.6–56.4% | ≥ 45% |
+| Level | Correct | Rate | 95% interval (Wilson) |
+|---|---|---|---|
+| Right compounds and crystal structures (strict) | 72 / 200 | 36.0% | 29.7–42.9% |
+| Right compounds, any polymorph (family) | 99 / 200 | 49.5% | 42.6–56.4% |
 
-Both point estimates meet their targets; both lower bounds fall below them.
-Accuracy depends strongly on the number of phases:
+The untuned method scored 71 and 96 on the same 200 scans, so tuning gained
+little; the remaining errors are in the fit, not the settings. Accuracy
+depends strongly on the number of phases:
 
 | Phases in the sample | Scans | Correct at family level |
 |---|---|---|
-| 1 | 8 | 3 |
-| 2 | 125 | 87 (70%) |
-| 3 or more | 67 | 9 (13%) |
+| 1 | 9 | 4 |
+| 2 | 126 | 85 (67%) |
+| 3 or more | 65 | 10 (15%) |
 
 The protocol, the earlier held-out run (32% / 42% for the previous version),
 the failure analysis and the receipts are in [docs/validation.md](docs/validation.md).

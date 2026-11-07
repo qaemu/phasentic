@@ -410,7 +410,7 @@ ${altRows ? `<p>Table 2 lists, for each selected phase, the other materials that
 ${alternativesFigure(r) ? `<div class="span">${alternativesFigure(r)}</div>` : ""}
 
 <h3>3.1. Limitations and uncertainty</h3>
-<p>The result is qualitative, so no numerical measurement uncertainty is stated. Only phases present in the reference database and allowed by the stated chemistry can be found; minor phases (below a few mass percent) and weakly scattering phases next to strongly scattering ones are often missed. On a sealed test of 200 synthesis products the validated method found the exact phases in 37&#8201;% of samples and the right compounds in 49.5&#8201;%, with accuracy falling sharply for three or more phases.</p>
+<p>The result is qualitative, so no numerical measurement uncertainty is stated. Only phases present in the reference database and allowed by the stated chemistry can be found; minor phases (below a few mass percent) and weakly scattering phases next to strongly scattering ones are often missed. On a sealed test of 200 synthesis products the validated method found the exact phases in 36&#8201;% of samples and the right compounds in 49.5&#8201;%, with accuracy falling sharply for three or more phases.</p>
 
 <h2>4. Conclusions</h2>
 <p>${conclusion}</p>
