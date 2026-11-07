@@ -435,7 +435,11 @@ def _cache_hash(connection: sqlite3.Connection) -> str:
 
 
 def _canonical_source_url(cod_id: str, supplied: str | None) -> str:
-    return supplied or f"https://www.crystallography.net/cod/{cod_id}.html"
+    if supplied:
+        return supplied
+    if cod_id.startswith("mp-"):  # Materials Project supplement
+        return f"https://next-gen.materialsproject.org/materials/{cod_id}"
+    return f"https://www.crystallography.net/cod/{cod_id}.html"
 
 
 def build_powcod_cache(

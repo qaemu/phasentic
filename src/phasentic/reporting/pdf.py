@@ -22,7 +22,8 @@ def _formula(text: str | None) -> str:
 
 
 def _ref(reference_id: str | None) -> str:
-    return str(reference_id or "—").replace("powcod:", "COD ")
+    text = str(reference_id or "—").replace("powcod:", "")
+    return f"MP {text[3:]}" if text.startswith("mp-") else f"COD {text}" if text.isdigit() else text
 
 
 def _num(value, digits: int = 2, unit: str = "") -> str:

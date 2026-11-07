@@ -41,7 +41,10 @@
 
   function codLink(referenceId) {
     const id = String(referenceId || "").replace(/^powcod:/, "");
-    return /^\d+$/.test(id) ? `<a href="https://www.crystallography.net/cod/${id}.html">COD ${id}</a>` : esc(referenceId);
+    if (/^\d+$/.test(id)) return `<a href="https://www.crystallography.net/cod/${id}.html">COD ${id}</a>`;
+    // Materials Project entries (experimental structures, DFT-relaxed) added to the COD-derived database.
+    if (/^mp-\d+$/.test(id)) return `<a href="https://next-gen.materialsproject.org/materials/${id}">MP ${id.slice(3)}</a>`;
+    return esc(referenceId);
   }
 
   function ticks(min, max, step) { const out = []; for (let v = Math.ceil(min / step) * step; v <= max + 1e-9; v += step) out.push(v); return out; }
@@ -485,7 +488,7 @@ ${alternativesFigure(r) ? `<div class="span">${alternativesFigure(r)}</div>` : "
       "loop_",
       "_pd_phase_id",
       "_pd_phase_name",
-      ...phases.map((c, i) => `${i + 1} ${q(`${c.formula}, ${c.space_group}, ${String(c.reference_id).replace("powcod:", "COD ")}${realName(c) ? `, ${c.name}` : ""}`)}`),
+      ...phases.map((c, i) => `${i + 1} ${q(`${c.formula}, ${c.space_group}, ${String(c.reference_id).replace(/^powcod:(\d+)$/, "COD $1").replace(/^powcod:mp-/, "MP mp-")}${realName(c) ? `, ${c.name}` : ""}`)}`),
       "",
       "loop_",
       "_pd_proc_2theta_corrected",
