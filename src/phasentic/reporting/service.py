@@ -970,6 +970,8 @@ def analyze_file(
                     abstain_when_ambiguous=resolved_settings.abstain_when_ambiguous,
                     missing_intensity_max=resolved_settings.missing_intensity_max,
                     residual_rerank=resolved_settings.residual_rerank,
+                    local_improvement_min=resolved_settings.local_improvement_min,
+                    local_improvement_skips_evidence=resolved_settings.local_improvement_skips_evidence,
                     polymorph_guard=resolved_settings.polymorph_guard,
                     noise_sigma=(
                         float(peak_detection_receipt["median_noise_sigma"])
@@ -1220,6 +1222,8 @@ def analyze_file(
                 "anisotropic_lattice_scale": resolved_settings.anisotropic_lattice_scale,
                 "candidate_dedupe": resolved_settings.candidate_dedupe,
                 "residual_rerank": resolved_settings.residual_rerank,
+                "local_improvement_min": resolved_settings.local_improvement_min,
+                "local_improvement_skips_evidence": resolved_settings.local_improvement_skips_evidence,
                 "lattice_change_penalty": resolved_settings.lattice_change_penalty,
                 "entry_count_prior": resolved_settings.entry_count_prior,
                 "pinned_reference_ids": list(resolved_settings.pinned_reference_ids),
@@ -1324,6 +1328,8 @@ def _analysis_id(
             "anisotropic_lattice_scale": settings.anisotropic_lattice_scale,
             "candidate_dedupe": settings.candidate_dedupe,
             "residual_rerank": settings.residual_rerank,
+            **({"local_improvement_min": settings.local_improvement_min} if settings.local_improvement_min else {}),
+            **({"local_improvement_skips_evidence": True} if settings.local_improvement_skips_evidence else {}),
             "lattice_change_penalty": settings.lattice_change_penalty,
             "entry_count_prior": settings.entry_count_prior,
             "polymorph_guard": settings.polymorph_guard,

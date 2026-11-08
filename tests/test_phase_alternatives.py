@@ -67,6 +67,26 @@ def test_alternatives_and_pinning():
     assert pinned.query["pinned_reference_ids"] == ["b"]
 
 
+def test_local_improvement_accepts_minor_phase():
+    angles = np.arange(20.0, 70.0, 0.02)
+    y = np.full_like(angles, 1.0)
+    for lines, scale in ((MAJOR, 1.0), (MINOR, 0.03)):
+        for angle, intensity in lines:
+            y += scale * intensity * np.exp(-0.5 * ((angles - angle) / 0.06) ** 2)
+    peaks = [Peak(angle, float(np.interp(angle, angles, y)), 1.0, 0.14) for lines in (MAJOR, MINOR) for angle, _ in lines]
+
+    def phases(**kwargs):
+        result = select_mixture_hypotheses(
+            angles, y, peaks, (A, C), CU, tolerance_deg=0.1,
+            settings=MixtureSettings(max_phases=2, swap_fit_attempt_budget=0, min_objective_improvement=0.05, **kwargs),
+        )
+        return any({c.reference_id for c in h.components} == {"a", "c"} for h in result.hypotheses)
+
+    assert not phases(), "minor phase should fail the 5% global gate"
+    assert phases(local_improvement_min=0.3)
+    assert phases(local_improvement_min=0.3, local_improvement_skips_evidence=True)
+
+
 def test_space_group_order():
     from phasentic.search.mixtures import _space_group_order
 
@@ -79,3 +99,4 @@ if __name__ == "__main__":
     test_alternatives_and_pinning()
     print("ok")
     test_space_group_order()
+    test_local_improvement_accepts_minor_phase()
