@@ -65,12 +65,6 @@ class MixtureSettings:
     residual_rerank: bool = False
     # Skip candidates with the same composition as a phase already in the branch.
     polymorph_guard: bool = False
-    # Also accept a phase whose fit gain is small overall but large where its
-    # own lines are (minor phases): residual drop on those points >= this (0 = off).
-    local_improvement_min: float = 0.0
-    # With local_improvement_min, also fit phases whose lines all overlap
-    # peaks already explained (fewer than min_independent_evidence free lines).
-    local_improvement_skips_evidence: bool = False
 
     def validate(self) -> "MixtureSettings":
         if isinstance(self.missing_intensity_max, bool) or not isinstance(self.missing_intensity_max, (int, float)) or not 0.0 <= float(self.missing_intensity_max) <= 1.0:
@@ -142,8 +136,6 @@ class MixtureSettings:
             "missing_intensity_max": self.missing_intensity_max,
             "residual_rerank": self.residual_rerank,
             "polymorph_guard": self.polymorph_guard,
-            "local_improvement_min": self.local_improvement_min,
-            "local_improvement_skips_evidence": self.local_improvement_skips_evidence,
             "inactive_scale_relative_tolerance": self.inactive_scale_relative_tolerance,
             "profile_width_deg": self.profile_width_deg,
             "d_spacing_scale_tolerance": self.d_spacing_scale_tolerance,
@@ -1219,9 +1211,7 @@ def _try_branch_addition(
         for reflection in evidence[reference.reference_id]
         if any(index not in explained_peak_indices for index in reflection.peak_indices)
     )
-    local_mode = config.local_improvement_min > 0 and bool(branch.references)
-    short_of_evidence = len(available_reflections) < config.min_independent_evidence
-    if short_of_evidence and not (local_mode and config.local_improvement_skips_evidence):
+    if len(available_reflections) < config.min_independent_evidence:
         _log_addition(reference, branch, "evidence", float(len(available_reflections)))
         return None
     proposed = branch.references + (reference,)
@@ -1251,12 +1241,7 @@ def _try_branch_addition(
                 best = (trial_objective, shift, trial_scales, trial_calculated)
         objective, zero_shift, scales, calculated = best
     improvement = (branch.objective - objective) / max(branch.objective, 1e-12)
-    if local_mode and (short_of_evidence or improvement < config.min_objective_improvement):
-        local = _local_improvement(matrix[:, -1] * float(scales[-1]), branch.calculated, calculated, targets[zero_shift], grid_weights)
-        if local < config.local_improvement_min:
-            _log_addition(reference, branch, "evidence" if short_of_evidence else "improvement", float(improvement))
-            return _REJECTED
-    elif branch.references and improvement < config.min_objective_improvement:
+    if branch.references and improvement < config.min_objective_improvement:
         _log_addition(reference, branch, "improvement", float(improvement))
         return _REJECTED
     if config.missing_intensity_max < 1.0 and config.noise_sigma:
@@ -1282,21 +1267,6 @@ def _try_branch_addition(
         zero_shift_deg=zero_shift,
     )
 
-
-
-LOCAL_WINDOW_FRACTION = 0.1  # points where the new phase reaches 10% of its own maximum
-
-
-def _local_improvement(contribution: np.ndarray, before: np.ndarray, after: np.ndarray, target: np.ndarray, weights: np.ndarray) -> float:
-    """Relative residual drop on the points where the added phase has intensity."""
-
-    peak = float(np.max(contribution)) if contribution.size else 0.0
-    if peak <= 0:
-        return 0.0
-    mask = contribution >= LOCAL_WINDOW_FRACTION * peak
-    old = float(np.sum(weights[mask] * (target[mask] - before[mask]) ** 2))
-    new = float(np.sum(weights[mask] * (target[mask] - after[mask]) ** 2))
-    return (old - new) / old if old > 0 else 0.0
 
 
 VISIBLE_LINE_SNR = 5.0

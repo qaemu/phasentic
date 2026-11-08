@@ -109,8 +109,6 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
         "anisotropic_lattice_scale",
         "candidate_dedupe",
         "residual_rerank",
-        "local_improvement_min",
-        "local_improvement_skips_evidence",
         "lattice_change_penalty",
         "entry_count_prior",
         "polymorph_guard",
