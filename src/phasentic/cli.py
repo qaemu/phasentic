@@ -39,7 +39,7 @@ def build_parser() -> argparse.ArgumentParser:
     analyze.add_argument(
         "--preset",
         choices=["validated"],
-        help="use the settings of the validated method (needs POW_COD and --chemistry); other tuning flags are ignored",
+        help="use the settings of the validated method (needs the reference database and --chemistry); other tuning flags are ignored",
     )
     analyze.add_argument(
         "--chemistry",
@@ -99,6 +99,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     setup_cod = subparsers.add_parser("setup-cod", help="Download (8.6 GB) and install the COD reference database")
     setup_cod.add_argument("database", type=Path, nargs="?", help="an already downloaded cod.xrd.sqlite (optional)")
+
+    subparsers.add_parser("setup", help="Install the reference database, add Phasentic shortcuts (Windows) and open it")
 
     powcod = subparsers.add_parser("powcod", help="Prepare and verify a local CNR POW_COD release")
     powcod_subparsers = powcod.add_subparsers(dest="powcod_command", required=True)
@@ -274,6 +276,36 @@ def _setup_cod(source: Path | None) -> int:
     return 0
 
 
+def _setup() -> int:
+    """setup-cod, then (Windows) Desktop and Start Menu shortcuts, then open the Phasentic window."""
+
+    import subprocess
+    import sys
+
+    status = _setup_cod(None)
+    if status or sys.platform != "win32":
+        return status
+    app = Path(sys.executable).with_name("phasentic-app.exe")
+    icon = Path(__file__).with_name("web") / "phasentic.ico"
+    quote = lambda path: "'" + str(path).replace("'", "''") + "'"  # PowerShell single-quoted string
+    script = "; ".join(
+        f"$s = $shell.CreateShortcut((Join-Path ([Environment]::GetFolderPath('{folder}')) 'Phasentic.lnk')); "
+        f"$s.TargetPath = {quote(app)}; $s.WorkingDirectory = {quote(Path.home())}; "
+        f"$s.IconLocation = {quote(icon)}; $s.Description = 'Powder XRD phase identification'; $s.Save()"
+        for folder in ("Desktop", "Programs")
+    )
+    print("Adding Phasentic shortcuts to the Desktop and Start Menu...", flush=True)
+    result = subprocess.run(
+        ["powershell", "-NoProfile", "-NonInteractive", "-Command", "$shell = New-Object -ComObject WScript.Shell; " + script],
+        check=False,
+    )
+    if result.returncode:
+        print(f"Could not add the shortcuts; open Phasentic with: {app}", flush=True)
+    print("Phasentic is installed. Starting it now; next time, open the Phasentic shortcut.", flush=True)
+    subprocess.Popen([str(app)], close_fds=True)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "analyze":
@@ -354,6 +386,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "setup-powcod":
         return _setup_powcod(args.source)
+    if args.command == "setup":
+        return _setup()
     if args.command == "setup-cod":
         return _setup_cod(args.database)
     if args.command == "powcod":

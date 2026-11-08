@@ -22,8 +22,7 @@
   <a href="#install">Installation</a> ·
   <a href="#quick-start">Démarrage rapide</a> ·
   <a href="#how-accurate-is-it">Validation</a> ·
-  <a href="../docs/">Documentation</a> ·
-  <a href="#how-this-was-built">Genèse du projet</a>
+  <a href="../docs/">Documentation</a>
 </p>
 
 Phasentic lit un diffractogramme de poudre (`.xy`, `.xrdml` ou `.raw` ASCII),
@@ -81,7 +80,10 @@ Aucun droit d’administrateur n’est nécessaire.
 Windows (PowerShell) :
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+$env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
+uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
+phasentic setup
 ```
 
 macOS et Linux :
@@ -168,42 +170,6 @@ Une décision `supported` exige en outre un étalonnage de la position des raies
 
 Détails : [docs/scientific-method.md](../docs/scientific-method.md) et
 [PARAMETERS.md](../PARAMETERS.md).
-
-## Reproduire la validation
-
-Cloner le dépôt et l’installer :
-
-```bash
-git clone https://github.com/qaemu/phasentic && cd phasentic
-git checkout 14fc94f   # last version that includes the validation tooling
-pip install -e .
-```
-
-Les exécutions validées utilisent `scripts/run_wp5_parallel.py`, qui refuse de
-s’exécuter si le code d’analyse diffère de l’empreinte enregistrée dans la
-configuration figée (`validation/wp5-precursor-frozen-v6.json`). Les listes de
-cas des cohortes et les justificatifs des résultats se trouvent dans
-[`validation/`](../validation/) ; les diffractogrammes eux-mêmes proviennent du
-jeu de données [Precursor Genome](https://github.com/lauren-walters/precursor-genome)
-(CC BY 4.0). Les instructions pas à pas figurent dans
-[docs/validation.md](../docs/validation.md).
-
-<a name="how-this-was-built"></a>
-
-## Genèse du projet
-
-Phasentic a été écrit presque entièrement par **Claude Code**, l’agent de
-programmation d’Anthropic, travaillant sous ma direction. Je développe ce projet seul. J’ai choisi le problème, les méthodes et le protocole de validation,
-examiné les résultats, et je suis responsable de chaque affirmation de ce dépôt.
-
-Les éléments qui rendent ces affirmations vérifiables ont été fixés avant que les résultats ne soient connus : l’objectif de taux de réussite a été déclaré avant le réglage, le
-réglage n’a utilisé que 100 diffractogrammes de développement, le jeu de test
-indépendant a été scellé et exécuté une seule fois, les paramètres et le code ont été
-figés par empreinte (hash), et les refactorisations ultérieures devaient
-reproduire exactement les 300 résultats
-([docs/validation.md](../docs/validation.md)). Les commits réalisés avec
-l’assistance de l’IA portent une mention `Assisted-by: Claude Code`. Voir
-[AI_USE.md](../AI_USE.md).
 
 ## Citer
 

@@ -22,8 +22,7 @@
   <a href="#install">Installation</a> ·
   <a href="#quick-start">Schnellstart</a> ·
   <a href="#how-accurate-is-it">Validierung</a> ·
-  <a href="../docs/">Dokumentation</a> ·
-  <a href="#how-this-was-built">Wie dieses Projekt entstand</a>
+  <a href="../docs/">Dokumentation</a>
 </p>
 
 Phasentic liest einen Pulver-XRD-Scan (`.xy`, `.xrdml` oder ASCII-`.raw`) ein,
@@ -81,7 +80,10 @@ Speicher nötig). Administratorrechte sind nicht erforderlich.
 Windows (PowerShell):
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+$env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
+uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
+phasentic setup
 ```
 
 macOS und Linux:
@@ -169,43 +171,6 @@ NIST SRM 640g): `phasentic calibrate standard.xy`.
 
 Details: [docs/scientific-method.md](../docs/scientific-method.md) und
 [PARAMETERS.md](../PARAMETERS.md).
-
-## Reproduktion der Validierung
-
-Repository klonen und installieren:
-
-```bash
-git clone https://github.com/qaemu/phasentic && cd phasentic
-git checkout 14fc94f   # last version that includes the validation tooling
-pip install -e .
-```
-
-Die validierten Läufe verwenden `scripts/run_wp5_parallel.py`; das Skript
-verweigert die Ausführung, wenn der Analysecode vom Hash in der eingefrorenen
-Konfiguration (`validation/wp5-precursor-frozen-v6.json`) abweicht. Die
-Falllisten der Kohorten und die Ergebnisnachweise liegen in
-[`validation/`](../validation/); die Scans selbst stammen aus dem Datensatz
-[Precursor Genome](https://github.com/lauren-walters/precursor-genome)
-(CC BY 4.0). Eine Schritt-für-Schritt-Anleitung steht in
-[docs/validation.md](../docs/validation.md).
-
-<a name="how-this-was-built"></a>
-
-## Wie dieses Projekt entstand
-
-Phasentic wurde fast vollständig von **Claude Code**, dem Coding-Agenten von
-Anthropic, unter meiner Leitung geschrieben. Ich entwickle das Projekt allein.
-Ich habe das Problem, die Methoden und das Validierungsprotokoll gewählt, die
-Ergebnisse geprüft und bin für jede Aussage in diesem Repository verantwortlich.
-
-Alles, was die Aussagen überprüfbar macht, stand fest, bevor Ergebnisse
-vorlagen: Der Genauigkeitszielwert wurde vor dem Tuning festgelegt,
-für das Tuning wurden nur 100 Entwicklungsscans verwendet, der zurückgehaltene
-Testdatensatz war versiegelt und wurde einmal ausgewertet, Einstellungen und
-Code wurden per Hash eingefroren, und spätere Refactorings mussten alle 300
-Ergebnisse exakt reproduzieren ([docs/validation.md](../docs/validation.md)).
-Mit KI-Unterstützung erstellte Commits tragen den Trailer
-`Assisted-by: Claude Code`. Siehe [AI_USE.md](../AI_USE.md).
 
 ## Zitieren
 

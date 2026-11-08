@@ -22,8 +22,7 @@
   <a href="#install">التثبيت</a> ·
   <a href="#quick-start">البدء السريع</a> ·
   <a href="#how-accurate-is-it">التحقق</a> ·
-  <a href="../docs/">التوثيق</a> ·
-  <a href="#how-this-was-built">كيف بُني هذا المشروع</a>
+  <a href="../docs/">التوثيق</a>
 </p>
 
 يقرأ Phasentic مسحًا لحيود الأشعة السينية للمساحيق (XRD) بصيغة &lrm;`.xy` أو &lrm;`.xrdml` أو &lrm;`.raw` النصية (ASCII)،
@@ -75,7 +74,10 @@
 Windows (PowerShell):
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+$env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
+uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
+phasentic setup
 ```
 
 macOS وLinux:
@@ -151,38 +153,6 @@ phasentic analyze scan.xrdml --preset validated --chemistry "Ag2O BaCO3 Ba2Ag2C2
 
 التفاصيل: [docs/scientific-method.md](../docs/scientific-method.md) و
 [PARAMETERS.md](../PARAMETERS.md).
-
-## إعادة إنتاج التحقق
-
-استنسخ المستودع وثبّته:
-
-```bash
-git clone https://github.com/qaemu/phasentic && cd phasentic
-git checkout 14fc94f   # last version that includes the validation tooling
-pip install -e .
-```
-
-تستخدم التشغيلات المُتحقَّق منها `scripts/run_wp5_parallel.py`، الذي يرفض العمل إذا
-اختلفت شيفرة التحليل عن قيمة التجزئة المسجّلة في الإعدادات المجمّدة
-(`validation/wp5-precursor-frozen-v6.json`). وتوجد قوائم حالات المجموعات وسجلات إثبات
-النتائج في [`validation/`&lrm;](../validation/)؛ أما المسوح نفسها فمصدرها
-مجموعة بيانات [Precursor Genome](https://github.com/lauren-walters/precursor-genome)
-(CC BY 4.0). وتوجد التعليمات خطوةً بخطوة في
-[docs/validation.md](../docs/validation.md).
-
-<a name="how-this-was-built"></a>
-
-## كيف بُني هذا المشروع
-
-تولّى **Claude Code**، وكيل البرمجة من Anthropic، كتابة Phasentic بالكامل تقريبًا، تحت توجيهي. أنا مطوّر واحد. اخترتُ المسألة والطرائق وبروتوكول التحقق،
-وراجعتُ النتائج، وأنا مسؤول عن كل ادعاء في هذا المستودع.
-
-حُدِّدت الأجزاء التي تجعل الادعاءات قابلة للتحقق قبل الاطلاع على النتائج:
-أُعلن هدف الدقة قبل الضبط، واقتصر الضبط على 100 مسح
-تطويري، وخُتمت مجموعة الاختبار المحجوزة وشُغِّلت مرة واحدة، وجُمِّدت الإعدادات والشيفرة
-بقيم التجزئة، وكان على أي إعادة هيكلة لاحقة أن تعيد إنتاج النتائج الـ 300 كلها بدقة
-([docs/validation.md](../docs/validation.md)). وتحمل الإيداعات (commits) المُنجزة بمساعدة الذكاء الاصطناعي
-السطر الختامي `Assisted-by: Claude Code`. انظر [AI_USE.md](../AI_USE.md).
 
 ## الاستشهاد
 
