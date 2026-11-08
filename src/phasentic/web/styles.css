@@ -87,11 +87,8 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .fold[open] > summary::before { content: "−"; }
 .block.fold > summary { font: 600 17px/1.25 var(--serif); padding-bottom: 6px; border-bottom: 1px solid var(--rule-strong); }
 .fold-body { display: grid; gap: 12px; padding-top: 12px; }
-#custom-settings.is-off .fold-body { opacity: .6; }
 
 /* Workspace */
-.boundary { margin: 0 0 22px; padding: 0 0 12px; border-bottom: 1px solid var(--rule); color: var(--muted); font-size: 13px; max-width: 78ch; }
-.boundary b { color: var(--ink); }
 .empty { padding: 48px 0; max-width: 60ch; }
 .empty h2 { font-size: 24px; font-weight: 400; }
 .empty p { color: var(--muted); font-size: 15px; }
@@ -159,7 +156,7 @@ details.provenance > summary { cursor: pointer; font-size: 13px; color: var(--ac
 .provenance-list details summary { color: var(--accent); cursor: pointer; font-family: var(--sans); }
 .provenance-list pre { background: var(--paper); border: 1px solid var(--rule); border-radius: 3px; font-size: 11px; max-height: 320px; overflow: auto; padding: 8px; white-space: pre-wrap; }
 
-.foot { display: flex; justify-content: space-between; gap: 16px; padding: 12px 28px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 12px; background: var(--sheet); }
+.foot { display: flex; justify-content: flex-end; gap: 16px; padding: 12px 28px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 12px; background: var(--sheet); }
 
 @media (max-width: 920px) {
   .layout { grid-template-columns: minmax(0, 1fr); }

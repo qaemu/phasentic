@@ -129,7 +129,8 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
             raise ValueError("preset must be 'validated'")
         if not payload.get("allowed_elements"):
             raise ValueError("the validated preset needs the sample chemistry (precursor and target formulas)")
-        kept = {"radiation", "angle_unit", "reference_source", "allowed_elements", "instrument", "calibration", "pinned_reference_ids"}
+        kept = {"radiation", "angle_unit", "reference_source", "allowed_elements", "instrument", "calibration", "pinned_reference_ids",
+                "peak_tolerance_deg", "max_phases"}  # the operator may change these two
         payload = {**validated_preset(), **{key: value for key, value in payload.items() if key in kept}}
     unknown = set(payload) - allowed
     if unknown:

@@ -3,17 +3,13 @@ const translations = {
     lede: "Powder X-ray diffraction phase identification",
     sample: "Sample", file: "Pattern file", fileHint: ".xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.",
     chemistry: "Precursor and target formulas", chemistryHint: "Candidates are limited to these elements plus H, C and O.",
-    method: "Method", validatedPreset: "Validated method", validatedHint: "The settings tested on 200 sealed scans (with POW_COD). Needs Cu Kα and the formulas above.",
-    radiation: "Anode", reference: "Reference database", customSettings: "Custom settings (not validated)",
-    tolerance: "Peak tolerance (° 2θ)", maxPhases: "Maximum phases", analysisMode: "Analysis mode", angle: "Angle coordinate",
-    customHint: "Ignored while the validated method is selected.",
-    optional: "Instrument and calibration", vendor: "Vendor", model: "Model", radius: "Goniometer radius (mm)",
-    standardFile: "Standard scan", standard: "Calibration standard", calibrate: "Calibrate",
-    calibrationHint: "No calibration attached. A “supported” decision needs one.",
+    method: "Method", validatedPreset: "Validated method", validatedHint: "The settings tested on 200 sealed test scans. Needs Cu Kα and the formulas above.",
+    radiation: "Anode", reference: "Reference database", customSettings: "Search settings",
+    tolerance: "Peak tolerance (° 2θ)", maxPhases: "Maximum phases",
+    customHint: "Validated values: 0.10° and 5 phases. Other values are not validated.",
+    optional: "Instrument", vendor: "Vendor", model: "Model", radius: "Goniometer radius (mm)",
     instrumentPair: "Give both instrument vendor and model, or leave both blank.",
     analyze: "Analyze", running: "Analysing…", done: "Done. Read the result as a ranked hypothesis.",
-    noticeTitle: "Read results as ranked hypotheses.",
-    noticeText: "On 200 sealed test scans the validated method found the exact phases in 42.5% and the right compounds in 52%, falling sharply for three or more phases. Confirm before you report.",
     emptyTitle: "No analysis yet",
     emptyText: "Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.",
     decisionLabel: "Decision", selected: "Selected phases", noMixture: "No mixture selected",
@@ -47,23 +43,19 @@ const translations = {
     altFit: "Fit", altUse: "Use this", altNone: "No other material fits within 80% of the best.", altSelected: "selected",
     pinned: "Fixed by you:", unpin: "Clear and analyze again",
     stale: "A setting changed, so the previous result was cleared.",
-    footer: "Runs on this computer; scans are not uploaded anywhere.", footerAi: "Open source (MIT). No AI model is used to analyse scans.",
+    footerAi: "Open source (MIT).",
   },
   es: {
     lede: "Identificación de fases por difracción de rayos X de polvo",
     sample: "Muestra", file: "Archivo del patrón", fileHint: ".xy, .xrdml o .raw ASCII, hasta 10 MB. Seleccione varios para un lote.",
     chemistry: "Fórmulas de precursores y objetivo", chemistryHint: "Los candidatos se limitan a estos elementos más H, C y O.",
-    method: "Método", validatedPreset: "Método validado", validatedHint: "La configuración probada en 200 escaneos sellados (con POW_COD). Requiere Cu Kα y las fórmulas de arriba.",
-    radiation: "Ánodo", reference: "Base de referencias", customSettings: "Configuración personalizada (no validada)",
-    tolerance: "Tolerancia de pico (° 2θ)", maxPhases: "Máximo de fases", analysisMode: "Modo de análisis", angle: "Coordenada angular",
-    customHint: "Se ignora mientras el método validado está seleccionado.",
-    optional: "Instrumento y calibración", vendor: "Fabricante", model: "Modelo", radius: "Radio del goniómetro (mm)",
-    standardFile: "Escaneo estándar", standard: "Estándar de calibración", calibrate: "Calibrar",
-    calibrationHint: "Sin calibración. Una decisión “supported” la necesita.",
+    method: "Método", validatedPreset: "Método validado", validatedHint: "La configuración probada en 200 escaneos de prueba sellados. Requiere Cu Kα y las fórmulas de arriba.",
+    radiation: "Ánodo", reference: "Base de referencias", customSettings: "Ajustes de búsqueda",
+    tolerance: "Tolerancia de pico (° 2θ)", maxPhases: "Máximo de fases",
+    customHint: "Valores validados: 0,10° y 5 fases. Otros valores no están validados.",
+    optional: "Instrumento", vendor: "Fabricante", model: "Modelo", radius: "Radio del goniómetro (mm)",
     instrumentPair: "Indique fabricante y modelo, o deje ambos vacíos.",
     analyze: "Analizar", running: "Analizando…", done: "Listo. Lea el resultado como una hipótesis ordenada.",
-    noticeTitle: "Lea los resultados como hipótesis ordenadas.",
-    noticeText: "En 200 escaneos de prueba sellados, el método validado encontró las fases exactas en el 37% y los compuestos correctos en el 49,5%, con una caída fuerte para tres o más fases. Confirme antes de informar.",
     emptyTitle: "Todavía no hay análisis",
     emptyText: "Elija un escaneo, escriba las fórmulas de precursores y objetivo, mantenga el método validado y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y un informe imprimible aparecerán aquí.",
     decisionLabel: "Decisión", selected: "Fases seleccionadas", noMixture: "No se seleccionó una mezcla",
@@ -97,7 +89,7 @@ const translations = {
     altFit: "Ajuste", altUse: "Usar esta", altNone: "Ningún otro material ajusta dentro del 80% del mejor.", altSelected: "seleccionada",
     pinned: "Fijadas por usted:", unpin: "Quitar y analizar de nuevo",
     stale: "Cambió una configuración, así que se borró el resultado anterior.",
-    footer: "Se ejecuta en esta computadora; los escaneos no se suben a ningún lado.", footerAi: "Código abierto (MIT). No se usa ningún modelo de IA para analizar escaneos.",
+    footerAi: "Código abierto (MIT).",
   },
 };
 
@@ -105,8 +97,6 @@ const $ = (id) => document.getElementById(id);
 const form = $("analysis-form");
 const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const R = () => window.PhasenticReport;
-let calibrationResult = null;
-let calibrationRequest = 0;
 let latestReport = null;
 let analysisRequest = 0;
 let activeAnalysisController = null;
@@ -123,16 +113,9 @@ function currentLanguage() {
 function setLanguage(language) {
   document.documentElement.lang = language;
   document.querySelectorAll("[data-i18n]").forEach((element) => {
-    if (element.id === "calibration-status" && calibrationResult) return;
     const text = translations[language][element.dataset.i18n];
     if (typeof text === "string") element.textContent = text;
   });
-}
-
-function setCalibrationStatus(message) {
-  const element = $("calibration-status");
-  element.removeAttribute("data-i18n");
-  element.textContent = message;
 }
 
 function appendKeyValueList(parent, entries, className = "provenance-list") {
@@ -375,15 +358,6 @@ function clearRenderedReport() {
   $("decision").textContent = "—"; $("analysis-id").textContent = "";
 }
 
-// The validated method fixes the search settings, so the custom ones are inactive.
-function syncPreset() {
-  const on = $("validated-preset").checked;
-  ["tolerance", "analysis-mode", "max-phases"].forEach((id) => { $(id).disabled = on; });
-  $("custom-settings").classList.toggle("is-off", on);
-}
-$("validated-preset").addEventListener("change", syncPreset);
-syncPreset();
-
 function invalidateAnalysis(message = translations[$("language").value].stale) {
   pinnedIds = []; currentFile = null; batchRows = []; $("batch").hidden = true;
   analysisRequest += 1;
@@ -392,12 +366,6 @@ function invalidateAnalysis(message = translations[$("language").value].stale) {
   setRunning(false);
   clearRenderedReport();
   $("form-status").textContent = message;
-}
-
-function invalidateCalibration(message) {
-  calibrationRequest += 1;
-  calibrationResult = null;
-  setCalibrationStatus(message);
 }
 
 // In the Phasentic app window (pywebview) files are saved through a save dialog
@@ -484,45 +452,8 @@ $("language").addEventListener("change", (event) => {
   if (batchRows.length) renderBatch();
   void loadHistory();
 });
-$("calibrate-button").addEventListener("click", async () => {
-  const file = $("standard-file").files[0];
-  if (!file) { setCalibrationStatus("Select a standard scan first."); return; }
-  if (file.size > 10 * 1024 * 1024) { setCalibrationStatus("File exceeds the 10 MiB limit."); return; }
-  const requestId = ++calibrationRequest;
-  setCalibrationStatus("Calibrating line positions…");
-  const data = new FormData();
-  data.append("file", file);
-  data.append("standard_id", $("standard-id").value);
-  data.append("radiation", $("radiation").value);
-  try {
-    const response = await fetch("/api/v1/calibrate", { method: "POST", body: data });
-    const payload = await response.json();
-    if (!response.ok) throw new Error(payload.detail || "Calibration failed");
-    if (requestId !== calibrationRequest) return;
-    calibrationResult = payload.data;
-    invalidateAnalysis("Calibration changed; analyze the sample again.");
-    setCalibrationStatus(`${calibrationResult.status} · ${calibrationResult.line_count} lines · RMSE ${calibrationResult.rmse_deg == null ? "—" : `${calibrationResult.rmse_deg.toFixed(3)}°`}`);
-  } catch (error) {
-    if (requestId !== calibrationRequest) return;
-    calibrationResult = null;
-    setCalibrationStatus(error instanceof Error ? error.message : "Calibration failed.");
-  }
-});
-
 $("radiation").addEventListener("change", () => {
   invalidateAnalysis();
-  invalidateCalibration("Radiation changed; calibrate the standard again.");
-  void loadCapabilities();
-});
-
-$("standard-id").addEventListener("change", () => {
-  invalidateAnalysis();
-  invalidateCalibration("Standard changed; calibrate the standard again.");
-});
-
-$("standard-file").addEventListener("change", () => {
-  invalidateAnalysis();
-  invalidateCalibration("Standard scan changed; calibrate the standard again.");
 });
 
 // A file dropped anywhere is selected instead of being opened, which would
@@ -541,9 +472,7 @@ $("file").addEventListener("change", () => {
 });
 
 [
-  "angle-unit",
   "tolerance",
-  "analysis-mode",
   "max-phases",
   "chemistry",
   "validated-preset",
@@ -563,7 +492,7 @@ $("reference-source").addEventListener("change", () => {
 });
 
 function reportOptions() {
-  return { version: appVersion, preset: $("validated-preset").checked ? "validated" : null, laboratory: reportSettings.laboratory };
+  return { version: appVersion, preset: $("validated-preset").checked && !Object.keys(searchOverrides()).length ? "validated" : null, laboratory: reportSettings.laboratory };
 }
 
 // After each finished analysis: report (.html), powder CIF and JSON into the chosen folder, if one is set.
@@ -642,10 +571,19 @@ function formSettings() {
     if (Number.isFinite(radius) && radius > 0) instrument.goniometer_radius_mm = radius;
   }
   const chemistry = $("chemistry").value.trim();
-  const common = { radiation: $("radiation").value, angle_unit: $("angle-unit").value, reference_source: $("reference-source").value, ...(chemistry ? { chemistry } : {}), ...(Object.keys(instrument).length ? { instrument } : {}) };
+  const common = { radiation: $("radiation").value, reference_source: $("reference-source").value, ...(chemistry ? { chemistry } : {}), ...(Object.keys(instrument).length ? { instrument } : {}) };
   return $("validated-preset").checked
-    ? { ...common, preset: "validated" }
-    : { ...common, peak_tolerance_deg: Number($("tolerance").value), analysis_mode: $("analysis-mode").value, max_phases: Number($("max-phases").value) };
+    ? { ...common, preset: "validated", ...searchOverrides() }
+    : { ...common, ...searchValues(), analysis_mode: "full_mixture" };
+}
+
+// Peak tolerance and maximum phases of the validated method; other values are custom.
+const VALIDATED_SEARCH = { peak_tolerance_deg: 0.1, max_phases: 5 };
+function searchValues() {
+  return { peak_tolerance_deg: Number($("tolerance").value), max_phases: Number($("max-phases").value) };
+}
+function searchOverrides() {
+  return Object.fromEntries(Object.entries(searchValues()).filter(([key, value]) => value !== VALIDATED_SEARCH[key]));
 }
 
 // Shows the running stage until the request ends.
@@ -666,7 +604,6 @@ async function requestAnalysis(file, settings, signal) {
   const data = new FormData();
   data.append("file", file);
   data.append("settings_json", JSON.stringify(settings));
-  data.append("calibration_json", JSON.stringify(calibrationResult || {}));
   const response = await fetch("/api/v1/analyze", { method: "POST", body: data, signal });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload.detail || "Analysis failed");
@@ -824,19 +761,6 @@ async function loadHistory() {
 }
 void loadHistory();
 
-async function loadCapabilities() {
-  try {
-    const response = await fetch("/api/v1/capabilities");
-    const payload = await fetchJsonOrThrow(response, "Engine capability status unavailable");
-    const mixture = payload?.data?.mixture_screening;
-    $("capability-status").textContent = mixture && mixture.available
-      ? `Engine: ${mixture.algorithm_version}`
-      : "Mixture screening is unavailable; single-phase screening remains active.";
-  } catch (_error) {
-    $("capability-status").textContent = "Engine capability status unavailable; deterministic screening remains active.";
-  }
-}
-
 setLanguage("en");
 
 fetch("/api/v1/reference-sources")
@@ -858,4 +782,3 @@ fetch("/api/v1/reference-sources")
   })
   .catch(() => { $("reference-status").textContent = "Reference-source status unavailable; demo subset remains active."; });
 
-void loadCapabilities();
