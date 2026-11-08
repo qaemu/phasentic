@@ -67,6 +67,15 @@ def test_alternatives_and_pinning():
     assert pinned.query["pinned_reference_ids"] == ["b"]
 
 
+def test_space_group_order():
+    from phasentic.search.mixtures import _space_group_order
+
+    assert _space_group_order("F d -3 m :2") > _space_group_order("F -4 3 m") > 0
+    assert _space_group_order("I a -3") > _space_group_order("I 21 3")
+    assert _space_group_order("not a group") == 0
+
+
 if __name__ == "__main__":
     test_alternatives_and_pinning()
     print("ok")
+    test_space_group_order()

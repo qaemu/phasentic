@@ -8,6 +8,7 @@ and must never be presented as composition percentages.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from functools import lru_cache
 import math
 from typing import Callable, Iterable
 
@@ -15,6 +16,7 @@ import numpy as np
 
 from phasentic.domain.formula import charge_balanced, compositions_compatible, normalize_space_group_symbol
 from phasentic.domain.models import Peak, ReferenceLine, ReferencePhase
+from phasentic.references.equivalence import space_group_number
 from phasentic.domain.radiation import (
     Radiation,
     radiation_spectral_components,
@@ -25,7 +27,6 @@ from phasentic.domain.radiation import (
 MIXTURE_ALGORITHM_VERSION = "mixture-screening-0.17-balanced-entry-preference"
 SHARED_PEAK_CONTRIBUTION_RATIO = 0.5
 SAME_MATERIAL_PREFERENCE_MARGIN = 0.15
-SYMMETRY_PREFERENCE_REFLECTION_RATIO = 0.8
 SUPPORT_OBJECTIVE_THRESHOLD = 0.10
 RESIDUAL_CANDIDATE_PEAK_SOURCE = "unassigned_detected_peaks_from_active_branch_components"
 PROFILE_D_SPACING_SCALE_GRID_POINTS = 31
@@ -890,24 +891,12 @@ def select_mixture_hypotheses(
             )
         ]
         if len(peers) > 1:
-            def reflection_count(item: MixtureHypothesis) -> int:
-                total = 0
-                for component in item.components:
-                    reference = profile_references.get(component.reference_id)
-                    if reference is not None:
-                        total += sum(
-                            1
-                            for angle, _intensity in _merged_reflections(reference, radiation)
-                            if float(angles[0]) <= angle <= float(angles[-1])
-                        )
-                return total
-
-            leader_count = reflection_count(leader)
-            preferred = min(peers, key=lambda index: (reflection_count(ranked_hypotheses[index]), index))
-            # Only a clearly more symmetric description (at least 20% fewer
-            # distinct reflections) displaces the best fit; small differences
-            # come from database intensity cut-offs, not symmetry.
-            if reflection_count(ranked_hypotheses[preferred]) > SYMMETRY_PREFERENCE_REFLECTION_RATIO * leader_count:
+            # The same material described in a lower-symmetry subgroup (F-43m
+            # for Fd-3m, I2_13 for Ia-3) fits marginally better only through
+            # extra free lines; prefer the highest-symmetry description.
+            leader_order = _symmetry_order(leader)
+            preferred = max(peers, key=lambda index: (_symmetry_order(ranked_hypotheses[index]), -index))
+            if _symmetry_order(ranked_hypotheses[preferred]) <= leader_order:
                 preferred = 0
             if preferred == 0 and not _formulas_balanced(leader):
                 # An entry stored under a formula that cannot be charge
@@ -1464,6 +1453,23 @@ def _relative_margin(best: float, other: float) -> float:
     """Relative selection-score gap; ambiguity is judged on this ratio."""
 
     return (other - best) / max(abs(best), 1e-9)
+
+
+@lru_cache(maxsize=None)
+def _space_group_order(symbol: str | None) -> int:
+    """Symmetry operations in the conventional cell (0 when the symbol is unknown)."""
+
+    number = space_group_number(symbol)
+    if number is None:
+        return 0
+    import gemmi
+
+    operations = gemmi.find_spacegroup_by_number(number).operations()
+    return len(operations.sym_ops) * len(operations.cen_ops)
+
+
+def _symmetry_order(hypothesis: MixtureHypothesis) -> int:
+    return sum(_space_group_order(component.space_group) for component in hypothesis.components)
 
 
 def _formulas_balanced(hypothesis: MixtureHypothesis) -> bool:
