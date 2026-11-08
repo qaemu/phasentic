@@ -1131,6 +1131,18 @@ def _pinned_branch(
 
 _REJECTED = object()
 
+# Diagnostics only: when a list, every candidate addition the search considers
+# appends (reference_id, formula, space_group, depth, outcome, value).
+# Outcomes: same_group, same_material, polymorph_guard, evidence (value =
+# unexplained reflections), already_fitted, improvement (value = relative
+# objective gain), missing_lines (value = missing visible fraction), accepted.
+REJECTION_LOG: list | None = None
+
+
+def _log_addition(reference: ReferencePhase, depth: int, outcome: str, value: float | None = None) -> None:
+    if REJECTION_LOG is not None:
+        REJECTION_LOG.append((reference.reference_id, reference.formula, reference.space_group, depth, outcome, value))
+
 
 def _try_branch_addition(
     branch: "_MixtureBranch",
@@ -1158,17 +1170,21 @@ def _try_branch_addition(
     """
 
     reference = profile_references.get(candidate_reference.reference_id, candidate_reference)
+    depth = len(branch.references)
     group = _reference_group(reference)
     if group in {_reference_group(item) for item in branch.references}:
+        _log_addition(reference, depth, "same_group")
         return None
     # Another database entry of a material already in the branch is not a
     # second phase (same composition and space group, or the same strong
     # reflections).
     if any(_same_material(reference, item, radiation, tolerance_deg) for item in branch.references):
+        _log_addition(reference, depth, "same_material")
         return None
     if config.polymorph_guard and any(
         compositions_compatible(reference.formula, item.formula, ignore_hydrogen=True) for item in branch.references
     ):
+        _log_addition(reference, depth, "polymorph_guard")
         return None
     if reference.reference_id not in profiles:
         profile_d_scale, profile = _fit_reference_profile_scale(
@@ -1197,10 +1213,12 @@ def _try_branch_addition(
         if any(index not in explained_peak_indices for index in reflection.peak_indices)
     )
     if len(available_reflections) < config.min_independent_evidence:
+        _log_addition(reference, depth, "evidence", float(len(available_reflections)))
         return None
     proposed = branch.references + (reference,)
     proposed_id = _branch_id_from_references(proposed)
     if proposed_id in fitted_branch_ids:
+        _log_addition(reference, depth, "already_fitted")
         return None
     fitted_branch_ids.add(proposed_id)
     matched = tuple(
@@ -1225,13 +1243,17 @@ def _try_branch_addition(
         objective, zero_shift, scales, calculated = best
     improvement = (branch.objective - objective) / max(branch.objective, 1e-12)
     if branch.references and improvement < config.min_objective_improvement:
+        _log_addition(reference, depth, "improvement", float(improvement))
         return _REJECTED
     if config.missing_intensity_max < 1.0 and config.noise_sigma:
         contribution = matrix[:, -1] * float(scales[-1])
-        if _missing_visible_fraction(
+        missing = _missing_visible_fraction(
             reference, contribution, targets[zero_shift], angles, radiation, tolerance_deg, float(config.noise_sigma)
-        ) > config.missing_intensity_max:
+        )
+        if missing > config.missing_intensity_max:
+            _log_addition(reference, depth, "missing_lines", float(missing))
             return _REJECTED
+    _log_addition(reference, depth, "accepted", float(improvement))
     return _MixtureBranch(
         references=proposed,
         matched_peak_indices=frozenset(branch.matched_peak_indices | set(matched)),
