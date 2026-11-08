@@ -112,6 +112,8 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
         "lattice_change_penalty",
         "entry_count_prior",
         "polymorph_guard",
+        "branch_completion",
+        "orientation_tolerant_missing",
         "adaptive_pool",
         "pinned_reference_ids",
         "d_spacing_scale_tolerance",

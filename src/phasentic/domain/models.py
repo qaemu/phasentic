@@ -453,6 +453,8 @@ class AnalysisSettings:
     # Never add a phase with the same composition as one already in the
     # hypothesis (a second polymorph), only a different compound.
     polymorph_guard: bool = False
+    branch_completion: bool = False
+    orientation_tolerant_missing: bool = False
     # Cut the fitter shortlist at the knee of the candidate score curve
     # (Dara's automatic threshold) instead of always taking candidate_pool;
     # candidate_pool stays the upper bound.
@@ -519,7 +521,7 @@ class AnalysisSettings:
             value = getattr(self, name)
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)) or not low <= float(value) <= high:
                 raise ValueError(f"{name} must be between {low} and {high}")
-        for flag in ("anisotropic_lattice_scale", "candidate_dedupe", "residual_rerank", "polymorph_guard", "adaptive_pool"):
+        for flag in ("anisotropic_lattice_scale", "candidate_dedupe", "residual_rerank", "polymorph_guard", "adaptive_pool", "branch_completion", "orientation_tolerant_missing"):
             if not isinstance(getattr(self, flag), bool):
                 raise ValueError(f"{flag} must be a boolean")
         if not isinstance(self.pinned_reference_ids, tuple) or len(self.pinned_reference_ids) > self.max_phases or any(

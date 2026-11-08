@@ -971,6 +971,8 @@ def analyze_file(
                     missing_intensity_max=resolved_settings.missing_intensity_max,
                     residual_rerank=resolved_settings.residual_rerank,
                     polymorph_guard=resolved_settings.polymorph_guard,
+                    branch_completion=resolved_settings.branch_completion,
+                    orientation_tolerant_missing=resolved_settings.orientation_tolerant_missing,
                     noise_sigma=(
                         float(peak_detection_receipt["median_noise_sigma"])
                         if isinstance(peak_detection_receipt.get("median_noise_sigma"), float)
@@ -1224,6 +1226,8 @@ def analyze_file(
                 "entry_count_prior": resolved_settings.entry_count_prior,
                 "pinned_reference_ids": list(resolved_settings.pinned_reference_ids),
                 "polymorph_guard": resolved_settings.polymorph_guard,
+                "branch_completion": resolved_settings.branch_completion,
+                "orientation_tolerant_missing": resolved_settings.orientation_tolerant_missing,
                 "adaptive_pool": resolved_settings.adaptive_pool,
                 "d_spacing_scale_tolerance": resolved_settings.d_spacing_scale_tolerance,
                 "max_fit_attempts": resolved_settings.max_fit_attempts,
@@ -1328,6 +1332,8 @@ def _analysis_id(
             "entry_count_prior": settings.entry_count_prior,
             "polymorph_guard": settings.polymorph_guard,
             "adaptive_pool": settings.adaptive_pool,
+            **({"branch_completion": True} if settings.branch_completion else {}),
+            **({"orientation_tolerant_missing": True} if settings.orientation_tolerant_missing else {}),
             **({"pinned_reference_ids": list(settings.pinned_reference_ids)} if settings.pinned_reference_ids else {}),
             "d_spacing_scale_tolerance": settings.d_spacing_scale_tolerance,
             "max_fit_attempts": settings.max_fit_attempts,
