@@ -125,7 +125,7 @@ POWCOD_ZIP_SHA256 = "75b74f9544e8677edb2c6dc46196ee4331e27f21d943a70b08c68f18c01
 # Materials Project entries, hydrogen formulas restored), 8,644,423,680 bytes.
 COD_DATABASE_SHA256 = "edd41e64441a56bf9c06c45631b4ea26f149792c762bb7a4f676c7067c159f2c"
 COD_DATABASE_SIZE = 8_644_423_680
-COD_DATABASE_URL = "https://zenodo.org/records/NEW_RECORD_ID/files/cod.xrd.sqlite?download=1"
+COD_DATABASE_URL = "https://zenodo.org/records/24059658/files/cod.xrd.sqlite?download=1"
 
 
 def _emit(payload: dict, output: Path | None) -> None:
