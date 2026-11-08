@@ -838,6 +838,11 @@ def select_mixture_hypotheses(
             key=lambda item: (item[0].selection_score, item[0].hypothesis_id),
         )
     )
+    if HYPOTHESIS_LOG is not None:
+        HYPOTHESIS_LOG.extend(
+            (h.objective, h.selection_score, tuple((c.formula, c.space_group, c.reference_id) for c in h.components))
+            for h, _branch in ranked
+        )
     if not ranked:
         return MixtureResult(
             MIXTURE_ALGORITHM_VERSION,
@@ -1137,6 +1142,9 @@ _REJECTED = object()
 # unexplained reflections), already_fitted, improvement (value = relative
 # objective gain), missing_lines (value = missing visible fraction), accepted.
 REJECTION_LOG: list | None = None
+# Diagnostics only: when a list, every ranked hypothesis of a scan is appended
+# as (objective, selection_score, ((formula, space_group, reference_id), ...)).
+HYPOTHESIS_LOG: list | None = None
 
 
 def _log_addition(reference: ReferencePhase, depth: int, outcome: str, value: float | None = None) -> None:
