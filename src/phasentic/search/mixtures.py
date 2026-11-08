@@ -64,10 +64,6 @@ class MixtureSettings:
     residual_rerank: bool = False
     # Skip candidates with the same composition as a phase already in the branch.
     polymorph_guard: bool = False
-    # Re-try phases accepted anywhere in the search on the best final branches.
-    branch_completion: bool = False
-    # Missing-lines check allows one March-Dollase preferred orientation per phase.
-    orientation_tolerant_missing: bool = False
 
     def validate(self) -> "MixtureSettings":
         if isinstance(self.missing_intensity_max, bool) or not isinstance(self.missing_intensity_max, (int, float)) or not 0.0 <= float(self.missing_intensity_max) <= 1.0:
@@ -757,24 +753,6 @@ def select_mixture_hypotheses(
     )
     all_branches.extend(swap_branches)
     terminal.extend(swap_branches)
-    completed, completion_fit_attempts = ([], 0) if not config.branch_completion else _complete_branches(
-        terminal,
-        all_branches,
-        profile_references,
-        profile_scales,
-        profiles,
-        evidence,
-        peak_values,
-        angles,
-        target,
-        grid_weights,
-        radiation,
-        tolerance_deg,
-        config,
-        shift_targets,
-    )
-    all_branches.extend(completed)
-    terminal.extend(completed)
     if attempts >= config.max_fit_attempts:
         terminal.extend(branches)
         terminal = [
@@ -1023,7 +1001,6 @@ def select_mixture_hypotheses(
             swap_fit_attempts=swap_fit_attempts,
             swap_diagnostics=swap_diagnostics,
             pinned_reference_ids=tuple(item.reference_id for item in pinned),
-            completion_fit_attempts=completion_fit_attempts,
         ),
         alternatives,
     )
@@ -1082,8 +1059,8 @@ def _phase_alternatives(
                 if fit < ALTERNATIVE_MIN_FIT * selected_fit:
                     continue
                 # Same gate as the search: strong predicted lines must not be absent.
-                if config.missing_intensity_max < 1.0 and config.noise_sigma and _missing_fraction(
-                    config, candidate, matrix[:, -1] * float(scales[-1]), target, angles, radiation, tolerance_deg, float(config.noise_sigma)
+                if config.missing_intensity_max < 1.0 and config.noise_sigma and _missing_visible_fraction(
+                    candidate, matrix[:, -1] * float(scales[-1]), target, angles, radiation, tolerance_deg, float(config.noise_sigma)
                 ) > config.missing_intensity_max:
                     continue
                 key = material_key(candidate.formula, candidate.space_group) or candidate.reference_id
@@ -1150,73 +1127,6 @@ def _pinned_branch(
         stopping_reason="phase_limit_reached" if len(references) >= config.max_phases else "residual_search_pending",
         zero_shift_deg=shift,
     )
-
-
-COMPLETION_BRANCHES = 5  # best terminal branches the completion pass extends
-COMPLETION_FIT_LIMIT = 200  # ponytail: hard cap on extra fits per scan; raise if completion ever runs out
-
-
-def _complete_branches(
-    terminal: list["_MixtureBranch"],
-    all_branches: list["_MixtureBranch"],
-    profile_references: dict[str, ReferencePhase],
-    profile_scales: dict[str, float],
-    profiles: dict[str, np.ndarray],
-    evidence: dict[str, tuple["_ReflectionEvidence", ...]],
-    peak_values: tuple[Peak, ...],
-    angles: np.ndarray,
-    target: np.ndarray,
-    grid_weights: np.ndarray,
-    radiation: Radiation,
-    tolerance_deg: float,
-    config: MixtureSettings,
-    shift_targets: dict[float, np.ndarray] | None,
-) -> tuple[list["_MixtureBranch"], int]:
-    """Greedily add back phases that passed every check somewhere in the search.
-
-    The beam keeps only the best few partial sets per level, so a correct minor
-    phase accepted on a branch that was later dropped never reaches a final
-    hypothesis. For the best terminal branches, each phase accepted anywhere
-    is tried again with the same checks (evidence, improvement, missing
-    lines); the best passing one is added, repeatedly, up to max_phases.
-    """
-
-    accepted: dict[str, ReferencePhase] = {}
-    for branch in all_branches:
-        for reference in branch.references:
-            accepted.setdefault(reference.reference_id, reference)
-    starts = sorted(
-        (item for item in terminal if item.references and len(item.references) < config.max_phases),
-        key=lambda item: (item.objective, _branch_id(item)),
-    )[:COMPLETION_BRANCHES]
-    known = {_branch_id(item) for item in (*all_branches, *terminal)}
-    completed: list[_MixtureBranch] = []
-    fits = 0
-    for start in starts:
-        branch = start
-        while len(branch.references) < config.max_phases and fits < COMPLETION_FIT_LIMIT:
-            present = {item.reference_id for item in branch.references}
-            explained = _branch_explained_peak_indices(branch, peak_values, radiation, tolerance_deg, config)
-            best = None
-            for reference in accepted.values():
-                if reference.reference_id in present or fits >= COMPLETION_FIT_LIMIT:
-                    continue
-                outcome = _try_branch_addition(
-                    branch, reference, explained, profile_references, profile_scales, profiles, evidence,
-                    set(), peak_values, angles, target, grid_weights, radiation, tolerance_deg, config, shift_targets,
-                )
-                if outcome is None:
-                    continue
-                fits += 1
-                if outcome is not _REJECTED and (best is None or outcome.objective < best.objective):
-                    best = outcome
-            if best is None:
-                break
-            branch = best
-            if _branch_id(branch) not in known:
-                known.add(_branch_id(branch))
-                completed.append(branch)
-    return completed, fits
 
 
 _REJECTED = object()
@@ -1337,8 +1247,8 @@ def _try_branch_addition(
         return _REJECTED
     if config.missing_intensity_max < 1.0 and config.noise_sigma:
         contribution = matrix[:, -1] * float(scales[-1])
-        missing = _missing_fraction(
-            config, reference, contribution, targets[zero_shift], angles, radiation, tolerance_deg, float(config.noise_sigma)
+        missing = _missing_visible_fraction(
+            reference, contribution, targets[zero_shift], angles, radiation, tolerance_deg, float(config.noise_sigma)
         )
         if missing > config.missing_intensity_max:
             _log_addition(reference, depth, "missing_lines", float(missing))
@@ -1364,64 +1274,6 @@ VISIBLE_LINE_SNR = 5.0
 ABSENT_OBSERVED_RATIO = 0.3
 
 
-ORIENTATION_DIRECTIONS = ((0, 0, 1), (1, 0, 0), (0, 1, 0), (1, 1, 0), (1, 0, 1), (0, 1, 1), (1, 1, 1))
-ORIENTATION_RATIOS = (0.6, 0.8, 1.25, 1.6)  # March-Dollase r: < 1 plates, > 1 needles
-
-
-def _orientation_factor_sets(reference: ReferencePhase) -> list[np.ndarray]:
-    """March-Dollase intensity factors per line for a few preferred orientations.
-
-    P(alpha) = (r^2 cos^2 alpha + sin^2 alpha / r)^(-3/2), alpha between a
-    line's plane normal and the preferred direction. Representative hkl only
-    (no averaging over symmetry equivalents): a tolerance check, not a fit.
-    """
-
-    from phasentic.search.matcher import _reciprocal_metric, parse_hkl
-
-    cell = getattr(reference, "cell", None)
-    metric = _reciprocal_metric(cell) if cell else None
-    hkls = [parse_hkl(line.hkl) for line in reference.lines]
-    if metric is None or any(item is None for item in hkls):
-        return []
-    vectors = np.array(hkls, dtype=float)
-    norms = np.sqrt(np.maximum(np.einsum("ij,jk,ik->i", vectors, metric, vectors), 1e-12))
-    sets = []
-    for direction in ORIENTATION_DIRECTIONS:
-        d = np.array(direction, dtype=float)
-        d_norm = math.sqrt(max(float(d @ metric @ d), 1e-12))
-        cos = np.clip(np.abs(vectors @ metric @ d) / (norms * d_norm), 0.0, 1.0)
-        for r in ORIENTATION_RATIOS:
-            factors = (r * r * cos * cos + (1.0 - cos * cos) / r) ** -1.5
-            weights = np.array([max(line.relative_intensity, 0.0) for line in reference.lines])
-            mean = float(np.sum(factors * weights) / max(float(np.sum(weights)), 1e-12))
-            sets.append(factors / max(mean, 1e-12))  # keep the total intensity
-    return sets
-
-
-def _missing_fraction(
-    config: "MixtureSettings",
-    reference: ReferencePhase,
-    contribution: np.ndarray,
-    target: np.ndarray,
-    angles: np.ndarray,
-    radiation: Radiation,
-    tolerance_deg: float,
-    noise_sigma: float,
-) -> float:
-    """Missing visible fraction; with orientation tolerance, the lowest over a few preferred orientations."""
-
-    plain = _missing_visible_fraction(reference, contribution, target, angles, radiation, tolerance_deg, noise_sigma)
-    if not config.orientation_tolerant_missing or plain <= config.missing_intensity_max:
-        return plain
-    return min(
-        [plain]
-        + [
-            _missing_visible_fraction(reference, contribution, target, angles, radiation, tolerance_deg, noise_sigma, factors)
-            for factors in _orientation_factor_sets(reference)
-        ]
-    )
-
-
 def _missing_visible_fraction(
     reference: ReferencePhase,
     contribution: np.ndarray,
@@ -1430,7 +1282,6 @@ def _missing_visible_fraction(
     radiation: Radiation,
     tolerance_deg: float,
     noise_sigma: float,
-    line_factors: np.ndarray | None = None,
 ) -> float:
     """Fraction of a phase's clearly visible predicted intensity that the scan lacks.
 
@@ -1443,7 +1294,7 @@ def _missing_visible_fraction(
 
     wavelength = radiation_spectral_components(radiation)[0][0]
     visible = absent = 0.0
-    for index, line in enumerate(reference.lines):
+    for line in reference.lines:
         try:
             center = two_theta_from_wavelength(line.d_spacing_angstrom, wavelength)
         except ValueError:
@@ -1453,8 +1304,6 @@ def _missing_visible_fraction(
         if upper <= lower:
             continue
         predicted = float(np.max(contribution[lower:upper]))
-        if line_factors is not None:
-            predicted *= float(line_factors[index])
         if predicted < VISIBLE_LINE_SNR * noise_sigma:
             continue
         visible += predicted
@@ -1798,11 +1647,9 @@ def _query_metadata(
     swap_fit_attempts: int = 0,
     swap_diagnostics: Iterable[dict[str, object]] = (),
     pinned_reference_ids: tuple[str, ...] = (),
-    completion_fit_attempts: int = 0,
 ) -> dict[str, object]:
     return {
         "pinned_reference_ids": list(pinned_reference_ids),
-        "completion_fit_attempts": completion_fit_attempts,
         "candidate_pool_size": candidate_pool_size,
         "retained_branches": retained_branches,
         "fit_attempts": fit_attempts,
