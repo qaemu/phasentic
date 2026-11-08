@@ -81,7 +81,10 @@ libres). No hacen falta permisos de administrador.
 Windows (PowerShell):
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+$env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
+uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
+phasentic setup
 ```
 
 macOS y Linux:

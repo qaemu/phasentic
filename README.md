@@ -46,37 +46,31 @@ and then run on 200 locked scans that tuning never saw, with the
 COD-derived database PXRD_COD 2026.11 (COD plus a Materials Project
 supplement). Abstentions count as failures.
 
-| Level | Correct | Rate | 95% interval (Wilson) |
-|---|---|---|---|
-| Right compounds and crystal structures (strict) | 85 / 200 | 42.5% | 35.9–49.4% |
-| Right compounds, any polymorph (family) | 104 / 200 | 52.0% | 45.1–58.8% |
+| Level | Correct | Rate |
+|---|---|---|
+| Right compounds and crystal structures (strict) | 85 / 200 | 42.5% |
+| Right compounds, any polymorph (family) | 104 / 200 | 52.0% |
 
 This is the second run on these 200 scans. The first (72 and 99) used the
 COD-only database; the database supplement, restored hydrogen formulas and a
 preference for the highest-symmetry description of a material were developed
-on the 485 tuning scans only. The untuned method scored 71 and 96. Accuracy
-depends strongly on the number of phases:
-
-| Phases in the sample | Scans | Correct at family level |
-|---|---|---|
-| 1 | 9 | 4 |
-| 2 | 126 | 93 (74%) |
-| 3 or more | 65 | 7 (11%) |
-
-The protocol, the earlier held-out run (32% / 42% for the previous version),
-the failure analysis and the receipts are in [docs/validation.md](docs/validation.md).
-These numbers apply to the validated preset with POW_COD, Cu Kα and the
-sample's precursor chemistry; other settings are untested.
+on the 485 tuning scans only. The untuned method scored 71 and 96.
+These numbers apply to the validated preset with PXRD_COD 2026.11, Cu Kα and
+the sample's precursor chemistry; other settings are untested.
 
 ## Install
 
-One command installs Python 3.12, Phasentic and its reference database (an
+The install sets up Python 3.12, Phasentic and its reference database (an
 8.6 GB download from Zenodo; keep about 10 GB free). No admin rights needed.
 
-Windows (PowerShell):
+Windows: paste these four lines into PowerShell (the first one is the official
+installer of [uv](https://docs.astral.sh/uv/), which installs Python):
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+$env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
+uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
+phasentic setup
 ```
 
 macOS and Linux:
@@ -85,17 +79,19 @@ macOS and Linux:
 curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-On Windows it also adds a **Phasentic** shortcut to the Desktop and Start Menu
-and opens Phasentic in its own window. On macOS it adds
-Phasentic to Applications, on Linux to the applications menu. If the download is interrupted, run the same command
-again; it resumes.
+On Windows `phasentic setup` downloads the database, adds a **Phasentic**
+shortcut to the Desktop and Start Menu and opens Phasentic in its own window;
+close Phasentic before reinstalling. On macOS the installer adds Phasentic to
+Applications, on Linux to the applications menu. If the download is
+interrupted, run the same commands again; it resumes.
 
 ### Using POW_COD instead
 
 If you have **POW_COD 2205 (FULL)** from the
 [CNR download page](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/),
 install it with the command below; Phasentic then uses it instead of the COD
-database. The published accuracy figures were measured with POW_COD.
+database. The published accuracy figures were measured with the COD database,
+not with POW_COD.
 
 ```bash
 phasentic setup-powcod ~/Downloads/powcod-2205.zip
@@ -111,10 +107,10 @@ phasentic serve
 ```
 
 Choose a scan, type the precursor and target formulas, keep *Validated method*
-selected (the default) and press *Analyze*. *Download report* gives a printable
-two-page report (fit plot, per-phase evidence, competing hypotheses, method and
-traceability) that you can save as PDF; *JSON* gives the full machine-readable
-record.
+selected (the default) and press *Analyze*. *PDF* saves a plain report of the
+measured and calculated values; *Formal report* opens a printable report (fit
+plot, per-phase evidence, competing hypotheses, method and traceability);
+*CIF* and *JSON* give the data.
 
 From the command line, the same validated method:
 
@@ -132,16 +128,12 @@ a standard scan (NIST SRM 640g silicon by default): `phasentic calibrate standar
 
 ## When not to use it
 
-- **To prove a phase is present.** Results are ranked hypotheses for a
-  scientist to confirm, ideally by Rietveld refinement.
 - **For phase fractions.** Fit scales are screening amplitudes, not weight
   percentages.
 - **For samples with three or more phases**, where it identified all the compounds
-  only 13% of the time in testing.
+  only 11% of the time in testing.
 - **For minor or weakly scattering phases** (for example Li, B or K salts next
   to heavy-element phases), which it often misses.
-- **Without the sample chemistry or with anodes other than Cu**, which were
-  not part of the validation.
 
 ## How it works
 
@@ -155,24 +147,6 @@ a standard scan (NIST SRM 640g silicon by default): `phasentic calibrate standar
 
 Details: [docs/scientific-method.md](docs/scientific-method.md) and
 [PARAMETERS.md](PARAMETERS.md).
-
-## Reproducing the validation
-
-Clone the repository and install it:
-
-```bash
-git clone https://github.com/qaemu/phasentic && cd phasentic
-git checkout 14fc94f   # last version that includes the validation tooling
-pip install -e .
-```
-
-The validated runs use `scripts/run_wp5_parallel.py`, which refuses to run if
-the analysis code differs from the hash in the frozen configuration
-(`validation/wp5-precursor-frozen-v6.json`). The cohorts' case lists and the
-outcome receipts are in [`validation/`](validation/); the scans themselves come
-from the [Precursor Genome](https://github.com/lauren-walters/precursor-genome)
-dataset (CC BY 4.0). Step-by-step instructions are in
-[docs/validation.md](docs/validation.md).
 
 ## How this was built
 
