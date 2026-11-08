@@ -10,8 +10,8 @@ abstract: >-
   Phasentic identifies crystalline phases in powder X-ray diffraction
   patterns. It searches the CNR POW_COD reference database, fits mixtures of
   up to five phases, and reports ranked hypotheses with full provenance. Its
-  validated preset found the exact phase set in 37.0% (Wilson 95% CI
-  30.6-43.9%) and the right phase family in 49.5% (42.6-56.4%) of 200 sealed
+  validated preset found the exact phase set in 42.5% (Wilson 95% CI
+  35.9-49.4%) and the right phase family in 52.0% (45.1-58.8%) of 200 sealed
   held-out Precursor Genome scans. The code was written with Claude Code.
 keywords:
   - powder X-ray diffraction

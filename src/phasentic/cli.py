@@ -121,10 +121,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 POWCOD_ZIP_SHA256 = "75b74f9544e8677edb2c6dc46196ee4331e27f21d943a70b08c68f18c010f9df"
-# cod.xrd.sqlite as published: COD build of 2026-11-01, 526,354 phases, 8,554,987,520 bytes.
-COD_DATABASE_SHA256 = "f613eae75bbc5e3fb69a9047ee28b58416a94f18b4a253f29683be535e3d0398"
-COD_DATABASE_SIZE = 8_554_987_520
-COD_DATABASE_URL = "https://zenodo.org/records/23862393/files/cod.xrd.sqlite?download=1"
+# cod.xrd.sqlite as published: PXRD_COD 2026.11, 549,965 phases (COD plus 23,611
+# Materials Project entries, hydrogen formulas restored), 8,644,423,680 bytes.
+COD_DATABASE_SHA256 = "edd41e64441a56bf9c06c45631b4ea26f149792c762bb7a4f676c7067c159f2c"
+COD_DATABASE_SIZE = 8_644_423_680
+COD_DATABASE_URL = "https://zenodo.org/records/NEW_RECORD_ID/files/cod.xrd.sqlite?download=1"
 
 
 def _emit(payload: dict, output: Path | None) -> None:

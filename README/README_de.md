@@ -51,8 +51,8 @@ Ergebnis (Enthaltungen) zählen als Fehlschläge.
 
 | Ebene | Korrekt | Trefferquote | 95%-Intervall (Wilson) | Festgelegter Zielwert |
 |---|---|---|---|---|
-| Richtige Verbindungen und Kristallstrukturen (strict) | 74 / 200 | 37.0% | 30.6–43.9% | ≥ 35% |
-| Richtige Verbindungen, beliebiges Polymorph (family) | 99 / 200 | 49.5% | 42.6–56.4% | ≥ 45% |
+| Richtige Verbindungen und Kristallstrukturen (strict) | 85 / 200 | 42.5% | 35.9–49.4% | ≥ 35% |
+| Richtige Verbindungen, beliebiges Polymorph (family) | 104 / 200 | 52.0% | 45.1–58.8% | ≥ 45% |
 
 Beide Punktschätzungen erreichen ihren Zielwert; beide Untergrenzen liegen darunter.
 Die Genauigkeit hängt stark von der Anzahl der Phasen ab:

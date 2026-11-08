@@ -13,7 +13,7 @@ const translations = {
     instrumentPair: "Give both instrument vendor and model, or leave both blank.",
     analyze: "Analyze", running: "Analysing…", done: "Done. Read the result as a ranked hypothesis.",
     noticeTitle: "Read results as ranked hypotheses.",
-    noticeText: "On 200 sealed test scans the validated method found the exact phases in 37% and the right compounds in 49.5%, falling sharply for three or more phases. Confirm before you report.",
+    noticeText: "On 200 sealed test scans the validated method found the exact phases in 42.5% and the right compounds in 52%, falling sharply for three or more phases. Confirm before you report.",
     emptyTitle: "No analysis yet",
     emptyText: "Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.",
     decisionLabel: "Decision", selected: "Selected phases", noMixture: "No mixture selected",

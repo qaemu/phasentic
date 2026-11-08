@@ -50,8 +50,8 @@ como fallos.
 
 | Nivel | Aciertos | Tasa | Intervalo del 95% (Wilson) | Objetivo declarado |
 |---|---|---|---|---|
-| Compuestos y estructuras cristalinas correctos (strict) | 74 / 200 | 37.0% | 30.6–43.9% | ≥ 35% |
-| Compuestos correctos, cualquier polimorfo (family) | 99 / 200 | 49.5% | 42.6–56.4% | ≥ 45% |
+| Compuestos y estructuras cristalinas correctos (strict) | 85 / 200 | 42.5% | 35.9–49.4% | ≥ 35% |
+| Compuestos correctos, cualquier polimorfo (family) | 104 / 200 | 52.0% | 45.1–58.8% | ≥ 45% |
 
 Ambas estimaciones puntuales alcanzan sus objetivos; ambos límites inferiores
 quedan por debajo de ellos. La exactitud depende en gran medida del número de

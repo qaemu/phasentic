@@ -51,8 +51,8 @@ comptent comme des échecs.
 
 | Niveau | Corrects | Taux | Intervalle à 95 % (Wilson) | Objectif déclaré |
 |---|---|---|---|---|
-| Bons composés et bonnes structures cristallines (strict) | 74 / 200 | 37.0% | 30.6–43.9% | ≥ 35% |
-| Bons composés, polymorphe quelconque (family) | 99 / 200 | 49.5% | 42.6–56.4% | ≥ 45% |
+| Bons composés et bonnes structures cristallines (strict) | 85 / 200 | 42.5% | 35.9–49.4% | ≥ 35% |
+| Bons composés, polymorphe quelconque (family) | 104 / 200 | 52.0% | 45.1–58.8% | ≥ 45% |
 
 Les deux estimations ponctuelles atteignent leur objectif ; les deux bornes
 inférieures restent en dessous. Le taux de réussite dépend fortement du nombre de phases :

@@ -42,30 +42,31 @@ report. It runs locally, in the browser or from the command line.
 ## How accurate is it
 
 The settings were tuned on 485 Precursor Genome scans (human-refined labels)
-and then run once on 200 locked scans that tuning never saw, with the
-COD-derived database PXRD_COD 2026.11. Abstentions count as failures.
+and then run on 200 locked scans that tuning never saw, with the
+COD-derived database PXRD_COD 2026.11 (COD plus a Materials Project
+supplement). Abstentions count as failures.
 
 | Level | Correct | Rate | 95% interval (Wilson) |
 |---|---|---|---|
-| Right compounds and crystal structures (strict) | 72 / 200 | 36.0% | 29.7–42.9% |
-| Right compounds, any polymorph (family) | 99 / 200 | 49.5% | 42.6–56.4% |
+| Right compounds and crystal structures (strict) | 85 / 200 | 42.5% | 35.9–49.4% |
+| Right compounds, any polymorph (family) | 104 / 200 | 52.0% | 45.1–58.8% |
 
-The untuned method scored 71 and 96 on the same 200 scans, so tuning gained
-little; the remaining errors are in the fit, not the settings. Accuracy
+This is the second run on these 200 scans. The first (72 and 99) used the
+COD-only database; the database supplement, restored hydrogen formulas and a
+preference for the highest-symmetry description of a material were developed
+on the 485 tuning scans only. The untuned method scored 71 and 96. Accuracy
 depends strongly on the number of phases:
 
 | Phases in the sample | Scans | Correct at family level |
 |---|---|---|
 | 1 | 9 | 4 |
-| 2 | 126 | 85 (67%) |
-| 3 or more | 65 | 10 (15%) |
+| 2 | 126 | 93 (74%) |
+| 3 or more | 65 | 7 (11%) |
 
 The protocol, the earlier held-out run (32% / 42% for the previous version),
 the failure analysis and the receipts are in [docs/validation.md](docs/validation.md).
 These numbers apply to the validated preset with POW_COD, Cu Kα and the
-sample's precursor chemistry; other settings are untested. They were measured
-with a 0–100° matching window; the current preset uses 0–90° and has not been
-re-validated yet (see [CHANGELOG.md](CHANGELOG.md)).
+sample's precursor chemistry; other settings are untested.
 
 ## Install
 

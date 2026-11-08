@@ -6,6 +6,14 @@ All notable changes are listed here. The format follows
 
 ## [Unreleased]
 
+### Changed
+- Reference database PXRD_COD 2026.11 (new Zenodo version): 23,611 Materials
+  Project structures of experimentally known phases missing from COD, and
+  hydrogen restored in 9,437 COD formulas. Installer checksum updated.
+- Among near-equal fits of the same material, the highest-symmetry space
+  group wins (Fd-3m over F-43m for Co3O4).
+- Locked test (200 scans): 42.5% exact, 52.0% family (was 36.0% / 49.5%).
+
 ### Removed
 - Validation and testing tooling: `scripts/`, the `phasentic.validation`
   package, `benchmarks/`, the WP-5 and crosswalk schemas, and the `evaluation`

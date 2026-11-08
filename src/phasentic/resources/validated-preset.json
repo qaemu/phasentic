@@ -1,5 +1,5 @@
 {
-  "description": "Analysis settings of the validated method: tuned on 485 Precursor Genome scans (Nov 2026), checked once on 200 locked test scans (36.0 % exact phases, 49.5 % right compounds). Use with the COD-derived database, Cu Ka and the sample's precursor/target chemistry.",
+  "description": "Analysis settings of the validated method: tuned on 485 Precursor Genome scans (Nov 2026), checked on 200 locked test scans (42.5 % exact phases, 52.0 % right compounds, PXRD_COD 2026.11 with Materials Project supplement). Use with the COD-derived database, Cu Ka and the sample's precursor/target chemistry.",
   "settings": {
     "abstain_when_ambiguous": false,
     "ambiguity_margin": 0.05,
