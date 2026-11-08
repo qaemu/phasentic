@@ -30,7 +30,7 @@
             <small data-i18n="fileHint">.xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.</small>
           </label>
           <label class="field"><span data-i18n="chemistry">Precursor and target formulas</span>
-            <input id="chemistry" type="text" maxlength="400" placeholder="Ag2O BaCO3 Ba2Ag2C2O7" autocomplete="off" spellcheck="false" />
+            <input id="chemistry" type="text" maxlength="400" placeholder="e.g. Ag2O BaCO3 Ba2Ag2C2O7" autocomplete="off" spellcheck="false" />
             <small data-i18n="chemistryHint">Candidates are limited to these elements plus H, C and O.</small>
           </label>
         </section>
@@ -38,7 +38,7 @@
         <section class="block">
           <h2 data-i18n="method">Method</h2>
           <label class="choice"><input id="validated-preset" type="checkbox" checked />
-            <span><b data-i18n="validatedPreset">Validated method</b><small data-i18n="validatedHint">The settings tested on 200 sealed scans (with POW_COD). Needs Cu Kα and the formulas above.</small></span>
+            <span><b data-i18n="validatedPreset">Validated method</b><small data-i18n="validatedHint">The settings tested on 200 sealed test scans. Needs Cu Kα and the formulas above.</small></span>
           </label>
           <div class="pair source-pair">
             <label class="field"><span data-i18n="radiation">Anode</span>
@@ -59,38 +59,23 @@
           </div>
           <p id="reference-status" class="note" aria-live="polite"></p>
           <details id="custom-settings" class="fold">
-            <summary data-i18n="customSettings">Custom settings (not validated)</summary>
+            <summary data-i18n="customSettings">Search settings</summary>
             <div class="fold-body">
               <div class="pair">
                 <label class="field"><span data-i18n="tolerance">Peak tolerance (° 2θ)</span>
                   <input id="tolerance" type="number" value="0.10" min="0.01" max="2" step="0.01" />
                 </label>
                 <label class="field"><span data-i18n="maxPhases">Maximum phases</span>
-                  <input id="max-phases" type="number" value="3" min="1" max="5" step="1" />
+                  <input id="max-phases" type="number" value="5" min="1" max="5" step="1" />
                 </label>
               </div>
-              <label class="field"><span data-i18n="analysisMode">Analysis mode</span>
-                <select id="analysis-mode" name="analysis_mode">
-                  <option value="full_mixture">Mixture, with residual re-query</option>
-                  <option value="joint_no_requery">Mixture, fixed candidates</option>
-                  <option value="screening">Single phase</option>
-                </select>
-              </label>
-              <label class="field"><span data-i18n="angle">Angle coordinate</span>
-                <select id="angle-unit" name="angle_unit">
-                  <option value="two_theta">2θ</option>
-                  <option value="two_alpha" disabled>2α (needs calibration plug-in)</option>
-                  <option value="q" disabled>q (needs calibration plug-in)</option>
-                  <option value="d_spacing" disabled>d spacing (needs calibration plug-in)</option>
-                </select>
-              </label>
-              <p class="note" data-i18n="customHint">Ignored while the validated method is selected.</p>
+              <p class="note" data-i18n="customHint">Validated values: 0.10° and 5 phases. Other values are not validated.</p>
             </div>
           </details>
         </section>
 
         <details class="fold block">
-          <summary data-i18n="optional">Instrument and calibration</summary>
+          <summary data-i18n="optional">Instrument</summary>
           <div class="fold-body">
             <div class="pair">
               <label class="field"><span data-i18n="vendor">Vendor</span>
@@ -103,16 +88,6 @@
             <label class="field"><span data-i18n="radius">Goniometer radius (mm)</span>
               <input id="instrument-radius" type="number" min="0.001" max="1000" step="0.1" />
             </label>
-            <label class="field"><span data-i18n="standardFile">Standard scan</span>
-              <input id="standard-file" type="file" accept=".xy,.xrdml,.raw" />
-            </label>
-            <label class="field"><span data-i18n="standard">Calibration standard</span>
-              <select id="standard-id">
-                <option value="silicon_srm_640g">NIST SRM 640g silicon</option>
-              </select>
-            </label>
-            <button id="calibrate-button" class="secondary" type="button" data-i18n="calibrate">Calibrate</button>
-            <p id="calibration-status" class="note" aria-live="polite" data-i18n="calibrationHint">No calibration attached. A “supported” decision needs one.</p>
           </div>
         </details>
 
@@ -123,7 +98,6 @@
             <span><b data-i18n="autoPdf">Export analysis’ PDF</b><small data-i18n="autoPdfHint">Several files: one ZIP with a PDF per file.</small></span>
           </label>
           <p id="form-status" class="status" aria-live="polite"></p>
-          <p id="capability-status" class="note" aria-live="polite"></p>
         </div>
 
         <details id="reports-fold" class="fold block">
@@ -151,8 +125,6 @@
       </form>
 
       <main class="work">
-        <p class="boundary"><b data-i18n="noticeTitle">Read results as ranked hypotheses.</b> <span data-i18n="noticeText">On 200 sealed test scans the validated method found the exact phases in 37% and the right compounds in 49.5%, falling sharply for three or more phases. Confirm before you report.</span></p>
-
         <section id="empty-state" class="empty">
           <h2 data-i18n="emptyTitle">No analysis yet</h2>
           <p data-i18n="emptyText">Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.</p>
@@ -217,8 +189,7 @@
     </div>
 
     <footer class="foot">
-      <span id="footer-source" data-i18n="footer">Runs on this computer; scans are not uploaded anywhere.</span>
-      <span data-i18n="footerAi">Open source (MIT). No AI model is used to analyse scans.</span>
+      <span data-i18n="footerAi">Open source (MIT).</span>
     </footer>
     <script src="/static/report.js" defer></script>
     <script src="/static/app.js" defer></script>
