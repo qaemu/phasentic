@@ -22,8 +22,7 @@
   <a href="#install">安装</a> ·
   <a href="#quick-start">快速上手</a> ·
   <a href="#how-accurate-is-it">验证</a> ·
-  <a href="../docs/">文档</a> ·
-  <a href="#how-this-was-built">开发方式</a>
+  <a href="../docs/">文档</a>
 </p>
 
 Phasentic 读取粉末XRD扫描数据（`.xy`、`.xrdml` 或 ASCII `.raw`），检测衍射峰，检索基于 [Crystallography Open Database](https://www.crystallography.net/cod/) 构建的参考数据库（或 CNR 的 [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/)），并对最多五个物相的混合物进行拟合。它给出经排序的物相假设，并将全部设置、哈希值和警告记录在 JSON 报告中。软件在本地运行，可通过浏览器或命令行使用。
@@ -124,26 +123,6 @@ phasentic analyze scan.xrdml --preset validated --chemistry "Ag2O BaCO3 Ba2Ag2C2
 4. 对假设排序，报告歧义情况，并记录溯源信息（输入哈希值、设置、数据库标识、算法版本）。
 
 详情见 [docs/scientific-method.md](../docs/scientific-method.md) 和 [PARAMETERS.md](../PARAMETERS.md)。
-
-## 复现验证结果
-
-克隆仓库并安装：
-
-```bash
-git clone https://github.com/qaemu/phasentic && cd phasentic
-git checkout 14fc94f   # last version that includes the validation tooling
-pip install -e .
-```
-
-验证运行使用 `scripts/run_wp5_parallel.py`；若分析代码与冻结配置（`validation/wp5-precursor-frozen-v6.json`）中的哈希值不一致，该脚本将拒绝运行。各数据集（开发集与留出测试集）的样本清单和结果凭证位于 [`validation/`](../validation/)；扫描数据本身来自 [Precursor Genome](https://github.com/lauren-walters/precursor-genome) 数据集（CC BY 4.0）。分步说明见 [docs/validation.md](../docs/validation.md)。
-
-<a name="how-this-was-built"></a>
-
-## 开发方式
-
-Phasentic 几乎完全由 Anthropic 的编程智能体 **Claude Code** 在我的指导下编写。我是唯一的开发者。问题、方法和验证协议由我选定，结果由我审查，本仓库中的每一项结论均由我负责。
-
-使结论可供核查的环节均在看到结果之前确定：准确度目标在调参前声明；调参仅使用 100 条开发集扫描；留出测试集保持封存且只运行一次；设置和代码通过哈希值冻结；后续重构必须精确复现全部 300 个结果（[docs/validation.md](../docs/validation.md)）。借助 AI 完成的提交带有 `Assisted-by: Claude Code` 提交尾部信息（trailer）。参见 [AI_USE.md](../AI_USE.md)。
 
 ## 引用
 

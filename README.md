@@ -22,8 +22,7 @@
   <a href="#install">Install</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#how-accurate-is-it">Validation</a> ·
-  <a href="docs/">Docs</a> ·
-  <a href="#how-this-was-built">How this was built</a>
+  <a href="docs/">Docs</a>
 </p>
 
 Phasentic reads a powder XRD scan (`.xy`, `.xrdml` or ASCII `.raw`), detects
@@ -147,20 +146,6 @@ a standard scan (NIST SRM 640g silicon by default): `phasentic calibrate standar
 
 Details: [docs/scientific-method.md](docs/scientific-method.md) and
 [PARAMETERS.md](PARAMETERS.md).
-
-## How this was built
-
-Phasentic was written almost entirely by **Claude Code**, Anthropic's coding
-agent, working under my direction. I am a single developer. I chose the
-problem, the methods and the validation protocol, reviewed the results, and
-I am responsible for every claim in this repository.
-
-The parts that make the claims checkable were set before results were seen:
-the accuracy target was declared before tuning, tuning used only 100
-development scans, the held-out set was sealed and run once, settings and code
-were hash-frozen, and later refactors had to reproduce all 300 results exactly
-([docs/validation.md](docs/validation.md)). Commits made with AI assistance
-carry an `Assisted-by: Claude Code` trailer. See [AI_USE.md](AI_USE.md).
 
 ## Citing
 

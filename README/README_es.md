@@ -22,8 +22,7 @@
   <a href="#install">Instalación</a> ·
   <a href="#quick-start">Inicio rápido</a> ·
   <a href="#how-accurate-is-it">Validación</a> ·
-  <a href="../docs/">Documentación</a> ·
-  <a href="#how-this-was-built">Cómo se desarrolló</a>
+  <a href="../docs/">Documentación</a>
 </p>
 
 Phasentic lee un difractograma de polvo (`.xy`, `.xrdml` o `.raw` en ASCII),
@@ -171,45 +170,6 @@ líneas con un difractograma de un material de referencia (por defecto, silicio 
 
 Detalles: [docs/scientific-method.md](../docs/scientific-method.md) y
 [PARAMETERS.md](../PARAMETERS.md).
-
-## Reproducir la validación
-
-Clonar el repositorio e instalarlo:
-
-```bash
-git clone https://github.com/qaemu/phasentic && cd phasentic
-git checkout 14fc94f   # last version that includes the validation tooling
-pip install -e .
-```
-
-Las ejecuciones validadas usan `scripts/run_wp5_parallel.py`, que se niega a
-ejecutarse si el código de análisis difiere del hash registrado en la
-configuración congelada (`validation/wp5-precursor-frozen-v6.json`). Las listas
-de casos de cada cohorte y los comprobantes de resultados están en
-[`validation/`](../validation/); los difractogramas proceden del conjunto de
-datos [Precursor Genome](https://github.com/lauren-walters/precursor-genome)
-(CC BY 4.0). Las instrucciones paso a paso están en
-[docs/validation.md](../docs/validation.md).
-
-<a name="how-this-was-built"></a>
-
-## Cómo se desarrolló
-
-Phasentic fue escrito casi en su totalidad por **Claude Code**, el agente de
-programación de Anthropic, trabajando bajo mi dirección. Soy un único
-desarrollador. Elegí el problema, los métodos y el protocolo de validación,
-revisé los resultados y soy responsable de cada afirmación de este
-repositorio.
-
-Los elementos que permiten verificar las afirmaciones se fijaron antes de ver
-los resultados: el objetivo de exactitud se declaró antes del ajuste de
-parámetros, el ajuste usó solo 100 difractogramas de desarrollo, el conjunto
-de prueba reservado se selló y se ejecutó una sola vez, la configuración y el
-código se congelaron mediante hash, y las refactorizaciones posteriores
-debían reproducir exactamente los 300 resultados
-([docs/validation.md](../docs/validation.md)). Los commits realizados con
-asistencia de IA llevan la línea final `Assisted-by: Claude Code`. Véase
-[AI_USE.md](../AI_USE.md).
 
 ## Cómo citar
 
