@@ -27,7 +27,7 @@
 </p>
 
 يقرأ Phasentic مسحًا لحيود الأشعة السينية للمساحيق (XRD) بصيغة &lrm;`.xy` أو &lrm;`.xrdml` أو &lrm;`.raw` النصية (ASCII)،
-ويكشف القمم، ويبحث في قاعدة البيانات المرجعية [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) التابعة لـ CNR،
+ويكشف القمم، ويبحث في قاعدة بيانات مرجعية مبنية من [Crystallography Open Database](https://www.crystallography.net/cod/) (أو [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) التابعة لـ CNR)،
 ويطابق مخاليط تضم ما يصل إلى خمسة أطوار. ويُعيد فرضيات أطوار مرتّبة، مع تسجيل كل إعداد وكل قيمة تجزئة (hash) وكل تحذير
 في تقرير بصيغة JSON. ويعمل محليًا، في المتصفح أو من سطر الأوامر.
 
@@ -47,8 +47,8 @@
 
 | المستوى | الصحيح | النسبة | فترة ثقة 95% (Wilson) | الهدف المُعلَن |
 |---|---|---|---|---|
-| المركّبات والبُنى البلورية الصحيحة (strict) | 74 / 200 | 37.0% | 30.6–43.9% | ≥ 35% |
-| المركّبات الصحيحة، بأي شكل بلوري متعدد (family) | 99 / 200 | 49.5% | 42.6–56.4% | ≥ 45% |
+| المركّبات والبُنى البلورية الصحيحة (strict) | 85 / 200 | 42.5% | 35.9–49.4% | ≥ 35% |
+| المركّبات الصحيحة، بأي شكل بلوري متعدد (family) | 104 / 200 | 52.0% | 45.1–58.8% | ≥ 45% |
 
 يبلغ كلا التقديرين النقطيين هدفيهما؛ بينما يقع كلا الحدّين الأدنيين دونهما.
 وتعتمد الدقة اعتمادًا كبيرًا على عدد الأطوار:
@@ -69,44 +69,39 @@
 
 ## التثبيت
 
-يلزم Python 3.10–3.13. أبسط طريقة تثبّت الأمر `phasentic`
-في بيئة مستقلة خاصة به:
+يثبّت أمر واحد Python 3.12 وPhasentic وقاعدة بياناته المرجعية (تنزيل بحجم 8.6 GB من Zenodo؛
+يلزم نحو 10 GB من المساحة الحرة). ولا حاجة إلى صلاحيات المسؤول.
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
+Windows (PowerShell):
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-أو باستخدام [uv](https://docs.astral.sh/uv/): `uv tool install git+https://github.com/qaemu/phasentic`،
-أو باستخدام pip العادي: `pip install git+https://github.com/qaemu/phasentic`.
-
-للتأكد من نجاح التثبيت:
+macOS وLinux:
 
 ```bash
-phasentic --version
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-### إضافة قاعدة البيانات المرجعية POW_COD (مرة واحدة)
+وعلى Windows يضيف أيضًا اختصار **Phasentic** إلى سطح المكتب وقائمة ابدأ، ويفتح Phasentic في نافذته الخاصة.
+وعلى macOS يُضاف إلى مجلد التطبيقات، وعلى Linux إلى قائمة التطبيقات. وإذا انقطع التنزيل، شغّل الأمر نفسه مرة أخرى فيستأنف من حيث توقف.
 
-من دون POW_COD، يعمل Phasentic على مجموعة فرعية تجريبية من ثلاثة أطوار لا تصلح إلا
-لتجربة الواجهة. وللعمل الفعلي:
+### استخدام POW_COD بدلًا من ذلك
 
-1. نزّل **POW_COD 2205 (FULL)** (نحو 1.9 GB) من
-   [صفحة التنزيل لدى CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/).
-2. شغّل:
+إذا كانت لديك **POW_COD 2205 (FULL)** من
+[صفحة التنزيل لدى CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/)،
+فثبّتها بالأمر أدناه؛ وعندها يستخدمها Phasentic بدلًا من قاعدة COD. وقد قيست أرقام الدقة المنشورة باستخدام POW_COD.
 
-   ```bash
-   phasentic setup-powcod ~/Downloads/powcod-2205.zip
-   ```
-
-يتحقق هذا الأمر من الأرشيف، ويستخرجه إلى &lrm;`~/.phasentic/powcod` (نحو 6 GB)،
-ويبني ذاكرة تخزين مؤقت للاستعلامات مرة واحدة (20–60 دقيقة). وبعد ذلك يستخدم Phasentic
-قاعدة POW_COD افتراضيًا.
+```bash
+phasentic setup-powcod ~/Downloads/powcod-2205.zip
+```
 
 <a name="quick-start"></a>
 
 ## البدء السريع
 
-شغّل الواجهة المحلية وافتح <http://127.0.0.1:8000>:
+افتح Phasentic من اختصاره، أو شغّل &lrm;`phasentic-app`. ولاستخدامه في المتصفح بدلًا من ذلك، شغّل الأمر أدناه وافتح <http://127.0.0.1:8000>:
 
 ```bash
 phasentic serve

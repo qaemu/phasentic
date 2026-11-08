@@ -97,8 +97,8 @@ def build_parser() -> argparse.ArgumentParser:
     setup = subparsers.add_parser("setup-powcod", help="Install POW_COD 2205 from the downloaded zip (one step)")
     setup.add_argument("source", type=Path, help="powcod-2205.zip as downloaded from CNR, or an extracted cod2205.sq")
 
-    setup_cod = subparsers.add_parser("setup-cod", help="Install the COD reference database downloaded from Zenodo")
-    setup_cod.add_argument("database", type=Path, help="the downloaded cod.xrd.sqlite")
+    setup_cod = subparsers.add_parser("setup-cod", help="Download (8.6 GB) and install the COD reference database")
+    setup_cod.add_argument("database", type=Path, nargs="?", help="an already downloaded cod.xrd.sqlite (optional)")
 
     powcod = subparsers.add_parser("powcod", help="Prepare and verify a local CNR POW_COD release")
     powcod_subparsers = powcod.add_subparsers(dest="powcod_command", required=True)
@@ -121,8 +121,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 POWCOD_ZIP_SHA256 = "75b74f9544e8677edb2c6dc46196ee4331e27f21d943a70b08c68f18c010f9df"
-# cod.xrd.sqlite as published: COD build of 2026-11-01, 526,354 phases, 8,554,987,520 bytes.
-COD_DATABASE_SHA256 = "60b0cd334caaee23b8ba9312e673d348a2661707d46bae5faedfc4fbc0a010a0"
+# cod.xrd.sqlite as published: PXRD_COD 2026.11, 549,965 phases (COD plus 23,611
+# Materials Project entries, hydrogen formulas restored), 8,644,423,680 bytes.
+COD_DATABASE_SHA256 = "edd41e64441a56bf9c06c45631b4ea26f149792c762bb7a4f676c7067c159f2c"
+COD_DATABASE_SIZE = 8_644_423_680
+COD_DATABASE_URL = "https://zenodo.org/records/24059658/files/cod.xrd.sqlite?download=1"
 
 
 def _emit(payload: dict, output: Path | None) -> None:
@@ -184,31 +187,89 @@ def _setup_powcod(source: Path) -> int:
     return 0
 
 
-def _setup_cod(source: Path) -> int:
-    """Check a downloaded COD database against the published checksum and install it."""
+def _download(url: str, target: Path, size: int) -> None:
+    """Download ``url`` to ``target``, resuming a partial file and retrying dropped connections."""
 
+    import time
+    import urllib.error
+    import urllib.request
+    from http.client import HTTPException
+
+    attempts = 0
+    while (done := target.stat().st_size if target.exists() else 0) < size:
+        request = urllib.request.Request(url, headers={"Range": f"bytes={done}-", "User-Agent": f"phasentic/{__version__}"})
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response, target.open("ab") as out:
+                if done and response.status != 206:  # server ignored the range: start over
+                    out.truncate(0)
+                    done = 0
+                while chunk := response.read(4 * 1024 * 1024):
+                    out.write(chunk)
+                    before, done = done, done + len(chunk)
+                    if before // 500_000_000 != done // 500_000_000:
+                        print(f"  {done / 1e9:.1f} of {size / 1e9:.1f} GB", flush=True)
+            attempts = 0
+        except urllib.error.HTTPError as exc:
+            if exc.code == 416:  # range past the end: the file is already complete
+                break
+            raise SystemExit(f"Download failed: HTTP {exc.code} from {url}") from exc
+        except (OSError, HTTPException):
+            attempts += 1
+            if attempts > 10:
+                raise SystemExit("Download kept failing; run the same command again later to resume.")
+            print(f"  connection problem; resuming in {5 * attempts} s", flush=True)
+            time.sleep(5 * attempts)
+
+
+def _setup_cod(source: Path | None) -> int:
+    """Install the COD reference database: download it, or take a given file; check the checksum."""
+
+    import os
     import shutil
 
+    target = phasentic_home() / "cod" / COD_CACHE_NAME
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if source is None and target.is_file():
+        print("Checking the installed COD database (a minute or two)...", flush=True)
+        if _sha256(target) == COD_DATABASE_SHA256:
+            source = target
+        else:  # keep it until a verified download replaces it
+            print("The installed copy does not match the published database; downloading it again.", flush=True)
+    if source is None:
+        partial = target.with_name(target.name + ".part")
+        needed = COD_DATABASE_SIZE - (partial.stat().st_size if partial.exists() else 0)
+        free = shutil.disk_usage(target.parent).free
+        if free < needed + 1_000_000_000:
+            raise SystemExit(
+                f"Not enough disk space in {target.parent}: the COD database needs {needed / 1e9:.1f} GB "
+                f"more (plus 1 GB margin), {free / 1e9:.1f} GB free."
+            )
+        print(f"Downloading the COD reference database ({COD_DATABASE_SIZE / 1e9:.1f} GB) from Zenodo...", flush=True)
+        _download(COD_DATABASE_URL, partial, COD_DATABASE_SIZE)
+        source = partial
     source = source.expanduser().resolve()
     if not source.is_file():
         raise SystemExit(f"Not found: {source}")
-    print("Checking the file checksum (a minute or two for 8.6 GB)...", flush=True)
-    digest = _sha256(source)
-    if digest != COD_DATABASE_SHA256:
-        raise SystemExit(
-            "This is not the published COD database, or the download is damaged "
-            f"(sha256 {digest}, expected {COD_DATABASE_SHA256}). Download it again."
-        )
-    target = phasentic_home() / "cod" / COD_CACHE_NAME
-    target.parent.mkdir(parents=True, exist_ok=True)
     if source != target.resolve():
-        print(f"Moving it to {target}...", flush=True)
-        shutil.move(str(source), target)
+        print("Checking the file checksum (a minute or two for 8.6 GB)...", flush=True)
+        digest = _sha256(source)
+        if digest != COD_DATABASE_SHA256:
+            if source.name.endswith(".part"):
+                source.unlink()  # a corrupt download must not be resumed
+            raise SystemExit(
+                "This is not the published COD database, or the download is damaged "
+                f"(sha256 {digest}, expected {COD_DATABASE_SHA256}). Run the command again."
+            )
+        if source.name.endswith(".part"):
+            os.replace(source, target)
+        else:
+            print(f"Moving it to {target}...", flush=True)
+            shutil.move(str(source), target)
     with PowCodReferenceStore(None, cache_path=target) as store:
         metadata = store.metadata()
     print(
         f"COD database {metadata.get('release')} is ready: {metadata.get('phase_count')} phases.\n"
-        "Phasentic now uses it by default. Start the interface with: phasentic serve"
+        "Phasentic uses it by default. Open Phasentic from its shortcut, or run: phasentic-app"
     )
     return 0
 

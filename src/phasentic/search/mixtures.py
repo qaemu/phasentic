@@ -8,6 +8,7 @@ and must never be presented as composition percentages.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from functools import lru_cache
 import math
 from typing import Callable, Iterable
 
@@ -15,6 +16,7 @@ import numpy as np
 
 from phasentic.domain.formula import charge_balanced, compositions_compatible, normalize_space_group_symbol
 from phasentic.domain.models import Peak, ReferenceLine, ReferencePhase
+from phasentic.references.equivalence import space_group_number
 from phasentic.domain.radiation import (
     Radiation,
     radiation_spectral_components,
@@ -25,7 +27,6 @@ from phasentic.domain.radiation import (
 MIXTURE_ALGORITHM_VERSION = "mixture-screening-0.17-balanced-entry-preference"
 SHARED_PEAK_CONTRIBUTION_RATIO = 0.5
 SAME_MATERIAL_PREFERENCE_MARGIN = 0.15
-SYMMETRY_PREFERENCE_REFLECTION_RATIO = 0.8
 SUPPORT_OBJECTIVE_THRESHOLD = 0.10
 RESIDUAL_CANDIDATE_PEAK_SOURCE = "unassigned_detected_peaks_from_active_branch_components"
 PROFILE_D_SPACING_SCALE_GRID_POINTS = 31
@@ -59,6 +60,11 @@ class MixtureSettings:
     # (1.0 disables). ``noise_sigma`` is the scan's measured noise level.
     missing_intensity_max: float = 1.0
     noise_sigma: float | None = None
+    # Order each branch's candidates by a Dara-style score on the peaks the
+    # branch leaves unexplained, instead of their global screening rank.
+    residual_rerank: bool = False
+    # Skip candidates with the same composition as a phase already in the branch.
+    polymorph_guard: bool = False
 
     def validate(self) -> "MixtureSettings":
         if isinstance(self.missing_intensity_max, bool) or not isinstance(self.missing_intensity_max, (int, float)) or not 0.0 <= float(self.missing_intensity_max) <= 1.0:
@@ -128,6 +134,8 @@ class MixtureSettings:
             "ambiguity_margin": self.ambiguity_margin,
             "abstain_when_ambiguous": self.abstain_when_ambiguous,
             "missing_intensity_max": self.missing_intensity_max,
+            "residual_rerank": self.residual_rerank,
+            "polymorph_guard": self.polymorph_guard,
             "inactive_scale_relative_tolerance": self.inactive_scale_relative_tolerance,
             "profile_width_deg": self.profile_width_deg,
             "d_spacing_scale_tolerance": self.d_spacing_scale_tolerance,
@@ -251,12 +259,35 @@ class MixtureHypothesis:
 
 
 @dataclass(frozen=True)
+class PhaseAlternative:
+    """Another database entry that could take one selected phase's place."""
+
+    reference_id: str
+    name: str
+    formula: str
+    space_group: str | None
+    fit_percent: float
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "reference_id": self.reference_id,
+            "name": self.name,
+            "formula": self.formula,
+            "space_group": self.space_group,
+            "fit_percent": self.fit_percent,
+            "fit_semantics": "share of the signal left by the other phases that this entry explains; 100 = perfect",
+        }
+
+
+@dataclass(frozen=True)
 class MixtureResult:
     algorithm_version: str
     hypotheses: tuple[MixtureHypothesis, ...]
     selected_hypothesis_id: str | None
     residual_trace: MixtureResidualTrace
     query: dict[str, object]
+    # Per active phase of the best hypothesis: (reference_id, alternatives best first).
+    phase_alternatives: tuple[tuple[str, float, tuple[PhaseAlternative, ...]], ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -265,6 +296,10 @@ class MixtureResult:
             "hypotheses": [hypothesis.to_dict() for hypothesis in self.hypotheses],
             "residual_trace": self.residual_trace.to_dict(),
             "query": dict(self.query),
+            "phase_alternatives": {
+                reference_id: {"fit_percent": fit, "alternatives": [item.to_dict() for item in items]}
+                for reference_id, fit, items in self.phase_alternatives
+            },
         }
 
 
@@ -417,6 +452,7 @@ def select_mixture_hypotheses(
     weights: np.ndarray | None = None,
     weight_provenance: str | None = None,
     residual_candidate_provider: Callable[[tuple[Peak, ...]], Iterable[ReferencePhase]] | None = None,
+    pinned_references: Iterable[ReferencePhase] = (),
 ) -> MixtureResult:
     """Select bounded nonnegative phase-set hypotheses by residual improvement.
 
@@ -482,7 +518,12 @@ def select_mixture_hypotheses(
     if weight_provenance is not None and (not isinstance(weight_provenance, str) or not weight_provenance.strip()):
         raise ValueError("weight_provenance must be a non-empty string when supplied")
     resolved_weight_provenance = weight_provenance or weighting
-    source_pool = _unique_references(references, limit=config.candidate_pool)
+    pinned = _unique_references(pinned_references, limit=config.max_phases)
+    pinned_ids = {reference.reference_id for reference in pinned}
+    source_pool = _unique_references(
+        (*pinned, *(item for item in references if item.reference_id not in pinned_ids)),
+        limit=config.candidate_pool + len(pinned),
+    )
     empty_trace = _trace(
         angles,
         observed,
@@ -552,11 +593,20 @@ def select_mixture_hypotheses(
         objective=_objective(target, np.zeros_like(target), grid_weights),
         stopping_reason="no_seed_passed_evidence",
     )
-    branches: list[_MixtureBranch] = [root]
     terminal: list[_MixtureBranch] = []
     all_branches: list[_MixtureBranch] = []
+    if pinned:
+        # The operator fixed these phases: every hypothesis starts from them
+        # and the search only adds the remaining (smaller) phases.
+        root = _pinned_branch(
+            tuple(profile_references[item.reference_id] for item in pinned),
+            profiles, profile_scales, evidence, shift_targets, grid_weights, config,
+        )
+        all_branches.append(root)
+    branches: list[_MixtureBranch] = [root] if len(root.references) < config.max_phases else []
 
     fitted_branch_ids: set[str] = set()
+    line_angle_cache: dict[str, tuple[np.ndarray, np.ndarray]] = {}
     while branches and attempts < addition_attempt_limit:
         expanded: list[_MixtureBranch] = []
         branch_queues: list[tuple[_MixtureBranch, list[ReferencePhase], frozenset[int]]] = []
@@ -617,7 +667,13 @@ def select_mixture_hypotheses(
                 tolerance_deg,
                 config,
             )
-            branch_queues.append((branch, list(branch_candidates.values()), explained_peak_indices))
+            queue = list(branch_candidates.values())
+            if config.residual_rerank and branch.references:
+                queue = _rerank_by_residual_explanation(
+                    queue, _unassigned_detected_peaks(peak_values, branch, config), peak_values,
+                    radiation, tolerance_deg, (float(angles[0]), float(angles[-1])), line_angle_cache,
+                )
+            branch_queues.append((branch, queue, explained_peak_indices))
         # Share the level's attempt budget fairly: every retained branch gets
         # one fit attempt per round (round-robin) instead of the first branch
         # consuming the whole budget. A reference set already fitted from
@@ -694,6 +750,7 @@ def select_mixture_hypotheses(
         attempts=attempts,
         swap_budget=effective_swap_budget,
         shift_targets=shift_targets,
+        pinned_ids=pinned_ids,
     )
     all_branches.extend(swap_branches)
     terminal.extend(swap_branches)
@@ -782,6 +839,11 @@ def select_mixture_hypotheses(
             key=lambda item: (item[0].selection_score, item[0].hypothesis_id),
         )
     )
+    if HYPOTHESIS_LOG is not None:
+        HYPOTHESIS_LOG.extend(
+            (h.objective, h.selection_score, tuple((c.formula, c.space_group, c.reference_id) for c in h.components))
+            for h, _branch in ranked
+        )
     if not ranked:
         return MixtureResult(
             MIXTURE_ALGORITHM_VERSION,
@@ -829,24 +891,12 @@ def select_mixture_hypotheses(
             )
         ]
         if len(peers) > 1:
-            def reflection_count(item: MixtureHypothesis) -> int:
-                total = 0
-                for component in item.components:
-                    reference = profile_references.get(component.reference_id)
-                    if reference is not None:
-                        total += sum(
-                            1
-                            for angle, _intensity in _merged_reflections(reference, radiation)
-                            if float(angles[0]) <= angle <= float(angles[-1])
-                        )
-                return total
-
-            leader_count = reflection_count(leader)
-            preferred = min(peers, key=lambda index: (reflection_count(ranked_hypotheses[index]), index))
-            # Only a clearly more symmetric description (at least 20% fewer
-            # distinct reflections) displaces the best fit; small differences
-            # come from database intensity cut-offs, not symmetry.
-            if reflection_count(ranked_hypotheses[preferred]) > SYMMETRY_PREFERENCE_REFLECTION_RATIO * leader_count:
+            # The same material described in a lower-symmetry subgroup (F-43m
+            # for Fd-3m, I2_13 for Ia-3) fits marginally better only through
+            # extra free lines; prefer the highest-symmetry description.
+            leader_order = _symmetry_order(leader)
+            preferred = max(peers, key=lambda index: (_symmetry_order(ranked_hypotheses[index]), -index))
+            if _symmetry_order(ranked_hypotheses[preferred]) <= leader_order:
                 preferred = 0
             if preferred == 0 and not _formulas_balanced(leader):
                 # An entry stored under a formula that cannot be charge
@@ -891,6 +941,18 @@ def select_mixture_hypotheses(
     ordered_terminal = ranked_branches
     hypotheses = tuple(ranked_hypotheses)
     selected = ordered_terminal[0]
+    alternatives = _phase_alternatives(
+        selected,
+        tuple(dynamic_pool.values()),
+        profiles,
+        evidence,
+        shift_targets.get(selected.zero_shift_deg, target),
+        grid_weights,
+        radiation,
+        tolerance_deg,
+        config,
+        angles,
+    )
     selected_active_indices = _active_component_indices(selected, config)
     trace = _trace(
         angles,
@@ -932,12 +994,153 @@ def select_mixture_hypotheses(
             ),
             swap_fit_attempts=swap_fit_attempts,
             swap_diagnostics=swap_diagnostics,
+            pinned_reference_ids=tuple(item.reference_id for item in pinned),
         ),
+        alternatives,
     )
 
 
+ALTERNATIVE_MIN_FIT = 0.8  # show entries reaching at least 80% of the best fit for that phase
+ALTERNATIVE_LIMIT = 50  # ponytail: payload bound only; raise if a scan ever has more near-equal materials
+
+
+def _phase_alternatives(
+    branch: "_MixtureBranch",
+    candidates: tuple[ReferencePhase, ...],
+    profiles: dict[str, np.ndarray],
+    evidence: dict[str, tuple["_ReflectionEvidence", ...]],
+    target: np.ndarray,
+    weights: np.ndarray,
+    radiation: Radiation,
+    tolerance_deg: float,
+    config: MixtureSettings,
+    angles: np.ndarray,
+) -> tuple[tuple[str, float, tuple[PhaseAlternative, ...]], ...]:
+    """For each active phase, its fit and the other materials that fit nearly as well in its place.
+
+    fit = 1 - misfit with the entry / misfit without it (the other phases are
+    refitted each time): the share of the signal left by the other phases that
+    the entry explains, 1.0 for a perfect fit. Alternatives within
+    ALTERNATIVE_MIN_FIT of the best entry (selected or not) are listed, one per
+    material; other entries of a selected material (same composition and space
+    group) are left out.
+    """
+
+    from phasentic.search.matcher import material_key
+
+    result = []
+    for index in _active_component_indices(branch, config):
+        chosen = branch.references[index]
+        others = tuple(item for position, item in enumerate(branch.references) if position != index)
+        columns = [profiles[item.reference_id] for item in others]
+        if columns:
+            _scales, _calculated, without = _fit(np.column_stack(columns), target, weights)
+        else:
+            without = _objective(target, np.zeros_like(target), weights)
+        selected_fit = 1.0 - branch.objective / without if without > 1e-12 else 0.0
+        selected_keys = {material_key(item.formula, item.space_group) or item.reference_id for item in branch.references}
+        best: dict[object, tuple[float, ReferencePhase]] = {}
+        if selected_fit > 0.0:
+            excluded = {item.reference_id for item in branch.references}
+            for candidate in candidates:
+                if candidate.reference_id in excluded or candidate.reference_id not in profiles:
+                    continue
+                if len(evidence.get(candidate.reference_id, ())) < config.min_independent_evidence:
+                    continue
+                matrix = np.column_stack([*columns, profiles[candidate.reference_id]])
+                scales, _calculated, objective = _fit(matrix, target, weights)
+                fit = 1.0 - objective / without
+                if fit < ALTERNATIVE_MIN_FIT * selected_fit:
+                    continue
+                # Same gate as the search: strong predicted lines must not be absent.
+                if config.missing_intensity_max < 1.0 and config.noise_sigma and _missing_visible_fraction(
+                    candidate, matrix[:, -1] * float(scales[-1]), target, angles, radiation, tolerance_deg, float(config.noise_sigma)
+                ) > config.missing_intensity_max:
+                    continue
+                key = material_key(candidate.formula, candidate.space_group) or candidate.reference_id
+                if key in best and best[key][0] >= fit:
+                    continue
+                # Duplicates are other entries of a selected material (same composition and
+                # space group). A different compound with a near-identical pattern stays:
+                # that is exactly the choice the operator has to make.
+                if key in selected_keys:
+                    continue
+                best[key] = (fit, candidate)
+        top = max([selected_fit, *(fit for fit, _candidate in best.values())])
+        ranked = sorted(
+            (item for item in best.values() if item[0] >= ALTERNATIVE_MIN_FIT * top),
+            key=lambda item: (-item[0], item[1].reference_id),
+        )[:ALTERNATIVE_LIMIT]
+        result.append(
+            (
+                chosen.reference_id,
+                round(100.0 * selected_fit, 1),
+                tuple(
+                    PhaseAlternative(
+                        candidate.reference_id,
+                        candidate.name,
+                        candidate.formula,
+                        candidate.space_group,
+                        round(100.0 * fit, 1),
+                    )
+                    for fit, candidate in ranked
+                ),
+            )
+        )
+    return tuple(result)
+
+
+def _pinned_branch(
+    references: tuple[ReferencePhase, ...],
+    profiles: dict[str, np.ndarray],
+    profile_scales: dict[str, float],
+    evidence: dict[str, tuple["_ReflectionEvidence", ...]],
+    shift_targets: dict[float, np.ndarray],
+    weights: np.ndarray,
+    config: MixtureSettings,
+) -> "_MixtureBranch":
+    """Fit the operator-fixed phases together (best zero shift), with no evidence gate."""
+
+    matrix = np.column_stack([profiles[item.reference_id] for item in references])
+    best = None
+    for shift in sorted(shift_targets, key=lambda value: (abs(value), value)):
+        scales, calculated, objective = _fit(matrix, shift_targets[shift], weights)
+        if best is None or objective < best[0] - 1e-12:
+            best = (objective, shift, scales, calculated)
+    objective, shift, scales, calculated = best
+    return _MixtureBranch(
+        references=references,
+        matched_peak_indices=frozenset(
+            index for item in references for reflection in evidence[item.reference_id] for index in reflection.peak_indices
+        ),
+        evidence=tuple((item.reference_id, evidence[item.reference_id]) for item in references),
+        scales=scales,
+        profile_d_spacing_scales=tuple(profile_scales[item.reference_id] for item in references),
+        calculated=calculated,
+        objective=objective,
+        stopping_reason="phase_limit_reached" if len(references) >= config.max_phases else "residual_search_pending",
+        zero_shift_deg=shift,
+    )
+
 
 _REJECTED = object()
+
+# Diagnostics only: when a list, every candidate addition the search considers
+# appends (reference_id, formula, space_group, parent, outcome, value), parent
+# being the branch's ((formula, space_group), ...).
+# Outcomes: same_group, same_material, polymorph_guard, evidence (value =
+# unexplained reflections), already_fitted, improvement (value = relative
+# objective gain), missing_lines (value = missing visible fraction), accepted.
+REJECTION_LOG: list | None = None
+# Diagnostics only: when a list, every ranked hypothesis of a scan is appended
+# as (objective, selection_score, ((formula, space_group, reference_id), ...)).
+HYPOTHESIS_LOG: list | None = None
+
+
+def _log_addition(reference: ReferencePhase, branch: "_MixtureBranch", outcome: str, value: float | None = None) -> None:
+    if REJECTION_LOG is not None:
+        parent = tuple((item.formula, item.space_group) for item in branch.references)
+        REJECTION_LOG.append((reference.reference_id, reference.formula, reference.space_group, parent, outcome, value))
 
 
 def _try_branch_addition(
@@ -966,13 +1169,21 @@ def _try_branch_addition(
     """
 
     reference = profile_references.get(candidate_reference.reference_id, candidate_reference)
+    depth = len(branch.references)
     group = _reference_group(reference)
     if group in {_reference_group(item) for item in branch.references}:
+        _log_addition(reference, branch, "same_group")
         return None
     # Another database entry of a material already in the branch is not a
     # second phase (same composition and space group, or the same strong
     # reflections).
     if any(_same_material(reference, item, radiation, tolerance_deg) for item in branch.references):
+        _log_addition(reference, branch, "same_material")
+        return None
+    if config.polymorph_guard and any(
+        compositions_compatible(reference.formula, item.formula, ignore_hydrogen=True) for item in branch.references
+    ):
+        _log_addition(reference, branch, "polymorph_guard")
         return None
     if reference.reference_id not in profiles:
         profile_d_scale, profile = _fit_reference_profile_scale(
@@ -1001,10 +1212,12 @@ def _try_branch_addition(
         if any(index not in explained_peak_indices for index in reflection.peak_indices)
     )
     if len(available_reflections) < config.min_independent_evidence:
+        _log_addition(reference, branch, "evidence", float(len(available_reflections)))
         return None
     proposed = branch.references + (reference,)
     proposed_id = _branch_id_from_references(proposed)
     if proposed_id in fitted_branch_ids:
+        _log_addition(reference, branch, "already_fitted")
         return None
     fitted_branch_ids.add(proposed_id)
     matched = tuple(
@@ -1029,13 +1242,17 @@ def _try_branch_addition(
         objective, zero_shift, scales, calculated = best
     improvement = (branch.objective - objective) / max(branch.objective, 1e-12)
     if branch.references and improvement < config.min_objective_improvement:
+        _log_addition(reference, branch, "improvement", float(improvement))
         return _REJECTED
     if config.missing_intensity_max < 1.0 and config.noise_sigma:
         contribution = matrix[:, -1] * float(scales[-1])
-        if _missing_visible_fraction(
+        missing = _missing_visible_fraction(
             reference, contribution, targets[zero_shift], angles, radiation, tolerance_deg, float(config.noise_sigma)
-        ) > config.missing_intensity_max:
+        )
+        if missing > config.missing_intensity_max:
+            _log_addition(reference, branch, "missing_lines", float(missing))
             return _REJECTED
+    _log_addition(reference, branch, "accepted", float(improvement))
     return _MixtureBranch(
         references=proposed,
         matched_peak_indices=frozenset(branch.matched_peak_indices | set(matched)),
@@ -1240,6 +1457,23 @@ def _relative_margin(best: float, other: float) -> float:
     return (other - best) / max(abs(best), 1e-9)
 
 
+@lru_cache(maxsize=None)
+def _space_group_order(symbol: str | None) -> int:
+    """Symmetry operations in the conventional cell (0 when the symbol is unknown)."""
+
+    number = space_group_number(symbol)
+    if number is None:
+        return 0
+    import gemmi
+
+    operations = gemmi.find_spacegroup_by_number(number).operations()
+    return len(operations.sym_ops) * len(operations.cen_ops)
+
+
+def _symmetry_order(hypothesis: MixtureHypothesis) -> int:
+    return sum(_space_group_order(component.space_group) for component in hypothesis.components)
+
+
 def _formulas_balanced(hypothesis: MixtureHypothesis) -> bool:
     return all(charge_balanced(component.formula) for component in hypothesis.components)
 
@@ -1428,8 +1662,10 @@ def _query_metadata(
     selection_margin: float | None = None,
     swap_fit_attempts: int = 0,
     swap_diagnostics: Iterable[dict[str, object]] = (),
+    pinned_reference_ids: tuple[str, ...] = (),
 ) -> dict[str, object]:
     return {
+        "pinned_reference_ids": list(pinned_reference_ids),
         "candidate_pool_size": candidate_pool_size,
         "retained_branches": retained_branches,
         "fit_attempts": fit_attempts,
@@ -1647,6 +1883,7 @@ def _swap_phase_branches(
     attempts: int,
     swap_budget: int,
     shift_targets: dict[float, np.ndarray] | None = None,
+    pinned_ids: set[str] = frozenset(),
 ) -> tuple[list[_MixtureBranch], int, int, list[dict[str, object]]]:
     """Try a bounded one-for-one replacement around the best retained sets."""
 
@@ -1677,6 +1914,8 @@ def _swap_phase_branches(
         )
         for drop_index in drop_order:
             dropped = branch.references[drop_index]
+            if dropped.reference_id in pinned_ids:
+                continue
             remaining = tuple(item for index, item in enumerate(branch.references) if index != drop_index)
             remaining_evidence = tuple(
                 pair for pair in branch.evidence if pair[0] != dropped.reference_id
@@ -1808,6 +2047,75 @@ def _swap_phase_branches(
 
 def _branch_id_from_references(references: Iterable[ReferencePhase]) -> str:
     return "+".join(sorted(reference.reference_id for reference in references))
+
+
+RESIDUAL_UNEXPLAINED_PENALTY = 0.1
+RESIDUAL_EXTRA_LINE_PENALTY = 0.5
+
+
+def _rerank_by_residual_explanation(
+    candidates: list[ReferencePhase],
+    residual_peaks: tuple[Peak, ...],
+    all_peaks: tuple[Peak, ...],
+    radiation: Radiation,
+    tolerance_deg: float,
+    scan_range: tuple[float, float],
+    cache: dict[str, tuple[np.ndarray, np.ndarray]],
+) -> list[ReferencePhase]:
+    """Order candidates by how well they explain the still-unexplained peaks.
+
+    Dara-style score: (I_matched - 0.1 * I_unexplained - 0.5 * I_extra) / I_residual,
+    where I_matched / I_unexplained are residual peak intensities a candidate
+    does / does not reach, and I_extra is the candidate's predicted intensity
+    (scaled to the matched peaks) at angles with no detected peak at all.
+    The sort is stable, so ties keep the evidence-rank order.
+    """
+
+    if not residual_peaks or not candidates:
+        return candidates
+    residual_positions = np.array([peak.position_deg for peak in residual_peaks], dtype=float)
+    residual_intensities = np.array([max(peak.intensity, 0.0) for peak in residual_peaks], dtype=float)
+    total = float(residual_intensities.sum())
+    if total <= 0:
+        return candidates
+    all_positions = np.array([peak.position_deg for peak in all_peaks], dtype=float)
+    detection_floor = float(min(max(peak.intensity, 0.0) for peak in all_peaks))
+    wavelength = radiation.wavelength_angstrom
+    lower, upper = scan_range
+
+    def score(reference: ReferencePhase) -> float:
+        cached = cache.get(reference.reference_id)
+        if cached is None:
+            d = np.array([line.d_spacing_angstrom for line in reference.lines], dtype=float)
+            intensity = np.array([max(line.relative_intensity, 0.0) for line in reference.lines], dtype=float)
+            argument = wavelength / (2.0 * np.maximum(d, 1e-12))
+            valid = argument < 1.0
+            angle = np.degrees(2.0 * np.arcsin(np.clip(argument, 0.0, 1.0)))
+            keep = valid & (angle >= lower) & (angle <= upper)
+            cached = (angle[keep], intensity[keep])
+            cache[reference.reference_id] = cached
+        line_angles, line_intensities = cached
+        if line_angles.size == 0:
+            return -1.0
+        reach = np.abs(residual_positions[:, None] - line_angles[None, :]) <= tolerance_deg
+        peak_matched = reach.any(axis=1)
+        matched = float(residual_intensities[peak_matched].sum())
+        unexplained = total - matched
+        if matched <= 0:
+            return -RESIDUAL_UNEXPLAINED_PENALTY
+        matched_lines = reach.any(axis=0)
+        scale = matched / max(float(line_intensities[matched_lines].sum()), 1e-12)
+        observed_anywhere = (
+            (np.abs(all_positions[:, None] - line_angles[None, :]) <= tolerance_deg).any(axis=0)
+            if all_positions.size
+            else np.zeros(line_angles.size, dtype=bool)
+        )
+        predicted = scale * line_intensities
+        extra = float(predicted[(~observed_anywhere) & (predicted > detection_floor)].sum())
+        return (matched - RESIDUAL_UNEXPLAINED_PENALTY * unexplained - RESIDUAL_EXTRA_LINE_PENALTY * extra) / total
+
+    scores = {reference.reference_id: score(reference) for reference in candidates}
+    return sorted(candidates, key=lambda reference: -scores[reference.reference_id])
 
 
 def _unassigned_detected_peaks(

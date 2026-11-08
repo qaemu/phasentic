@@ -362,6 +362,14 @@ def _decode_reflections(blob: bytes) -> tuple[tuple[float, float, str | None], .
     return tuple((value / 1_000_000.0, float(intensity), hkl) for value, intensity, hkl in zip(d_values, intensities, hkl_values))
 
 
+def _row_cell(row: sqlite3.Row) -> tuple[float, float, float, float, float, float] | None:
+    try:
+        cell = tuple(float(row[key]) for key in ("a", "b", "c", "alpha", "beta", "gamma"))
+    except (IndexError, KeyError, TypeError, ValueError):
+        return None
+    return cell if all(math.isfinite(value) and value > 0 for value in cell) else None  # type: ignore[return-value]
+
+
 def _decode_reflection_arrays(blob: bytes) -> tuple[np.ndarray, np.ndarray, list[str | None] | None]:
     """Decode d-spacings and intensities as arrays; hkl text only for small blobs."""
 
@@ -427,7 +435,11 @@ def _cache_hash(connection: sqlite3.Connection) -> str:
 
 
 def _canonical_source_url(cod_id: str, supplied: str | None) -> str:
-    return supplied or f"https://www.crystallography.net/cod/{cod_id}.html"
+    if supplied:
+        return supplied
+    if cod_id.startswith("mp-"):  # Materials Project supplement
+        return f"https://next-gen.materialsproject.org/materials/{cod_id}"
+    return f"https://www.crystallography.net/cod/{cod_id}.html"
 
 
 def build_powcod_cache(
@@ -1090,6 +1102,7 @@ class PowCodReferenceStore:
             parent_family_group_id=equivalence.parent_family_group_id if equivalence else None,
             equivalence_kind=equivalence.equivalence_kind if equivalence else None,
             equivalence_confidence=equivalence.confidence if equivalence else None,
+            cell=_row_cell(row),
         )
 
     def _rows_by_reference_ids(self, reference_ids: Iterable[str]) -> tuple[sqlite3.Row, ...]:

@@ -27,8 +27,8 @@
 </p>
 
 Phasentic lit un diffractogramme de poudre (`.xy`, `.xrdml` ou `.raw` ASCII),
-détecte les pics, interroge la base de données de référence
-[POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) du CNR et ajuste des
+détecte les pics, interroge une base de référence construite à partir de la
+[Crystallography Open Database](https://www.crystallography.net/cod/) (ou [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) du CNR) et ajuste des
 mélanges d’au plus cinq phases. Il renvoie des hypothèses de phases
 classées, et consigne dans un rapport JSON chaque paramètre, chaque empreinte
 (hash) et chaque avertissement. Il s’exécute en local, dans le navigateur ou en
@@ -51,8 +51,8 @@ comptent comme des échecs.
 
 | Niveau | Corrects | Taux | Intervalle à 95 % (Wilson) | Objectif déclaré |
 |---|---|---|---|---|
-| Bons composés et bonnes structures cristallines (strict) | 74 / 200 | 37.0% | 30.6–43.9% | ≥ 35% |
-| Bons composés, polymorphe quelconque (family) | 99 / 200 | 49.5% | 42.6–56.4% | ≥ 45% |
+| Bons composés et bonnes structures cristallines (strict) | 85 / 200 | 42.5% | 35.9–49.4% | ≥ 35% |
+| Bons composés, polymorphe quelconque (family) | 104 / 200 | 52.0% | 45.1–58.8% | ≥ 45% |
 
 Les deux estimations ponctuelles atteignent leur objectif ; les deux bornes
 inférieures restent en dessous. Le taux de réussite dépend fortement du nombre de phases :
@@ -74,44 +74,44 @@ Ils ont été mesurés avec une fenêtre de 0–100° ; la configuration actuell
 
 ## Installation
 
-Python 3.10–3.13 est requis. La méthode la plus simple installe la commande
-`phasentic` dans son propre environnement :
+Une seule commande installe Python 3.12, Phasentic et sa base de référence
+(un téléchargement de 8.6 GB depuis Zenodo ; prévoir environ 10 GB libres).
+Aucun droit d’administrateur n’est nécessaire.
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
+Windows (PowerShell) :
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-ou, avec [uv](https://docs.astral.sh/uv/) : `uv tool install git+https://github.com/qaemu/phasentic`,
-ou avec pip seul : `pip install git+https://github.com/qaemu/phasentic`.
-
-Vérifier que l’installation a fonctionné :
+macOS et Linux :
 
 ```bash
-phasentic --version
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-### Ajouter la base de référence POW_COD (une seule fois)
+Sous Windows, il ajoute aussi un raccourci **Phasentic** sur le Bureau et dans
+le menu Démarrer, puis ouvre Phasentic dans sa propre fenêtre. Sous macOS, il l’ajoute
+aux Applications, sous Linux au menu des applications. Si le téléchargement est interrompu,
+il suffit de relancer la même commande : il reprend là où il s’était arrêté.
 
-Sans POW_COD, Phasentic fonctionne sur un sous-ensemble de démonstration de
-trois phases, qui ne sert qu’à essayer l’interface. Pour un usage réel :
+### Utiliser POW_COD à la place
 
-1. Télécharger **POW_COD 2205 (FULL)** (environ 1.9 GB) depuis la
-   [page de téléchargement du CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/).
-2. Exécuter :
+Si vous disposez de **POW_COD 2205 (FULL)** depuis la
+[page de téléchargement du CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/),
+installez-la avec la commande ci-dessous ; Phasentic l’utilise alors à la place
+de la base COD. Les chiffres d’exactitude publiés ont été mesurés avec POW_COD.
 
-   ```bash
-   phasentic setup-powcod ~/Downloads/powcod-2205.zip
-   ```
-
-Cette commande vérifie l’archive, l’extrait dans `~/.phasentic/powcod` (environ
-6 GB) et construit une seule fois un cache de requêtes (20–60 minutes). Ensuite,
-Phasentic utilise POW_COD par défaut.
+```bash
+phasentic setup-powcod ~/Downloads/powcod-2205.zip
+```
 
 <a name="quick-start"></a>
 
 ## Démarrage rapide
 
-Lancer l’interface locale et ouvrir <http://127.0.0.1:8000> :
+Ouvrir Phasentic depuis son raccourci, ou lancer `phasentic-app`. Pour l’utiliser
+dans le navigateur, lancer la commande ci-dessous et ouvrir <http://127.0.0.1:8000> :
 
 ```bash
 phasentic serve

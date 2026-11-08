@@ -27,8 +27,8 @@
 </p>
 
 Phasentic liest einen Pulver-XRD-Scan (`.xy`, `.xrdml` oder ASCII-`.raw`) ein,
-detektiert die Reflexe, durchsucht die Referenzdatenbank
-[POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) des CNR und passt Gemische
+detektiert die Reflexe, durchsucht eine aus der
+[Crystallography Open Database](https://www.crystallography.net/cod/) erstellte Referenzdatenbank (oder [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) des CNR) und passt Gemische
 aus bis zu fünf Phasen an. Als Ergebnis liefert es eine Rangliste von
 Phasenhypothesen; jede Einstellung, jeder Hash und jede Warnung wird in einem
 JSON-Bericht festgehalten. Phasentic läuft lokal, im Browser oder auf der
@@ -51,8 +51,8 @@ Ergebnis (Enthaltungen) zählen als Fehlschläge.
 
 | Ebene | Korrekt | Trefferquote | 95%-Intervall (Wilson) | Festgelegter Zielwert |
 |---|---|---|---|---|
-| Richtige Verbindungen und Kristallstrukturen (strict) | 74 / 200 | 37.0% | 30.6–43.9% | ≥ 35% |
-| Richtige Verbindungen, beliebiges Polymorph (family) | 99 / 200 | 49.5% | 42.6–56.4% | ≥ 45% |
+| Richtige Verbindungen und Kristallstrukturen (strict) | 85 / 200 | 42.5% | 35.9–49.4% | ≥ 35% |
+| Richtige Verbindungen, beliebiges Polymorph (family) | 104 / 200 | 52.0% | 45.1–58.8% | ≥ 45% |
 
 Beide Punktschätzungen erreichen ihren Zielwert; beide Untergrenzen liegen darunter.
 Die Genauigkeit hängt stark von der Anzahl der Phasen ab:
@@ -74,44 +74,45 @@ Sie wurden mit einem Fenster von 0–100° gemessen; das aktuelle Preset nutzt 0
 
 ## Installation
 
-Benötigt wird Python 3.10–3.13. Am einfachsten wird der Befehl `phasentic` in
-einer eigenen Umgebung installiert:
+Ein einziger Befehl installiert Python 3.12, Phasentic und die
+Referenzdatenbank (ein Download von 8.6 GB von Zenodo; etwa 10 GB freier
+Speicher nötig). Administratorrechte sind nicht erforderlich.
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
+Windows (PowerShell):
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-oder mit [uv](https://docs.astral.sh/uv/): `uv tool install git+https://github.com/qaemu/phasentic`,
-oder mit einfachem pip: `pip install git+https://github.com/qaemu/phasentic`.
-
-Installation prüfen:
+macOS und Linux:
 
 ```bash
-phasentic --version
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-### Referenzdatenbank POW_COD hinzufügen (einmalig)
+Unter Windows legt er außerdem eine **Phasentic**-Verknüpfung auf dem Desktop
+und im Startmenü an und öffnet Phasentic in einem eigenen Fenster. Unter macOS trägt er es
+unter Programme ein, unter Linux ins Anwendungsmenü. Bricht der Download ab, einfach
+denselben Befehl erneut ausführen; er setzt dort fort.
 
-Ohne POW_COD arbeitet Phasentic mit einer Demo-Teilmenge aus drei Phasen, die sich
-nur zum Ausprobieren der Oberfläche eignet. Für die eigentliche Arbeit:
+### Stattdessen POW_COD verwenden
 
-1. **POW_COD 2205 (FULL)** (etwa 1.9 GB) von der
-   [Download-Seite des CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/) herunterladen.
-2. Ausführen:
+Wer **POW_COD 2205 (FULL)** von der
+[Download-Seite des CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/)
+hat, installiert sie mit dem folgenden Befehl; Phasentic verwendet sie dann
+anstelle der COD-Datenbank. Die veröffentlichten Genauigkeitswerte wurden mit
+POW_COD gemessen.
 
-   ```bash
-   phasentic setup-powcod ~/Downloads/powcod-2205.zip
-   ```
-
-Dabei wird das Archiv geprüft, nach `~/.phasentic/powcod` entpackt (etwa 6 GB)
-und einmalig ein Abfrage-Cache erstellt (20–60 Minuten). Danach verwendet
-Phasentic standardmäßig POW_COD.
+```bash
+phasentic setup-powcod ~/Downloads/powcod-2205.zip
+```
 
 <a name="quick-start"></a>
 
 ## Schnellstart
 
-Die lokale Oberfläche starten und <http://127.0.0.1:8000> öffnen:
+Phasentic über die Verknüpfung öffnen oder `phasentic-app` ausführen. Für den
+Browser stattdessen den Befehl unten ausführen und <http://127.0.0.1:8000> öffnen:
 
 ```bash
 phasentic serve

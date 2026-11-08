@@ -27,8 +27,8 @@
 </p>
 
 Phasentic lee un difractograma de polvo (`.xy`, `.xrdml` o `.raw` en ASCII),
-detecta los picos, consulta la base de datos de referencia
-[POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) del CNR y ajusta mezclas
+detecta los picos, consulta una base de datos de referencia construida a partir de la
+[Crystallography Open Database](https://www.crystallography.net/cod/) (o [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) del CNR) y ajusta mezclas
 de hasta cinco fases. Devuelve hipótesis de fases ordenadas por puntuación y
 registra en un informe JSON todos los parámetros, hashes y advertencias. Se
 ejecuta en local, desde el navegador o desde la línea de comandos.
@@ -50,8 +50,8 @@ como fallos.
 
 | Nivel | Aciertos | Tasa | Intervalo del 95% (Wilson) | Objetivo declarado |
 |---|---|---|---|---|
-| Compuestos y estructuras cristalinas correctos (strict) | 74 / 200 | 37.0% | 30.6–43.9% | ≥ 35% |
-| Compuestos correctos, cualquier polimorfo (family) | 99 / 200 | 49.5% | 42.6–56.4% | ≥ 45% |
+| Compuestos y estructuras cristalinas correctos (strict) | 85 / 200 | 42.5% | 35.9–49.4% | ≥ 35% |
+| Compuestos correctos, cualquier polimorfo (family) | 104 / 200 | 52.0% | 45.1–58.8% | ≥ 45% |
 
 Ambas estimaciones puntuales alcanzan sus objetivos; ambos límites inferiores
 quedan por debajo de ellos. La exactitud depende en gran medida del número de
@@ -74,44 +74,44 @@ Se midieron con una ventana de 0–100°; la configuración actual usa 0–90° 
 
 ## Instalación
 
-Se necesita Python 3.10–3.13. La forma más sencilla instala el comando
-`phasentic` en su propio entorno:
+Un solo comando instala Python 3.12, Phasentic y su base de datos de
+referencia (una descarga de 8.6 GB desde Zenodo; conviene tener unos 10 GB
+libres). No hacen falta permisos de administrador.
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
+Windows (PowerShell):
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-o bien, con [uv](https://docs.astral.sh/uv/): `uv tool install git+https://github.com/qaemu/phasentic`,
-o directamente con pip: `pip install git+https://github.com/qaemu/phasentic`.
-
-Comprobar que la instalación funciona:
+macOS y Linux:
 
 ```bash
-phasentic --version
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-### Añadir la base de datos de referencia POW_COD (una sola vez)
+En Windows también agrega un acceso directo **Phasentic** al Escritorio y al
+menú Inicio, y abre Phasentic en su propia ventana. En macOS lo agrega a
+Aplicaciones y en Linux al menú de aplicaciones. Si la descarga se interrumpe, basta con ejecutar el
+mismo comando otra vez: continúa donde quedó.
 
-Sin POW_COD, Phasentic funciona con un subconjunto de demostración de tres
-fases que solo sirve para probar la interfaz. Para trabajo real:
+### Usar POW_COD en su lugar
 
-1. Descargar **POW_COD 2205 (FULL)** (unos 1.9 GB) desde la
-   [página de descarga del CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/).
-2. Ejecutar:
+Si se dispone de **POW_COD 2205 (FULL)** desde la
+[página de descarga del CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/),
+se instala con el comando siguiente; Phasentic la usa entonces en lugar de la
+base de datos COD. Las cifras de exactitud publicadas se midieron con POW_COD.
 
-   ```bash
-   phasentic setup-powcod ~/Downloads/powcod-2205.zip
-   ```
-
-Este comando verifica el archivo comprimido, lo extrae en `~/.phasentic/powcod`
-(unos 6 GB) y construye una caché de consultas una única vez (20–60 minutos).
-A partir de entonces, Phasentic usa POW_COD por defecto.
+```bash
+phasentic setup-powcod ~/Downloads/powcod-2205.zip
+```
 
 <a name="quick-start"></a>
 
 ## Inicio rápido
 
-Iniciar la interfaz local y abrir <http://127.0.0.1:8000>:
+Abrir Phasentic desde su acceso directo, o ejecutar `phasentic-app`. Para usarlo
+en el navegador, ejecutar el comando de abajo y abrir <http://127.0.0.1:8000>:
 
 ```bash
 phasentic serve

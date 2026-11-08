@@ -1,10 +1,12 @@
 import asyncio
+import base64
 import hashlib
 import hmac
 import tempfile
 import json
 import multiprocessing
 import os
+import re
 import secrets
 import threading
 import time
@@ -16,12 +18,18 @@ from phasentic.acquisition.calibration import calibrate_standard_file
 from phasentic.api.contracts import settings_from_payload
 from phasentic.domain.models import CalibrationResult
 from phasentic.importers import ImportErrorDetail
-from phasentic.references.factory import ReferenceConfigurationError, default_reference_source, reference_source_status
+from phasentic.references.factory import (
+    ReferenceConfigurationError,
+    default_reference_source,
+    phasentic_home,
+    reference_source_status,
+)
 from phasentic.references.powcod import PowCodError
 from phasentic.reporting.service import analyze_file
 from phasentic.search.mixtures import MIXTURE_ALGORITHM_VERSION
 
 LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
+HISTORY_LIMIT = 100
 
 
 # Jobs run in a separate worker process (see ``_isolated``). They are
@@ -35,6 +43,9 @@ def _calibration_job(path: Path, standard_id: str, radiation: str) -> tuple[int,
         return 400, str(exc)
 
 
+_progress: Callable[[str], None] | None = None  # set in the worker by _run_job
+
+
 def _analysis_job(path: Path, settings: Any, original_name: str) -> tuple[int, Any]:
     try:
         report = analyze_file(
@@ -44,6 +55,7 @@ def _analysis_job(path: Path, settings: Any, original_name: str) -> tuple[int, A
             powcod_cache_path=os.environ.get("PHASENTIC_POWCOD_CACHE_PATH"),
             powcod_equivalence_path=os.environ.get("PHASENTIC_POWCOD_EQUIVALENCE_PATH"),
             original_filename=original_name,
+            progress=_progress,
         )
         return 200, report.to_dict()
     except ImportErrorDetail as exc:
@@ -64,7 +76,9 @@ def _exit_with_parent() -> None:
 
 
 def _run_job(sender: Any, job: Callable[..., tuple[int, Any]], args: tuple[Any, ...]) -> None:
+    global _progress
     threading.Thread(target=_exit_with_parent, daemon=True).start()
+    _progress = lambda stage: sender.send(("progress", stage))  # noqa: E731
     try:
         outcome = job(*args)
     except Exception:  # anything unexpected stays a generic server error, as before
@@ -99,11 +113,19 @@ def create_app() -> Any:
     # A host name other than loopback only arrives through DNS rebinding,
     # unless `phasentic serve --host` named it explicitly.
     allowed_hosts = LOOPBACK_HOSTS | {os.environ.get("PHASENTIC_BIND_HOST", "127.0.0.1")}
+    # The app window (pywebview) injects its bridge with eval and inline styles.
+    csp = (
+        "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval'"
+        if os.environ.get("PHASENTIC_APP_WINDOW")
+        else "default-src 'self'; style-src 'self'; script-src 'self'"
+    )
     timeout_seconds = float(os.environ.get("PHASENTIC_ANALYSIS_TIMEOUT_SECONDS", "300"))
     # ponytail: per-process key; calibrations from before a server restart must be redone.
     calibration_key = secrets.token_bytes(32)
     # ponytail: one heavy job at a time for a single local user; a queue if a server is ever shared.
     job_lock = asyncio.Lock()
+    job_state: dict[str, Any] = {"stage": None}
+    history_dir = phasentic_home() / "history"
 
     class RequestGuard:
         """Host/Origin checks and security headers as plain ASGI middleware.
@@ -126,7 +148,7 @@ def create_app() -> Any:
                     headers["X-Content-Type-Options"] = "nosniff"
                     headers["X-Frame-Options"] = "DENY"
                     headers["Referrer-Policy"] = "no-referrer"
-                    headers["Content-Security-Policy"] = "default-src 'self'; style-src 'self'; script-src 'self'"
+                    headers["Content-Security-Policy"] = csp
                 await send(message)
 
             request = Request(scope)
@@ -200,7 +222,17 @@ def create_app() -> Any:
             deadline = time.monotonic() + timeout_seconds
             try:
                 # poll() also turns true when the worker dies, and recv() then raises EOFError.
-                while not receiver.poll():
+                job_state["stage"] = "started"
+                while True:
+                    while receiver.poll():
+                        message = await run_in_threadpool(receiver.recv)
+                        if message[0] != "progress":
+                            break
+                        job_state["stage"] = message[1]
+                    else:
+                        message = None
+                    if message is not None:
+                        break
                     if time.monotonic() > deadline:
                         raise HTTPException(
                             status_code=503,
@@ -209,10 +241,11 @@ def create_app() -> Any:
                     if await request.is_disconnected():
                         raise HTTPException(status_code=400, detail="The request was cancelled")
                     await asyncio.sleep(0.2)
-                status, body = await run_in_threadpool(receiver.recv)
+                status, body = message
             except EOFError as exc:
                 raise HTTPException(status_code=500, detail="The analysis worker stopped unexpectedly") from exc
             finally:
+                job_state["stage"] = None
                 receiver.close()
                 if worker.is_alive():
                     worker.kill()
@@ -220,6 +253,203 @@ def create_app() -> Any:
         if status != 200:
             raise HTTPException(status_code=status, detail=body)
         return body
+
+    @app.get("/api/v1/progress")
+    async def progress() -> dict[str, Any]:
+        """Last finished stage of the running analysis (None when idle)."""
+        return {"success": True, "data": {"stage": job_state["stage"]}}
+
+    def _history_path(analysis_id: str) -> Path:
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,100}", analysis_id):
+            raise HTTPException(status_code=400, detail="Invalid analysis ID")
+        return history_dir / f"{analysis_id}.json"
+
+    def _save_history(report: dict[str, Any]) -> None:
+        # ponytail: whole reports as JSON files, newest HISTORY_LIMIT kept; a database if anyone needs search.
+        try:
+            history_dir.mkdir(parents=True, exist_ok=True)
+            path = _history_path(str(report.get("analysis_id", "")))
+            path.write_text(json.dumps({"saved_at": time.time(), "report": report}), encoding="utf-8")
+            for old in sorted(history_dir.glob("*.json"), key=lambda item: item.stat().st_mtime)[:-HISTORY_LIMIT]:
+                old.unlink(missing_ok=True)
+        except (OSError, HTTPException):
+            pass  # history is a convenience; never fail the analysis over it
+
+    @app.get("/api/v1/history")
+    async def history() -> dict[str, Any]:
+        def entries() -> list[dict[str, Any]]:
+            out = []
+            for path in sorted(history_dir.glob("*.json"), key=lambda item: item.stat().st_mtime, reverse=True):
+                try:
+                    saved = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, ValueError):
+                    continue
+                report = saved.get("report") or {}
+                mixture = report.get("mixture") or {}
+                selected = next(
+                    (h for h in mixture.get("hypotheses") or [] if h.get("hypothesis_id") == mixture.get("selected_hypothesis_id")),
+                    {},
+                )
+                out.append(
+                    {
+                        "analysis_id": report.get("analysis_id"),
+                        "saved_at": saved.get("saved_at"),
+                        "file_name": (report.get("input") or {}).get("file_name"),
+                        "decision": report.get("decision"),
+                        "phases": [c.get("formula") for c in selected.get("components") or []],
+                        "pinned": bool(((report.get("provenance") or {}).get("settings") or {}).get("pinned_reference_ids")),
+                    }
+                )
+            return out
+
+        return {"success": True, "data": await run_in_threadpool(entries) if history_dir.is_dir() else []}
+
+    @app.get("/api/v1/history/{analysis_id}/pdf")
+    async def history_pdf(analysis_id: str) -> Any:
+        from fastapi.responses import Response
+
+        from phasentic.reporting.pdf import report_pdf
+
+        path = _history_path(analysis_id)
+        if not path.is_file():
+            raise HTTPException(status_code=404, detail="Analysis not found in history")
+        report = json.loads(await run_in_threadpool(path.read_text, encoding="utf-8")).get("report") or {}
+        data = await run_in_threadpool(report_pdf, report)
+        return Response(data, media_type="application/pdf", headers={"Content-Disposition": f'attachment; filename="{analysis_id}.pdf"'})
+
+    @app.post("/api/v1/reports-zip")
+    async def reports_zip(request: Request) -> Any:
+        """One plain PDF per analysis (from history), zipped and named by creation date."""
+        import io
+        import zipfile
+        from datetime import datetime
+
+        from fastapi.responses import Response
+
+        from phasentic.reporting.pdf import report_pdf
+
+        try:
+            payload = await request.json()
+        except ValueError:
+            payload = None
+        ids = payload.get("analysis_ids") if isinstance(payload, dict) else None
+        if not isinstance(ids, list) or not ids or len(ids) > HISTORY_LIMIT:
+            raise HTTPException(status_code=400, detail=f"analysis_ids must list 1 to {HISTORY_LIMIT} analyses")
+        paths = [_history_path(str(analysis_id)) for analysis_id in ids]
+        if not all(path.is_file() for path in paths):
+            raise HTTPException(status_code=404, detail="An analysis is not in the history")
+
+        def build() -> bytes:
+            buffer = io.BytesIO()
+            with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+                for path in paths:
+                    report = json.loads(path.read_text(encoding="utf-8")).get("report") or {}
+                    stem = Path(str((report.get("input") or {}).get("file_name") or "scan")).stem
+                    stem = re.sub(r"[^A-Za-z0-9._ -]", "_", stem)[:100] or "scan"
+                    archive.writestr(f"{stem}_{report.get('analysis_id', path.stem)}.pdf", report_pdf(report))
+            return buffer.getvalue()
+
+        data = await run_in_threadpool(build)
+        name = f"phasentic-reports_{datetime.now():%Y-%m-%d_%H%M}.zip"
+        return Response(data, media_type="application/zip", headers={"Content-Disposition": f'attachment; filename="{name}"'})
+
+    @app.get("/api/v1/history/{analysis_id}")
+    async def history_item(analysis_id: str) -> dict[str, Any]:
+        path = _history_path(analysis_id)
+        if not path.is_file():
+            raise HTTPException(status_code=404, detail="Analysis not found in history")
+        saved = json.loads(await run_in_threadpool(path.read_text, encoding="utf-8"))
+        return {"success": True, "data": saved.get("report")}
+
+    settings_path = phasentic_home() / "report-settings.json"
+
+    def _report_settings() -> dict[str, Any]:
+        try:
+            saved = json.loads(settings_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            saved = {}
+        return {
+            "report_folder": str(saved.get("report_folder") or ""),
+            "laboratory": str(saved.get("laboratory") or ""),
+            "auto_pdf": saved.get("auto_pdf") is True,
+        }
+
+    @app.get("/api/v1/report-settings")
+    async def get_report_settings() -> dict[str, Any]:
+        return {"success": True, "data": _report_settings()}
+
+    @app.post("/api/v1/report-settings")
+    async def set_report_settings(request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except ValueError:
+            payload = None
+        if not isinstance(payload, dict):
+            raise HTTPException(status_code=400, detail="Report settings must be a JSON object")
+        current = _report_settings()  # fields left out keep their saved value
+        folder = str(payload.get("report_folder", current["report_folder"]) or "").strip()
+        laboratory = str(payload.get("laboratory", current["laboratory"]) or "").strip()
+        auto_pdf = payload.get("auto_pdf", current["auto_pdf"])
+        if not isinstance(auto_pdf, bool):
+            raise HTTPException(status_code=400, detail="auto_pdf must be true or false")
+        if len(laboratory) > 500 or len(folder) > 1000:
+            raise HTTPException(status_code=400, detail="Report settings are too long")
+        if folder:
+            path = Path(folder).expanduser()
+            if not path.is_absolute() or not path.is_dir():
+                raise HTTPException(status_code=400, detail="The report folder must be an existing folder (full path)")
+            folder = str(path.resolve())
+        settings_path.parent.mkdir(parents=True, exist_ok=True)
+        settings_path.write_text(json.dumps({"report_folder": folder, "laboratory": laboratory, "auto_pdf": auto_pdf}), encoding="utf-8")
+        return {"success": True, "data": _report_settings()}
+
+    @app.post("/api/v1/save-report")
+    async def save_report(request: Request) -> dict[str, Any]:
+        """Write a finished report (PDF, powder CIF, JSON, original scan) into the configured report folder."""
+        body = await request.body()
+        if len(body) > 64 * 1024 * 1024:
+            raise HTTPException(status_code=413, detail="Report is too large")
+        try:
+            payload = json.loads(body)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="Report must be JSON") from exc
+        folder = _report_settings()["report_folder"]
+        if not folder or not Path(folder).is_dir():
+            raise HTTPException(status_code=400, detail="No report folder is set, or it no longer exists")
+        base = re.sub(r"[^A-Za-z0-9._ -]", "_", str(payload.get("base_name") or "")).strip(" .")[:120]
+        files = payload.get("files")
+        if not base or not isinstance(files, dict):
+            raise HTTPException(status_code=400, detail="Report name and files are required")
+        written = []
+        # The original scan travels with its report (raw data for the record); only scan formats are accepted.
+        scan_extension = str(payload.get("scan_extension") or "").lower()
+        extensions = ("cif", "json") + ((scan_extension,) if scan_extension in {"xy", "xrdml", "raw"} else ())
+        for extension in extensions:
+            is_scan = extension == scan_extension
+            content = files.get("scan" if is_scan else extension)
+            if not isinstance(content, str) or not content:
+                continue
+            target = Path(folder) / f"{base}.{extension}"
+            if is_scan:  # byte-exact copy (base64), so its SHA-256 matches the report
+                try:
+                    data = base64.b64decode(content, validate=True)
+                except ValueError as exc:
+                    raise HTTPException(status_code=400, detail="Scan copy is not valid base64") from exc
+                await run_in_threadpool(target.write_bytes, data)
+            else:
+                await run_in_threadpool(target.write_text, content, encoding="utf-8")
+            written.append(target.name)
+        if isinstance(files.get("json"), str):  # the plain PDF report, rendered here from the JSON report
+            from phasentic.reporting.pdf import report_pdf
+
+            try:
+                report = json.loads(files["json"])
+            except ValueError as exc:
+                raise HTTPException(status_code=400, detail="Report JSON is invalid") from exc
+            target = Path(folder) / f"{base}.pdf"
+            await run_in_threadpool(target.write_bytes, await run_in_threadpool(report_pdf, report))
+            written.append(target.name)
+        return {"success": True, "data": {"folder": folder, "files": written}}
 
     @app.get("/api/v1/health")
     async def health() -> dict[str, str]:
@@ -297,6 +527,7 @@ def create_app() -> Any:
         try:
             temporary_path, original_name = await _save_upload(file, suffix)
             report = await _isolated(request, _analysis_job, temporary_path, settings, original_name)
+            await run_in_threadpool(_save_history, report)
             return {"success": True, "data": report}
         finally:
             if temporary_path is not None:

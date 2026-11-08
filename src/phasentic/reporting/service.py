@@ -8,7 +8,7 @@ import inspect
 import json
 import math
 from pathlib import Path
-from typing import Iterable
+from typing import Callable, Iterable
 
 import numpy as np
 
@@ -52,7 +52,11 @@ from phasentic.search.displacement import correct_angles, estimate_sample_displa
 from phasentic.search.matcher import (
     candidate_ranking_profile,
     candidate_retention_profile,
+    adaptive_pool_size,
+    apply_entry_count_prior,
+    collapse_same_material,
     match_references,
+    scale_reference_axes,
     select_fitter_shortlist,
 )
 from phasentic.search.mixtures import (
@@ -228,9 +232,34 @@ def _query_reference_candidates(
     return _filter_by_elements(fetched, allowed_elements, oxidizing=oxidizing)
 
 
-def _scaled_reference(reference: ReferencePhase, scale: float) -> ReferencePhase:
-    """Apply the matcher's per-phase d-spacing scale (screening adjustment)."""
+def _pinned_references(store: object, settings: AnalysisSettings, radiation: Radiation) -> tuple[ReferencePhase, ...]:
+    """Load the operator-fixed entries by ID; an unknown ID is an error, not a silent skip."""
 
+    found = []
+    for reference_id in settings.pinned_reference_ids:
+        try:
+            found.append(
+                store.get(reference_id, radiation=radiation)
+                if _provider_accepts_keyword(store.get, "radiation")
+                else store.get(reference_id)
+            )
+        except (KeyError, LookupError) as exc:
+            raise ValueError(f"pinned reference not found: {reference_id}") from exc
+    return tuple(found)
+
+
+def _shortlist_limit(matches: tuple[CandidateMatch, ...], settings: AnalysisSettings) -> int:
+    if settings.adaptive_pool:
+        return adaptive_pool_size(matches, settings.candidate_pool)
+    return settings.candidate_pool
+
+
+def _scaled_reference(reference: ReferencePhase, match: CandidateMatch) -> ReferencePhase:
+    """Apply the matcher's per-phase cell scaling (screening adjustment)."""
+
+    if match.axis_scales is not None:
+        return scale_reference_axes(reference, match.axis_scales)
+    scale = match.d_spacing_scale
     if scale == 1.0:
         return reference
     return replace(
@@ -336,7 +365,8 @@ def _resolve_radiation_spectrum(
 class _StageTimer:
     """Wall-clock stage durations for provenance (diagnostic, not reproducible)."""
 
-    def __init__(self) -> None:
+    def __init__(self, progress: Callable[[str], None] | None = None) -> None:
+        self._progress = progress
         self._started = time.perf_counter()
         self._last = self._started
         self._stages: dict[str, float] = {}
@@ -346,6 +376,8 @@ class _StageTimer:
         now = time.perf_counter()
         self._stages[stage] = self._stages.get(stage, 0.0) + (now - self._last)
         self._last = now
+        if self._progress is not None:
+            self._progress(stage)  # the stage that just finished
 
     def add(self, stage: str, seconds: float) -> None:
         self._stages[stage] = self._stages.get(stage, 0.0) + float(seconds)
@@ -372,9 +404,10 @@ def analyze_file(
     powcod_equivalence_path: str | Path | None = None,
     reference_store: object | None = None,
     original_filename: str | None = None,
+    progress: Callable[[str], None] | None = None,
 ) -> AnalysisReport:
     resolved_settings = validate_settings(settings or AnalysisSettings())
-    stage_timer = _StageTimer()
+    stage_timer = _StageTimer(progress)
     input_path = Path(path)
     file_hash_before = _sha256(input_path)
     pattern = import_pattern(input_path, radiation=resolved_settings.radiation)
@@ -643,6 +676,8 @@ def analyze_file(
             use_intensity=bool(intensity_policy.get("intensity_scoring", True)),
             collapse_groups=False,
             d_scale_tolerance=resolved_settings.lattice_scale_tolerance,
+            anisotropic=resolved_settings.anisotropic_lattice_scale,
+            lattice_change_penalty=resolved_settings.lattice_change_penalty,
         )
         ranked_candidates, qualx_search_receipt = _qualx_rank(
             peaks,
@@ -656,14 +691,17 @@ def analyze_file(
         ranked_with_evidence = tuple(match for match in ranked_candidates if match.matched_peaks > 0)
         if not ranked_with_evidence:
             ranked_with_evidence = ranked_candidates
+        ranked_with_evidence = apply_entry_count_prior(ranked_with_evidence, resolved_settings.entry_count_prior)
+        if resolved_settings.candidate_dedupe:
+            ranked_with_evidence = collapse_same_material(ranked_with_evidence)
         raw_candidates, fitter_shortlist_receipt = select_fitter_shortlist(
             ranked_with_evidence,
             peaks,
-            limit=resolved_settings.candidate_pool,
+            limit=_shortlist_limit(ranked_with_evidence, resolved_settings),
         )
         candidate_by_id = _references_by_id_first_wins(retrieved_candidate_phases)
         candidate_phases = tuple(
-            _scaled_reference(candidate_by_id[match.reference_id], match.d_spacing_scale)
+            _scaled_reference(candidate_by_id[match.reference_id], match)
             for match in raw_candidates
             if match.reference_id in candidate_by_id
         )
@@ -773,6 +811,8 @@ def analyze_file(
                             use_intensity=bool(intensity_policy.get("intensity_scoring", True)),
                             collapse_groups=False,
                             d_scale_tolerance=resolved_settings.lattice_scale_tolerance,
+                            anisotropic=resolved_settings.anisotropic_lattice_scale,
+                            lattice_change_penalty=resolved_settings.lattice_change_penalty,
                         )
                         ranked_residual_matches, residual_qualx_receipt = _qualx_rank(
                             residual_peaks,
@@ -790,14 +830,17 @@ def analyze_file(
                         )
                         if not residual_ranked_with_evidence:
                             residual_ranked_with_evidence = ranked_residual_matches
+                        residual_ranked_with_evidence = apply_entry_count_prior(residual_ranked_with_evidence, resolved_settings.entry_count_prior)
+                        if resolved_settings.candidate_dedupe:
+                            residual_ranked_with_evidence = collapse_same_material(residual_ranked_with_evidence)
                         residual_matches, residual_shortlist_receipt = select_fitter_shortlist(
                             residual_ranked_with_evidence,
                             residual_peaks,
-                            limit=resolved_settings.candidate_pool,
+                            limit=_shortlist_limit(residual_ranked_with_evidence, resolved_settings),
                         )
                         fetched_by_id = _references_by_id_first_wins(fetched)
                         fetched_shortlist = tuple(
-                            _scaled_reference(fetched_by_id[match.reference_id], match.d_spacing_scale)
+                            _scaled_reference(fetched_by_id[match.reference_id], match)
                             for match in residual_matches
                             if match.reference_id in fetched_by_id
                         )
@@ -854,6 +897,8 @@ def analyze_file(
                             use_intensity=bool(intensity_policy.get("intensity_scoring", True)),
                             collapse_groups=False,
                             d_scale_tolerance=resolved_settings.lattice_scale_tolerance,
+                            anisotropic=resolved_settings.anisotropic_lattice_scale,
+                            lattice_change_penalty=resolved_settings.lattice_change_penalty,
                         )
                         exact_residual_count = sum(
                             match.matched_peaks > 0 for match in ranked_residual_matches
@@ -863,14 +908,17 @@ def analyze_file(
                         )
                         if not residual_ranked_with_evidence:
                             residual_ranked_with_evidence = ranked_residual_matches
+                        residual_ranked_with_evidence = apply_entry_count_prior(residual_ranked_with_evidence, resolved_settings.entry_count_prior)
+                        if resolved_settings.candidate_dedupe:
+                            residual_ranked_with_evidence = collapse_same_material(residual_ranked_with_evidence)
                         residual_matches, residual_shortlist_receipt = select_fitter_shortlist(
                             residual_ranked_with_evidence,
                             residual_peaks,
-                            limit=resolved_settings.candidate_pool,
+                            limit=_shortlist_limit(residual_ranked_with_evidence, resolved_settings),
                         )
                         fetched_by_id = _references_by_id_first_wins(fetched)
                         fetched_shortlist = tuple(
-                            _scaled_reference(fetched_by_id[match.reference_id], match.d_spacing_scale)
+                            _scaled_reference(fetched_by_id[match.reference_id], match)
                             for match in residual_matches
                             if match.reference_id in fetched_by_id
                         )
@@ -901,6 +949,9 @@ def analyze_file(
                         return _mixture_inputs(resolved.references)
 
                     residual_candidate_provider = _query_residual_universe
+            pinned_phases = _pinned_references(store, resolved_settings, effective_radiation)
+            candidate_source_phases.update({phase.reference_id: phase for phase in pinned_phases})
+            residual_candidates.update({phase.reference_id: phase for phase in pinned_phases})
             mixture = select_mixture_hypotheses(
                 processed.angles_deg,
                 processed.raw_intensities,
@@ -918,6 +969,8 @@ def analyze_file(
                     ambiguity_margin=resolved_settings.ambiguity_margin,
                     abstain_when_ambiguous=resolved_settings.abstain_when_ambiguous,
                     missing_intensity_max=resolved_settings.missing_intensity_max,
+                    residual_rerank=resolved_settings.residual_rerank,
+                    polymorph_guard=resolved_settings.polymorph_guard,
                     noise_sigma=(
                         float(peak_detection_receipt["median_noise_sigma"])
                         if isinstance(peak_detection_receipt.get("median_noise_sigma"), float)
@@ -938,6 +991,7 @@ def analyze_file(
                 background_intensities=processed.background,
                 weight_provenance="trapezoidal-grid from acquired angle spacing",
                 residual_candidate_provider=residual_candidate_provider,
+                pinned_references=_mixture_inputs(pinned_phases),
             )
             if residual_candidates:
                 by_id = {reference.reference_id: reference for reference in candidate_phases}
@@ -1163,6 +1217,14 @@ def analyze_file(
                 "displacement_search_max_deg": resolved_settings.displacement_search_max_deg,
                 "displacement_tolerance_deg": resolved_settings.displacement_tolerance_deg,
                 "lattice_scale_tolerance": resolved_settings.lattice_scale_tolerance,
+                "anisotropic_lattice_scale": resolved_settings.anisotropic_lattice_scale,
+                "candidate_dedupe": resolved_settings.candidate_dedupe,
+                "residual_rerank": resolved_settings.residual_rerank,
+                "lattice_change_penalty": resolved_settings.lattice_change_penalty,
+                "entry_count_prior": resolved_settings.entry_count_prior,
+                "pinned_reference_ids": list(resolved_settings.pinned_reference_ids),
+                "polymorph_guard": resolved_settings.polymorph_guard,
+                "adaptive_pool": resolved_settings.adaptive_pool,
                 "d_spacing_scale_tolerance": resolved_settings.d_spacing_scale_tolerance,
                 "max_fit_attempts": resolved_settings.max_fit_attempts,
                 "swap_fit_attempt_budget": resolved_settings.swap_fit_attempt_budget,
@@ -1259,6 +1321,14 @@ def _analysis_id(
             "displacement_search_max_deg": settings.displacement_search_max_deg,
             "displacement_tolerance_deg": settings.displacement_tolerance_deg,
             "lattice_scale_tolerance": settings.lattice_scale_tolerance,
+            "anisotropic_lattice_scale": settings.anisotropic_lattice_scale,
+            "candidate_dedupe": settings.candidate_dedupe,
+            "residual_rerank": settings.residual_rerank,
+            "lattice_change_penalty": settings.lattice_change_penalty,
+            "entry_count_prior": settings.entry_count_prior,
+            "polymorph_guard": settings.polymorph_guard,
+            "adaptive_pool": settings.adaptive_pool,
+            **({"pinned_reference_ids": list(settings.pinned_reference_ids)} if settings.pinned_reference_ids else {}),
             "d_spacing_scale_tolerance": settings.d_spacing_scale_tolerance,
             "max_fit_attempts": settings.max_fit_attempts,
             "swap_fit_attempt_budget": settings.swap_fit_attempt_budget,

@@ -1,7 +1,7 @@
 # Troubleshooting
 
-- **`phasentic: command not found`** after `pipx install`: run `pipx ensurepath` and open a new terminal.
-- **The interface says POW_COD is not configured**: run `phasentic setup-powcod path/to/powcod-2205.zip`, or set `PHASENTIC_POWCOD_PATH` and `PHASENTIC_POWCOD_CACHE_PATH`.
+- **`phasentic: command not found`** after installing: open a new terminal (the installer adds Phasentic to your PATH for new terminals).
+- **The interface says no reference database is configured**: run the install command again; it downloads and installs the database (or finishes an interrupted download).
 - **`setup-powcod` reports a checksum mismatch**: the download is incomplete or a different release; download POW_COD 2205 (FULL) again.
 - **A binary `.raw` file is rejected**: export `.xy` or `.xrdml`, or set `GSASII_PATH` to a local GSAS-II installation.
 - **No peaks are reported**: check the scan range, the background warning and the step size before changing thresholds.

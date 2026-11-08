@@ -54,8 +54,8 @@ small, .note { color: var(--muted); font-size: 12px; }
 .field > span { font-size: 12px; font-weight: 600; color: var(--ink); }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .pair.source-pair { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
-input, select, button { font: inherit; color: var(--ink); }
-input[type=text], input[type=number], select {
+input, select, button, textarea { font: inherit; color: var(--ink); }
+input[type=text], input[type=number], select, textarea {
   width: 100%; min-width: 0; padding: 7px 9px; background: var(--sheet);
   border: 1px solid #c9ced5; border-radius: 3px;
 }
@@ -173,3 +173,18 @@ details.provenance > summary { cursor: pointer; font-size: 13px; color: var(--ac
   .foot { flex-direction: column; }
   table { display: block; overflow-x: auto; }
 }
+
+/* Zoom box on the fit figure, batch table, history list */
+#plot svg { cursor: crosshair; user-select: none; }
+.zoom-box { fill: rgba(31, 79, 122, .12); stroke: #1f4f7a; stroke-width: .8; }
+.batch-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: var(--paper); }
+.history { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 320px; overflow-y: auto; }
+.history-item { width: 100%; text-align: left; display: grid; gap: 2px; padding: 6px 8px; border: 1px solid var(--rule, #d6d9de); background: var(--sheet); font-weight: 400; }
+.history-item:hover { background: var(--paper); }
+.history-item b { font-size: 12px; overflow-wrap: anywhere; }
+.history-item small { color: var(--muted); font-size: 11px; }
+.submit #cancel-button { width: 100%; margin-top: 6px; }
+textarea { resize: vertical; font-size: 13px; }
+.submit .auto-pdf { margin-top: 8px; }

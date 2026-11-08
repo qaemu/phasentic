@@ -106,6 +106,14 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
         "displacement_search_max_deg",
         "displacement_tolerance_deg",
         "lattice_scale_tolerance",
+        "anisotropic_lattice_scale",
+        "candidate_dedupe",
+        "residual_rerank",
+        "lattice_change_penalty",
+        "entry_count_prior",
+        "polymorph_guard",
+        "adaptive_pool",
+        "pinned_reference_ids",
         "d_spacing_scale_tolerance",
         "max_fit_attempts",
         "swap_fit_attempt_budget",
@@ -121,7 +129,7 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
             raise ValueError("preset must be 'validated'")
         if not payload.get("allowed_elements"):
             raise ValueError("the validated preset needs the sample chemistry (precursor and target formulas)")
-        kept = {"radiation", "angle_unit", "reference_source", "allowed_elements", "instrument", "calibration"}
+        kept = {"radiation", "angle_unit", "reference_source", "allowed_elements", "instrument", "calibration", "pinned_reference_ids"}
         payload = {**validated_preset(), **{key: value for key, value in payload.items() if key in kept}}
     unknown = set(payload) - allowed
     if unknown:
@@ -157,6 +165,11 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
         if isinstance(raw_elements, str) or not isinstance(raw_elements, (list, tuple)):
             raise ValueError("allowed_elements must be a list of element symbols")
         values["allowed_elements"] = normalize_elements(raw_elements)
+    if "pinned_reference_ids" in values:
+        raw_pinned = values["pinned_reference_ids"]
+        if isinstance(raw_pinned, str) or not isinstance(raw_pinned, (list, tuple)):
+            raise ValueError("pinned_reference_ids must be a list of reference IDs")
+        values["pinned_reference_ids"] = tuple(raw_pinned)
     if "calibration" in values:
         if values["calibration"] is None:
             values["calibration"] = None

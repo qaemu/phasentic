@@ -70,6 +70,63 @@ def _source_radiation_metadata(root: ET.Element) -> dict[str, object] | None:
     return values or None
 
 
+def _acquisition_metadata(root: ET.Element, scan: ET.Element) -> dict[str, str]:
+    """Measurement conditions recorded in the file, as display text (IUCr / EN 13925 report items)."""
+
+    def text(element: ET.Element | None, name: str) -> str | None:
+        if element is None:
+            return None
+        found = next((child for child in element.iter() if _local_name(child.tag) == name), None)
+        if found is None or found.text is None or not found.text.strip():
+            return None
+        unit = found.attrib.get("unit")
+        return f"{found.text.strip()} {unit}" if unit else found.text.strip()
+
+    def part(name: str, within: ET.Element = root) -> ET.Element | None:
+        return next((element for element in within.iter() if _local_name(element.tag) == name), None)
+
+    def label(element: ET.Element | None) -> str | None:
+        return element.attrib.get("name") if element is not None and element.attrib.get("name") else None
+
+    incident, diffracted = part("incidentBeamPath"), part("diffractedBeamPath")
+    tube = part("xRayTube")
+    measurement = part("xrdMeasurement")
+    values = {
+        "sample_id": text(part("sample"), "id"),
+        "sample_name": text(part("sample"), "name"),
+        "prepared_by": text(part("sample"), "preparedBy"),
+        "sample_mode": measurement.attrib.get("sampleMode") if measurement is not None else None,
+        "measured_start": text(scan, "startTimeStamp"),
+        "measured_end": text(scan, "endTimeStamp"),
+        "operator": text(part("author", scan), "name"),
+        "instrument_id": text(scan, "instrumentID"),
+        "instrument_software": text(scan, "instrumentControlSoftware"),
+        "goniometer_radius": text(incident, "radius"),
+        "tube": label(tube),
+        "tube_voltage": text(tube, "tension"),
+        "tube_current": text(tube, "current"),
+        "incident_filter": label(part("filter", incident)) if incident is not None else None,
+        "incident_soller": label(part("sollerSlit", incident)) if incident is not None else None,
+        "divergence_slit": label(part("divergenceSlit", incident)) if incident is not None else None,
+        "mask": label(part("mask", incident)) if incident is not None else None,
+        "antiscatter_slit": label(part("antiScatterSlit", diffracted)) if diffracted is not None else None,
+        "diffracted_soller": label(part("sollerSlit", diffracted)) if diffracted is not None else None,
+        "diffracted_filter": label(part("filter", diffracted)) if diffracted is not None else None,
+        "monochromator": label(part("monochromator")),
+        "detector": label(part("detector", diffracted)) if diffracted is not None else label(part("detector")),
+        "detector_mode": text(part("detector"), "mode"),
+        "scan_mode": scan.attrib.get("mode"),
+        "scan_axis": scan.attrib.get("scanAxis"),
+        "counting_time": text(scan, "commonCountingTime"),
+        "sample_spinning": (
+            text(part("sampleMovement"), "spinnerRevolutionTime")
+            if part("sampleMovement") is not None
+            else None
+        ),
+    }
+    return {key: value[:200] for key, value in values.items() if value}
+
+
 def _descendants(root: ET.Element, name: str) -> list[ET.Element]:
     return [element for element in root.iter() if _local_name(element.tag) == name]
 
@@ -174,6 +231,9 @@ def parse_xrdml(path: Path) -> Pattern:
         "position_unit": position_unit,
         "scan_count": 1,
     }
+    acquisition = _acquisition_metadata(root, scan)
+    if acquisition:
+        metadata["acquisition"] = acquisition
     source_radiation = _source_radiation_metadata(root)
     if source_radiation is not None:
         metadata["source_radiation"] = source_radiation

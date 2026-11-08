@@ -27,8 +27,9 @@
 </p>
 
 Phasentic reads a powder XRD scan (`.xy`, `.xrdml` or ASCII `.raw`), detects
-peaks, searches the CNR [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/)
-reference database, and fits mixtures of up to five phases. It returns ranked
+peaks, searches a reference database built from the
+[Crystallography Open Database](https://www.crystallography.net/cod/) (or CNR's [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/)),
+and fits mixtures of up to five phases. It returns ranked
 phase hypotheses with every setting, hash and warning recorded in a JSON
 report. It runs locally, in the browser or from the command line.
 
@@ -40,69 +41,70 @@ report. It runs locally, in the browser or from the command line.
 
 ## How accurate is it
 
-The method was frozen before testing, together with a declared target, and
-run once on 200 scans it had never seen (Precursor Genome, human-refined
-labels). Abstentions count as failures.
+The settings were tuned on 485 Precursor Genome scans (human-refined labels)
+and then run on 200 locked scans that tuning never saw, with the
+COD-derived database PXRD_COD 2026.11 (COD plus a Materials Project
+supplement). Abstentions count as failures.
 
-| Level | Correct | Rate | 95% interval (Wilson) | Declared target |
-|---|---|---|---|---|
-| Right compounds and crystal structures (strict) | 74 / 200 | 37.0% | 30.6–43.9% | ≥ 35% |
-| Right compounds, any polymorph (family) | 99 / 200 | 49.5% | 42.6–56.4% | ≥ 45% |
+| Level | Correct | Rate | 95% interval (Wilson) |
+|---|---|---|---|
+| Right compounds and crystal structures (strict) | 85 / 200 | 42.5% | 35.9–49.4% |
+| Right compounds, any polymorph (family) | 104 / 200 | 52.0% | 45.1–58.8% |
 
-Both point estimates meet their targets; both lower bounds fall below them.
-Accuracy depends strongly on the number of phases:
+This is the second run on these 200 scans. The first (72 and 99) used the
+COD-only database; the database supplement, restored hydrogen formulas and a
+preference for the highest-symmetry description of a material were developed
+on the 485 tuning scans only. The untuned method scored 71 and 96. Accuracy
+depends strongly on the number of phases:
 
 | Phases in the sample | Scans | Correct at family level |
 |---|---|---|
-| 1 | 8 | 3 |
-| 2 | 125 | 87 (70%) |
-| 3 or more | 67 | 9 (13%) |
+| 1 | 9 | 4 |
+| 2 | 126 | 93 (74%) |
+| 3 or more | 65 | 7 (11%) |
 
 The protocol, the earlier held-out run (32% / 42% for the previous version),
 the failure analysis and the receipts are in [docs/validation.md](docs/validation.md).
 These numbers apply to the validated preset with POW_COD, Cu Kα and the
-sample's precursor chemistry; other settings are untested. They were measured
-with a 0–100° matching window; the current preset uses 0–90° and has not been
-re-validated yet (see [CHANGELOG.md](CHANGELOG.md)).
+sample's precursor chemistry; other settings are untested.
 
 ## Install
 
-You need Python 3.10–3.13. The simplest way installs the `phasentic` command
-in its own environment:
+One command installs Python 3.12, Phasentic and its reference database (an
+8.6 GB download from Zenodo; keep about 10 GB free). No admin rights needed.
 
-```bash
-pipx install git+https://github.com/qaemu/phasentic
+Windows (PowerShell):
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/qaemu/phasentic/main/install.ps1 | iex"
 ```
 
-or, with [uv](https://docs.astral.sh/uv/): `uv tool install git+https://github.com/qaemu/phasentic`,
-or with plain pip: `pip install git+https://github.com/qaemu/phasentic`.
-
-Check it worked:
+macOS and Linux:
 
 ```bash
-phasentic --version
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
 ```
 
-### Add the POW_COD reference database (once)
+On Windows it also adds a **Phasentic** shortcut to the Desktop and Start Menu
+and opens Phasentic in its own window. On macOS it adds
+Phasentic to Applications, on Linux to the applications menu. If the download is interrupted, run the same command
+again; it resumes.
 
-Without POW_COD, Phasentic runs on a three-phase demo subset that is only good
-for trying the interface. For real work:
+### Using POW_COD instead
 
-1. Download **POW_COD 2205 (FULL)** (about 1.9 GB) from the
-   [CNR download page](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/).
-2. Run:
+If you have **POW_COD 2205 (FULL)** from the
+[CNR download page](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/),
+install it with the command below; Phasentic then uses it instead of the COD
+database. The published accuracy figures were measured with POW_COD.
 
-   ```bash
-   phasentic setup-powcod ~/Downloads/powcod-2205.zip
-   ```
-
-This checks the archive, extracts it to `~/.phasentic/powcod` (about 6 GB),
-and builds a query cache once (20–60 minutes). After that, Phasentic uses
-POW_COD by default.
+```bash
+phasentic setup-powcod ~/Downloads/powcod-2205.zip
+```
 
 ## Quick start
 
-Start the local interface and open <http://127.0.0.1:8000>:
+Open Phasentic from its shortcut, or run `phasentic-app`. To use it in a browser
+instead, run the command below and open <http://127.0.0.1:8000>:
 
 ```bash
 phasentic serve
@@ -144,7 +146,7 @@ a standard scan (NIST SRM 640g silicon by default): `phasentic calibrate standar
 ## How it works
 
 1. Import the scan, estimate the background, detect peaks (noise-aware).
-2. Retrieve candidates from POW_COD, restricted to the sample's elements.
+2. Retrieve candidates from the reference database, restricted to the sample's elements.
 3. Fit non-negative mixtures of reference profiles with a bounded beam search,
    residual re-queries and phase swaps; reject phases whose strong lines are
    missing from the scan.
