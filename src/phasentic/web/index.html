@@ -25,10 +25,11 @@
       <form id="analysis-form" class="rail" novalidate>
         <section class="block">
           <h2 data-i18n="sample">Sample</h2>
-          <label class="field"><span data-i18n="file">Pattern file</span>
-            <input id="file" name="file" type="file" accept=".xy,.xrdml,.raw" multiple required />
+          <div class="field"><span data-i18n="file">Pattern file</span>
+            <input id="file" name="file" type="file" accept=".xy,.xrdml,.raw" multiple hidden />
+            <div class="file-pick"><button id="file-button" class="secondary" type="button" data-i18n="chooseFiles">Choose files</button><span id="file-name">No file chosen</span></div>
             <small data-i18n="fileHint">.xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.</small>
-          </label>
+          </div>
           <label class="field"><span data-i18n="chemistry">Precursor and target formulas</span>
             <input id="chemistry" type="text" maxlength="400" placeholder="e.g. Ag2O BaCO3 Ba2Ag2C2O7" autocomplete="off" spellcheck="false" />
             <small data-i18n="chemistryHint">Candidates are limited to these elements plus H, C and O.</small>
@@ -37,9 +38,6 @@
 
         <section class="block">
           <h2 data-i18n="method">Method</h2>
-          <label class="choice"><input id="validated-preset" type="checkbox" checked />
-            <span><b data-i18n="validatedPreset">Validated method</b><small data-i18n="validatedHint">The settings tested on 200 sealed test scans. Needs Cu Kα and the formulas above.</small></span>
-          </label>
           <div class="pair source-pair">
             <label class="field"><span data-i18n="radiation">Anode</span>
               <select id="radiation" name="radiation">
@@ -95,7 +93,7 @@
           <button type="submit" class="primary" data-i18n="analyze">Analyze</button>
           <button id="cancel-button" type="button" class="secondary" data-i18n="cancel" hidden>Cancel</button>
           <label class="choice auto-pdf"><input id="auto-pdf" type="checkbox" />
-            <span><b data-i18n="autoPdf">Export analysis’ PDF</b><small data-i18n="autoPdfHint">Several files: one ZIP with a PDF per file.</small></span>
+            <span><b data-i18n="autoPdf">Export analysis’ PDF</b></span>
           </label>
           <p id="form-status" class="status" aria-live="polite"></p>
         </div>
@@ -127,7 +125,7 @@
       <main class="work">
         <section id="empty-state" class="empty">
           <h2 data-i18n="emptyTitle">No analysis yet</h2>
-          <p data-i18n="emptyText">Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.</p>
+          <p data-i18n="emptyText">Choose a scan, type the precursor and target formulas and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.</p>
         </section>
 
         <section id="batch" class="part" hidden>

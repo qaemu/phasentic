@@ -314,7 +314,7 @@ def create_app() -> Any:
         if not path.is_file():
             raise HTTPException(status_code=404, detail="Analysis not found in history")
         report = json.loads(await run_in_threadpool(path.read_text, encoding="utf-8")).get("report") or {}
-        data = await run_in_threadpool(report_pdf, report)
+        data = await run_in_threadpool(report_pdf, report, _report_settings()["laboratory"])
         return Response(data, media_type="application/pdf", headers={"Content-Disposition": f'attachment; filename="{analysis_id}.pdf"'})
 
     @app.post("/api/v1/reports-zip")
@@ -339,6 +339,8 @@ def create_app() -> Any:
         if not all(path.is_file() for path in paths):
             raise HTTPException(status_code=404, detail="An analysis is not in the history")
 
+        laboratory = _report_settings()["laboratory"]
+
         def build() -> bytes:
             buffer = io.BytesIO()
             with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
@@ -346,7 +348,7 @@ def create_app() -> Any:
                     report = json.loads(path.read_text(encoding="utf-8")).get("report") or {}
                     stem = Path(str((report.get("input") or {}).get("file_name") or "scan")).stem
                     stem = re.sub(r"[^A-Za-z0-9._ -]", "_", stem)[:100] or "scan"
-                    archive.writestr(f"{stem}_{report.get('analysis_id', path.stem)}.pdf", report_pdf(report))
+                    archive.writestr(f"{stem}_{report.get('analysis_id', path.stem)}.pdf", report_pdf(report, laboratory))
             return buffer.getvalue()
 
         data = await run_in_threadpool(build)
@@ -447,7 +449,7 @@ def create_app() -> Any:
             except ValueError as exc:
                 raise HTTPException(status_code=400, detail="Report JSON is invalid") from exc
             target = Path(folder) / f"{base}.pdf"
-            await run_in_threadpool(target.write_bytes, await run_in_threadpool(report_pdf, report))
+            await run_in_threadpool(target.write_bytes, await run_in_threadpool(report_pdf, report, _report_settings()["laboratory"], folder))
             written.append(target.name)
         return {"success": True, "data": {"folder": folder, "files": written}}
 

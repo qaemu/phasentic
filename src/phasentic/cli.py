@@ -323,6 +323,7 @@ def main(argv: list[str] | None = None) -> int:
                 angle_unit=AngleUnit(args.angle_unit),
                 reference_source=reference_source,
                 allowed_elements=allowed,
+                sample_chemistry=args.chemistry,
             )
             payload = analyze_file(
                 args.file,
@@ -339,6 +340,7 @@ def main(argv: list[str] | None = None) -> int:
             angle_unit=AngleUnit(args.angle_unit),
             reference_source=reference_source,
             allowed_elements=allowed,
+            sample_chemistry=args.chemistry or "",
             analysis_mode=analysis_mode,
             residual_candidate_queries=residual_candidate_queries,
             max_phases=args.max_phases,

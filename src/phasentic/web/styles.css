@@ -185,3 +185,6 @@ tr.clickable:hover td { background: var(--paper); }
 .submit #cancel-button { width: 100%; margin-top: 6px; }
 textarea { resize: vertical; font-size: 13px; }
 .submit .auto-pdf { margin-top: 8px; }
+
+.file-pick { display: flex; align-items: center; gap: 10px; min-width: 0; }
+#file-name { color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

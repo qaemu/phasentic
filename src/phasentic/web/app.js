@@ -1,9 +1,9 @@
 const translations = {
   en: {
     lede: "Powder X-ray diffraction phase identification",
-    sample: "Sample", file: "Pattern file", fileHint: ".xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.",
-    chemistry: "Precursor and target formulas", chemistryHint: "Candidates are limited to these elements plus H, C and O.",
-    method: "Method", validatedPreset: "Validated method", validatedHint: "The settings tested on 200 sealed test scans. Needs Cu Kα and the formulas above.",
+    sample: "Sample", file: "Pattern file", fileHint: ".xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.", chooseFiles: "Choose files", noFile: "No file chosen", nFiles: (n) => `${n} files`,
+    chemistry: "Precursor and target formulas", chemistryHint: "Candidates are limited to these elements plus H, C and O. With formulas and Cu Kα, the validated method is used.",
+    method: "Method",
     radiation: "Anode", reference: "Reference database", customSettings: "Search settings",
     tolerance: "Peak tolerance (° 2θ)", maxPhases: "Maximum phases",
     customHint: "Validated values: 0.10° and 5 phases. Other values are not validated.",
@@ -11,7 +11,7 @@ const translations = {
     instrumentPair: "Give both instrument vendor and model, or leave both blank.",
     analyze: "Analyze", running: "Analysing…", done: "Done. Read the result as a ranked hypothesis.",
     emptyTitle: "No analysis yet",
-    emptyText: "Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.",
+    emptyText: "Choose a scan, type the precursor and target formulas and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.",
     decisionLabel: "Decision", selected: "Selected phases", noMixture: "No mixture selected",
     downloadReport: "Formal report", download: "JSON",
     hypotheses: "Phase hypotheses", phaseEvidence: "Evidence per phase", candidates: "Single-phase candidates", diagnostics: "Quality and provenance",
@@ -29,7 +29,7 @@ const translations = {
     mixtureQueryCandidatePool: "Candidate pool", mixtureQueryRequeries: "Residual re-queries", mixtureQueryMaxFitAttempts: "Max fit attempts",
     mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
     mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
-    autoPdf: "Export analysis’ PDF", autoPdfHint: "Several files: one ZIP with a PDF per file.", pdfFailed: (m) => `PDF not created: ${m}`,
+    autoPdf: "Export analysis’ PDF", pdfFailed: (m) => `PDF not created: ${m}`,
     reportsTitle: "Reports", laboratory: "Laboratory name and address", reportFolder: "Save every report to this folder",
     reportFolderHint: "Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.",
     chooseFolder: "Choose folder…", saveSettings: "Save", settingsSaved: "Saved.", autoSaveOff: "Reports are not saved automatically.", autoSaveOn: (f) => `Reports are saved to ${f}.`,
@@ -42,14 +42,13 @@ const translations = {
     altIntro: "How well each entry fits in a phase's place (100% = perfect fit), with the other materials within 80% of the best one; other entries of the same material are left out. Choosing one fixes it and searches the smaller phases again.",
     altFit: "Fit", altUse: "Use this", altNone: "No other material fits within 80% of the best.", altSelected: "selected",
     pinned: "Fixed by you:", unpin: "Clear and analyze again",
-    stale: "A setting changed, so the previous result was cleared.",
     footerAi: "Open source (MIT).",
   },
   es: {
     lede: "Identificación de fases por difracción de rayos X de polvo",
-    sample: "Muestra", file: "Archivo del patrón", fileHint: ".xy, .xrdml o .raw ASCII, hasta 10 MB. Seleccione varios para un lote.",
-    chemistry: "Fórmulas de precursores y objetivo", chemistryHint: "Los candidatos se limitan a estos elementos más H, C y O.",
-    method: "Método", validatedPreset: "Método validado", validatedHint: "La configuración probada en 200 escaneos de prueba sellados. Requiere Cu Kα y las fórmulas de arriba.",
+    sample: "Muestra", file: "Archivo del patrón", fileHint: ".xy, .xrdml o .raw ASCII, hasta 10 MB. Seleccione varios para un lote.", chooseFiles: "Elegir archivos", noFile: "Ningún archivo elegido", nFiles: (n) => `${n} archivos`,
+    chemistry: "Fórmulas de precursores y objetivo", chemistryHint: "Los candidatos se limitan a estos elementos más H, C y O. Con fórmulas y Cu Kα se usa el método validado.",
+    method: "Método",
     radiation: "Ánodo", reference: "Base de referencias", customSettings: "Ajustes de búsqueda",
     tolerance: "Tolerancia de pico (° 2θ)", maxPhases: "Máximo de fases",
     customHint: "Valores validados: 0,10° y 5 fases. Otros valores no están validados.",
@@ -57,7 +56,7 @@ const translations = {
     instrumentPair: "Indique fabricante y modelo, o deje ambos vacíos.",
     analyze: "Analizar", running: "Analizando…", done: "Listo. Lea el resultado como una hipótesis ordenada.",
     emptyTitle: "Todavía no hay análisis",
-    emptyText: "Elija un escaneo, escriba las fórmulas de precursores y objetivo, mantenga el método validado y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y un informe imprimible aparecerán aquí.",
+    emptyText: "Elija un escaneo, escriba las fórmulas de precursores y objetivo y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y un informe imprimible aparecerán aquí.",
     decisionLabel: "Decisión", selected: "Fases seleccionadas", noMixture: "No se seleccionó una mezcla",
     downloadReport: "Informe formal", download: "JSON",
     hypotheses: "Hipótesis de fases", phaseEvidence: "Evidencia por fase", candidates: "Candidatos de una sola fase", diagnostics: "Calidad y procedencia",
@@ -75,7 +74,7 @@ const translations = {
     mixtureQueryCandidatePool: "Conjunto de candidatos", mixtureQueryRequeries: "Nuevas consultas por residual", mixtureQueryMaxFitAttempts: "Máximo de intentos de ajuste",
     mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
     mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
-    autoPdf: "Exportar PDF del análisis", autoPdfHint: "Varios archivos: un ZIP con un PDF por archivo.", pdfFailed: (m) => `PDF no creado: ${m}`,
+    autoPdf: "Exportar PDF del análisis", pdfFailed: (m) => `PDF no creado: ${m}`,
     reportsTitle: "Informes", laboratory: "Nombre y dirección del laboratorio", reportFolder: "Guardar cada informe en esta carpeta",
     reportFolderHint: "Ruta completa. Cada análisis guarda un informe PDF, un CIF de polvo (.cif), los datos (.json) y una copia del escaneo. Déjela vacía para desactivarlo.",
     chooseFolder: "Elegir carpeta…", saveSettings: "Guardar", settingsSaved: "Guardado.", autoSaveOff: "Los informes no se guardan automáticamente.", autoSaveOn: (f) => `Los informes se guardan en ${f}.`,
@@ -88,7 +87,6 @@ const translations = {
     altIntro: "Qué tan bien ajusta cada entrada en el lugar de una fase (100% = ajuste perfecto), con los otros materiales dentro del 80% del mejor; se omiten otras entradas del mismo material. Elegir una la fija y vuelve a buscar las fases menores.",
     altFit: "Ajuste", altUse: "Usar esta", altNone: "Ningún otro material ajusta dentro del 80% del mejor.", altSelected: "seleccionada",
     pinned: "Fijadas por usted:", unpin: "Quitar y analizar de nuevo",
-    stale: "Cambió una configuración, así que se borró el resultado anterior.",
     footerAi: "Código abierto (MIT).",
   },
 };
@@ -116,6 +114,7 @@ function setLanguage(language) {
     const text = translations[language][element.dataset.i18n];
     if (typeof text === "string") element.textContent = text;
   });
+  if ($("file-name")) showFileName();
 }
 
 function appendKeyValueList(parent, entries, className = "provenance-list") {
@@ -358,7 +357,7 @@ function clearRenderedReport() {
   $("decision").textContent = "—"; $("analysis-id").textContent = "";
 }
 
-function invalidateAnalysis(message = translations[$("language").value].stale) {
+function invalidateAnalysis(message = "") {
   pinnedIds = []; currentFile = null; batchRows = []; $("batch").hidden = true;
   analysisRequest += 1;
   if (activeAnalysisController) activeAnalysisController.abort();
@@ -467,7 +466,14 @@ document.addEventListener("drop", (event) => {
   input.files = files;
   input.dispatchEvent(new Event("change", { bubbles: true }));
 });
+// The native file input shows the operating system's language; a button and label follow the app's.
+function showFileName() {
+  const files = $("file").files, L = currentLanguage();
+  $("file-name").textContent = !files.length ? L.noFile : files.length === 1 ? files[0].name : L.nFiles(files.length);
+}
+$("file-button").addEventListener("click", () => $("file").click());
 $("file").addEventListener("change", () => {
+  showFileName();
   invalidateAnalysis();
 });
 
@@ -475,7 +481,6 @@ $("file").addEventListener("change", () => {
   "tolerance",
   "max-phases",
   "chemistry",
-  "validated-preset",
   "instrument-vendor",
   "instrument-model",
   "instrument-radius",
@@ -492,7 +497,7 @@ $("reference-source").addEventListener("change", () => {
 });
 
 function reportOptions() {
-  return { version: appVersion, preset: $("validated-preset").checked && !Object.keys(searchOverrides()).length ? "validated" : null, laboratory: reportSettings.laboratory };
+  return { version: appVersion, preset: usesValidatedMethod() && !Object.keys(searchOverrides()).length ? "validated" : null, laboratory: reportSettings.laboratory, folder: reportSettings.report_folder };
 }
 
 // After each finished analysis: report (.html), powder CIF and JSON into the chosen folder, if one is set.
@@ -572,9 +577,14 @@ function formSettings() {
   }
   const chemistry = $("chemistry").value.trim();
   const common = { radiation: $("radiation").value, reference_source: $("reference-source").value, ...(chemistry ? { chemistry } : {}), ...(Object.keys(instrument).length ? { instrument } : {}) };
-  return $("validated-preset").checked
+  return usesValidatedMethod()
     ? { ...common, preset: "validated", ...searchOverrides() }
     : { ...common, ...searchValues(), analysis_mode: "full_mixture" };
+}
+
+// The validated method is used whenever the formulas are given and the anode is Cu (as tested).
+function usesValidatedMethod() {
+  return Boolean($("chemistry").value.trim()) && $("radiation").value === "Cu Ka";
 }
 
 // Peak tolerance and maximum phases of the validated method; other values are custom.
@@ -735,7 +745,7 @@ $("cancel-button").addEventListener("click", () => {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const files = Array.from($("file").files);
-  if (!files.length) return;
+  if (!files.length) { $("form-status").textContent = currentLanguage().noFile; return; }
   if (files.length > 1) void analyzeBatch(files);
   else { $("batch").hidden = true; batchRows = []; void analyzeSingle(files[0]); }
 });

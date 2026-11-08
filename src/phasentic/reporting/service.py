@@ -1192,6 +1192,7 @@ def analyze_file(
                 "peak_min_relative_prominence": resolved_settings.peak_min_relative_prominence,
                 "reference_limit": resolved_settings.reference_limit,
                 "allowed_elements": list(resolved_settings.allowed_elements) if resolved_settings.allowed_elements else None,
+                "sample_chemistry": resolved_settings.sample_chemistry,
                 "oxidizing_synthesis": resolved_settings.oxidizing_synthesis,
                 "missing_intensity_max": resolved_settings.missing_intensity_max,
                 "matching_two_theta_max_deg": resolved_settings.matching_two_theta_max_deg,

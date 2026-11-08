@@ -386,6 +386,8 @@ class AnalysisSettings:
     # Optional sample-context chemistry constraint: reference phases containing
     # any other element are excluded before ranking. ``None`` disables it.
     allowed_elements: tuple[str, ...] | None = None
+    # The precursor and target formulas as the operator typed them (for the report only).
+    sample_chemistry: str = ""
     # Synthesis heated in air: oxygen-free phases need a noble metal (or are
     # graphite). Applied together with ``allowed_elements``.
     oxidizing_synthesis: bool = False
@@ -513,6 +515,8 @@ class AnalysisSettings:
             raise ValueError("background_window_points must be odd and at least 5")
         if isinstance(self.missing_intensity_max, bool) or not isinstance(self.missing_intensity_max, (int, float)) or not 0.0 <= float(self.missing_intensity_max) <= 1.0:
             raise ValueError("missing_intensity_max must be between 0 and 1")
+        if not isinstance(self.sample_chemistry, str) or len(self.sample_chemistry) > 400:
+            raise ValueError("sample_chemistry must be text of at most 400 characters")
         if not isinstance(self.oxidizing_synthesis, bool):
             raise ValueError("oxidizing_synthesis must be a boolean")
         for name, low, high in (("lattice_change_penalty", 0.0, 100.0), ("entry_count_prior", 0.0, 1.0)):
