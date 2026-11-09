@@ -11,7 +11,7 @@ from phasentic import __version__
 
 A4 = (8.27, 11.69)  # inches
 LEFT, RIGHT, TOP, BOTTOM = 0.07, 0.93, 0.95, 0.05
-COLORS = ["#0072b2", "#d55e00", "#009e73", "#cc79a7", "#e69f00"]
+COLORS = ["#0072b2", "#009e73", "#cc79a7", "#56b4e9", "#6b4c9a"]  # same order as report.js
 LINE = 0.0135  # text line height, figure fraction
 
 
@@ -142,8 +142,8 @@ def _selected(report: dict) -> dict | None:
     )
 
 
-def report_pdf(report: dict) -> bytes:
-    """Render the analysis report dictionary as a plain A4 PDF."""
+def report_pdf(report: dict, laboratory: str = "", folder: str = "") -> bytes:
+    """Render the analysis report dictionary as a plain A4 PDF (laboratory and report folder as set by the operator)."""
     import matplotlib
 
     matplotlib.use("Agg")
@@ -160,6 +160,7 @@ def report_pdf(report: dict) -> bytes:
     components = (selected or {}).get("components") or []
     alternatives = mixture.get("phase_alternatives") or {}
     pinned = set(settings.get("pinned_reference_ids") or [])
+    instrument = settings.get("instrument") or {}
     peaks = report.get("peaks") or []
     wavelength = radiation.get("ka1_angstrom")
     width = ((provenance.get("reference_query") or {}).get("candidate_query_stats") or {}).get("profile_width") or {}
@@ -169,7 +170,11 @@ def report_pdf(report: dict) -> bytes:
     with PdfPages(buffer, metadata={"Title": f"Phase identification {source.get('file_name', '')}", "Creator": f"Phasentic {__version__}"}) as pdf:
         out = _Pages(pdf, title)
         out.text(f"Phase identification · {source.get('file_name', '—')}", size=13, weight="bold")
+        for line in str(laboratory or "").strip().splitlines():
+            out.text(line.strip(), size=8)
         out.y -= LINE * 0.6
+        if settings.get("sample_chemistry"):
+            out.text(f"Precursor and target formulas: {settings['sample_chemistry']}", size=8)
         out.pairs([
             ("Decision", str(report.get("decision", "—"))),
             ("Analysis ID", str(report.get("analysis_id", "—"))),
@@ -259,7 +264,8 @@ def report_pdf(report: dict) -> bytes:
             ("Points", str(source.get("point_count") or "")),
             ("Step / °", _num((float(source.get("angle_max_deg", 0)) - float(source.get("angle_min_deg", 0))) / (int(source.get("point_count") or 2) - 1), 4)),
             ("Measured", str(acquisition.get("measured_start", "")).replace("T", " ")),
-            ("Instrument", str(acquisition.get("instrument_id", ""))),
+            ("Instrument", " ".join(v for v in (instrument.get("vendor"), instrument.get("model")) if v) or str(acquisition.get("instrument_id", ""))),
+            ("Goniometer radius", _num(instrument.get("goniometer_radius_mm"), 1, " mm") if instrument.get("goniometer_radius_mm") else ""),
             ("Tube", ", ".join(v for v in (acquisition.get("tube_voltage"), acquisition.get("tube_current")) if v)),
             ("Counting time", str(acquisition.get("counting_time", ""))),
             ("Geometry", ", ".join(v for v in (acquisition.get("sample_mode"), acquisition.get("goniometer_radius")) if v)),
@@ -308,6 +314,8 @@ def report_pdf(report: dict) -> bytes:
         out.text(f"Database SHA-256  {provenance.get('powcod_database_sha256') or '—'}", size=7, family="monospace")
         out.text(f"Engine  {provenance.get('algorithm_version', '—')}", size=7, family="monospace")
         out.text(f"Mixture search  {mixture.get('algorithm_version', '—')}", size=7, family="monospace")
+        if folder:
+            out.text(f"Report stored in  {folder}", size=7, family="monospace")
         out.finish()
     return buffer.getvalue()
 
@@ -316,12 +324,12 @@ if __name__ == "__main__":  # self-check: python -m phasentic.reporting.pdf
     sample = {
         "analysis_id": "x", "decision": "tentative", "input": {"file_name": "s.xy", "point_count": 3, "angle_min_deg": 10, "angle_max_deg": 12},
         "radiation": {"label": "Cu Kα"}, "peaks": [{"position_deg": 11.0, "intensity": 50, "width_deg": 0.1}],
-        "provenance": {"settings": {}, "input_source": {"metadata": {"source_radiation": {"ka1_angstrom": 1.5406}}}},
+        "provenance": {"settings": {"sample_chemistry": "La2O3 SrCO3", "instrument": {"vendor": "Rigaku", "model": "SmartLab", "goniometer_radius_mm": 300}}, "input_source": {"metadata": {"source_radiation": {"ka1_angstrom": 1.5406}}}},
         "mixture": {"selected_hypothesis_id": "h", "hypotheses": [{"hypothesis_id": "h", "selection_score": 0.1, "components": [
             {"reference_id": "powcod:1", "formula": "La2 O3", "space_group": "P-3m1", "matched_peak_indices": [0]}]}],
             "residual_trace": {"angles_deg": [10, 11, 12], "observed_intensities": [1, 50, 1], "calculated_intensities": [0, 45, 0],
                                "background_intensities": [1, 1, 1], "residual_intensities": [0, 4, 0]}},
     }
-    data = report_pdf(sample)
+    data = report_pdf(sample, "Lab of Tests\nSome Street 1", "C:\\reports")
     assert data.startswith(b"%PDF") and len(data) > 1000
     print("ok")

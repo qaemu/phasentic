@@ -10,13 +10,15 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="/"><img src="/static/logo-mark.svg" alt="" width="26" height="26" /><span>Phasentic</span></a>
+      <a class="brand" href="/"><img src="/static/logo-mark.svg" alt="" width="24" height="24" /><span>Phasentic</span></a>
       <p class="tagline" data-i18n="lede">Powder X-ray diffraction phase identification</p>
       <nav class="topnav">
-        <select id="language" aria-label="Language">
-          <option value="en">English</option>
-          <option value="es">Español</option>
-        </select>
+        <label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>
+          <select id="language" aria-label="Language">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </label>
         <a href="https://github.com/qaemu/phasentic">Source</a>
       </nav>
     </header>
@@ -25,10 +27,15 @@
       <form id="analysis-form" class="rail" novalidate>
         <section class="block">
           <h2 data-i18n="sample">Sample</h2>
-          <label class="field"><span data-i18n="file">Pattern file</span>
-            <input id="file" name="file" type="file" accept=".xy,.xrdml,.raw" multiple required />
+          <div class="field">
+            <span data-i18n="file">Pattern file</span>
+            <input id="file" name="file" type="file" accept=".xy,.xrdml,.raw" multiple hidden />
+            <div class="dropzone" id="dropzone">
+              <button id="file-button" class="secondary" type="button" data-i18n="chooseFiles">Choose files</button>
+              <span id="file-name">No file chosen</span>
+            </div>
             <small data-i18n="fileHint">.xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.</small>
-          </label>
+          </div>
           <label class="field"><span data-i18n="chemistry">Precursor and target formulas</span>
             <input id="chemistry" type="text" maxlength="400" placeholder="e.g. Ag2O BaCO3 Ba2Ag2C2O7" autocomplete="off" spellcheck="false" />
             <small data-i18n="chemistryHint">Candidates are limited to these elements plus H, C and O.</small>
@@ -37,10 +44,7 @@
 
         <section class="block">
           <h2 data-i18n="method">Method</h2>
-          <label class="choice"><input id="validated-preset" type="checkbox" checked />
-            <span><b data-i18n="validatedPreset">Validated method</b><small data-i18n="validatedHint">The settings tested on 200 sealed test scans. Needs Cu Kα and the formulas above.</small></span>
-          </label>
-          <div class="pair source-pair">
+          <div class="pair">
             <label class="field"><span data-i18n="radiation">Anode</span>
               <select id="radiation" name="radiation">
                 <option value="Cu Ka">Cu Kα</option>
@@ -50,14 +54,10 @@
                 <option value="Ag Ka">Ag Kα</option>
               </select>
             </label>
-            <label class="field"><span data-i18n="reference">Reference database</span>
-              <select id="reference-source" name="reference_source">
-                <option value="demo">Demo subset</option>
-                <option value="pow_cod" disabled>Reference database (not installed)</option>
-              </select>
-            </label>
+            <div class="field"><span data-i18n="reference">Reference database</span>
+              <p id="reference-status" class="readout" aria-live="polite">…</p>
+            </div>
           </div>
-          <p id="reference-status" class="note" aria-live="polite"></p>
           <details id="custom-settings" class="fold">
             <summary data-i18n="customSettings">Search settings</summary>
             <div class="fold-body">
@@ -72,62 +72,67 @@
               <p class="note" data-i18n="customHint">Validated values: 0.10° and 5 phases. Other values are not validated.</p>
             </div>
           </details>
-        </section>
-
-        <details class="fold block">
-          <summary data-i18n="optional">Instrument</summary>
-          <div class="fold-body">
-            <div class="pair">
-              <label class="field"><span data-i18n="vendor">Vendor</span>
-                <input id="instrument-vendor" type="text" maxlength="120" placeholder="Rigaku" />
-              </label>
-              <label class="field"><span data-i18n="model">Model</span>
-                <input id="instrument-model" type="text" maxlength="120" placeholder="SmartLab" />
+          <details class="fold">
+            <summary data-i18n="optional">Instrument</summary>
+            <div class="fold-body">
+              <div class="pair">
+                <label class="field"><span data-i18n="vendor">Vendor</span>
+                  <input id="instrument-vendor" type="text" maxlength="120" placeholder="Rigaku" />
+                </label>
+                <label class="field"><span data-i18n="model">Model</span>
+                  <input id="instrument-model" type="text" maxlength="120" placeholder="SmartLab" />
+                </label>
+              </div>
+              <label class="field"><span data-i18n="radius">Goniometer radius (mm)</span>
+                <input id="instrument-radius" type="number" min="0.001" max="1000" step="0.1" />
               </label>
             </div>
-            <label class="field"><span data-i18n="radius">Goniometer radius (mm)</span>
-              <input id="instrument-radius" type="number" min="0.001" max="1000" step="0.1" />
-            </label>
-          </div>
-        </details>
+          </details>
+        </section>
+
+        <section class="block">
+          <h2 data-i18n="reportsTitle">Reports</h2>
+          <details id="reports-fold" class="fold">
+            <summary data-i18n="reportSettings">Laboratory and folder</summary>
+            <div class="fold-body">
+              <label class="field"><span data-i18n="laboratory">Laboratory name and address</span>
+                <textarea id="laboratory" rows="2" maxlength="500"></textarea>
+              </label>
+              <label class="field"><span data-i18n="reportFolder">Save every report to this folder</span>
+                <input id="report-folder" type="text" maxlength="1000" placeholder="C:\Users\you\Documents\XRD reports" autocomplete="off" spellcheck="false" />
+                <small data-i18n="reportFolderHint">Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.</small>
+              </label>
+              <div class="pair">
+                <button id="choose-folder" class="secondary" type="button" data-i18n="chooseFolder" hidden>Choose folder…</button>
+                <button id="save-report-settings" class="secondary" type="button" data-i18n="saveSettings">Save</button>
+              </div>
+              <p id="report-settings-status" class="note" aria-live="polite"></p>
+            </div>
+          </details>
+          <details id="history-fold" class="fold">
+            <summary data-i18n="history">Recent analyses</summary>
+            <div id="history-list" class="fold-body"></div>
+          </details>
+        </section>
 
         <div class="submit">
           <button type="submit" class="primary" data-i18n="analyze">Analyze</button>
           <button id="cancel-button" type="button" class="secondary" data-i18n="cancel" hidden>Cancel</button>
-          <label class="choice auto-pdf"><input id="auto-pdf" type="checkbox" />
-            <span><b data-i18n="autoPdf">Export analysis’ PDF</b><small data-i18n="autoPdfHint">Several files: one ZIP with a PDF per file.</small></span>
+          <label class="check auto-pdf"><input id="auto-pdf" type="checkbox" />
+            <span data-i18n="autoPdf">Export analysis’ PDF</span>
           </label>
           <p id="form-status" class="status" aria-live="polite"></p>
         </div>
-
-        <details id="reports-fold" class="fold block">
-          <summary data-i18n="reportsTitle">Reports</summary>
-          <div class="fold-body">
-            <label class="field"><span data-i18n="laboratory">Laboratory name and address</span>
-              <textarea id="laboratory" rows="2" maxlength="500"></textarea>
-            </label>
-            <label class="field"><span data-i18n="reportFolder">Save every report to this folder</span>
-              <input id="report-folder" type="text" maxlength="1000" placeholder="C:\Users\you\Documents\XRD reports" autocomplete="off" spellcheck="false" />
-              <small data-i18n="reportFolderHint">Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.</small>
-            </label>
-            <div class="pair">
-              <button id="choose-folder" class="secondary" type="button" data-i18n="chooseFolder" hidden>Choose folder…</button>
-              <button id="save-report-settings" class="secondary" type="button" data-i18n="saveSettings">Save</button>
-            </div>
-            <p id="report-settings-status" class="note" aria-live="polite"></p>
-          </div>
-        </details>
-
-        <details id="history-fold" class="fold block">
-          <summary data-i18n="history">Recent analyses</summary>
-          <div id="history-list" class="fold-body"></div>
-        </details>
       </form>
 
       <main class="work">
         <section id="empty-state" class="empty">
-          <h2 data-i18n="emptyTitle">No analysis yet</h2>
-          <p data-i18n="emptyText">Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.</p>
+          <button id="empty-drop" class="drop-target" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4l4 4"/><path d="M4 15v4h16v-4"/></svg>
+            <span class="drop-title" data-i18n="emptyTitle">Drop pattern files here</span>
+            <span class="drop-sub" data-i18n="emptyText">or click to choose .xy, .xrdml or ASCII .raw files</span>
+          </button>
+          <p class="empty-next" data-i18n="emptyNext">Then type the precursor and target formulas and press Analyze. The fit, the competing hypotheses, the quality checks and the reports appear here.</p>
         </section>
 
         <section id="batch" class="part" hidden>
@@ -139,26 +144,24 @@
         </section>
 
         <section id="result" class="result" hidden>
-          <div class="result-head">
-            <div class="verdict">
-              <span class="eyebrow" data-i18n="decisionLabel">Decision</span>
+          <header class="result-head">
+            <div class="result-title">
+              <h1 id="phase-summary" class="phase-summary"></h1>
               <span id="decision" class="decision">—</span>
             </div>
-            <div class="phases">
-              <span class="eyebrow" data-i18n="selected">Selected phases</span>
-              <div id="phase-summary" class="phase-summary"></div>
-            </div>
-            <div class="actions">
-              <button id="download-pdf" class="primary" type="button">PDF</button>
+            <div class="actions" role="group" aria-label="Export">
+              <button id="download-pdf" class="primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg>PDF</button>
               <button id="download-pdf-report" class="secondary" type="button" data-i18n="downloadReport">Formal report</button>
               <button id="download-cif" class="secondary" type="button">CIF</button>
               <button id="download-report" class="secondary" type="button" data-i18n="download">JSON</button>
             </div>
-          </div>
-          <p id="analysis-id" class="note mono"></p>
+            <p id="analysis-id" class="meta"></p>
+          </header>
 
-          <div id="plot" class="fig"></div>
-          <p class="note" data-i18n="zoomHint">Drag over the graph to zoom; double-click to reset.</p>
+          <section class="part plot-part">
+            <div id="plot" class="fig"></div>
+            <p class="note" data-i18n="zoomHint">Drag over the graph to zoom; double-click to reset.</p>
+          </section>
 
           <section class="part">
             <h2 data-i18n="hypotheses">Phase hypotheses</h2>

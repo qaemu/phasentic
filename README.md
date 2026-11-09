@@ -33,9 +33,9 @@ phase hypotheses with every setting, hash and warning recorded in a JSON
 report. It runs locally, in the browser or from the command line.
 
 <p align="center">
-  <img src="docs/images/interface.png" alt="Phasentic interface: a tentative result of ZrO2 and LiOH·H2O with the fit plot and the competing hypotheses" width="900">
+  <img src="docs/images/interface.png" alt="Phasentic interface: a tentative ZrO2 result with the fit plot, the competing hypotheses and the alternatives per phase" width="900">
   <br>
-  <sub>A development scan from the Precursor Genome dataset (PG_2452, Cu Kα), picked at random. Phasentic finds ZrO₂ and LiOH·H₂O; the human-refined label also contains Li₂CO₃, which this run misses. The leftover signal is visible under <i>Evidence per phase</i>.</sub>
+  <sub>A development scan from the Precursor Genome dataset (PG_2452, Cu Kα), picked at random. Phasentic selects ZrO₂. The human-refined label also contains two minor phases: LiOH·H₂O, which appears only in the competing hypotheses (ZrO₂ + LiH₃O₂), and Li₂CO₃, which this run misses.</sub>
 </p>
 
 ## How accurate is it

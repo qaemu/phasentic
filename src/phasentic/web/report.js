@@ -6,7 +6,7 @@
 (function (root) {
   "use strict";
 
-  const PHASE_COLORS = ["#0072b2", "#d55e00", "#009e73", "#cc79a7", "#e69f00"]; // validated, light surface
+  const PHASE_COLORS = ["#0072b2", "#009e73", "#cc79a7", "#56b4e9", "#6b4c9a"]; // validated, light surface
   const INK = "#1d2430", MUTED = "#5d6673", RULE = "#d6d9de", OBS = "#9aa1ab", MODEL = "#1d2430";
 
   const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -219,18 +219,20 @@
     const missing = sel ? (sel.missing_expected_lines || []).length : 0;
     const unexplained = sel ? (sel.unexplained_peak_positions || []).length : 0;
     const altClose = (() => { const hs = (r.mixture?.hypotheses || []).filter((h) => h !== sel && Number.isFinite(h.selection_score)); if (!sel || !hs.length) return null; const best = Math.min(...hs.map((h) => h.selection_score)); return (best - sel.selection_score) / sel.selection_score; })();
-    const isPowcod = (p.reference_source || s.reference_source) === "pow_cod";
+    const isPowcod = true;  // the only reference source
     const preset = isPowcod && opts.preset === "validated";
     const elements = (s.allowed_elements || []).join(", ");
     const release = String(p.powcod_release || "");
     const isPowcodRelease = isPowcod && !release.includes("COD");
     const dbShort = release.includes("COD") ? esc(release) : `POW_COD ${esc(release)}`;
-    const dbName = !isPowcod ? "the built-in demo subset (three phases; not for real samples)"
-      : release.includes("COD") ? `${dbShort}, powder patterns calculated from the Crystallography Open Database [2]` : `${dbShort} (CNR) [3], from the Crystallography Open Database [2]`;
+    const dbName = release.includes("COD") ? `${dbShort}, powder patterns calculated from the Crystallography Open Database [2]` : `${dbShort} (CNR) [3], from the Crystallography Open Database [2]`;
     const pct = (v, d = 1) => (Number.isFinite(Number(v)) ? `${Number(v).toFixed(d)}&#8201;%` : "—");  // ISO 80000: space before %
     const pinned = Array.isArray(s.pinned_reference_ids) ? s.pinned_reference_ids : [];
     const mq = (r.mixture && r.mixture.query) || {};
     const lab = String(opts.laboratory || "").trim();
+    const ins = s.instrument || {};  // as entered by the operator
+    const insName = [ins.vendor, ins.model].filter(Boolean).map(esc).join(" ");
+    const chem = String(s.sample_chemistry || "").trim();
 
     const lambda = `${rad.ka1_angstrom ? `<i>λ</i>(K<i>α</i><sub>1</sub>) = ${num(rad.ka1_angstrom, 6)} Å` : ""}${rad.ka2_angstrom ? `, <i>λ</i>(K<i>α</i><sub>2</sub>) = ${num(rad.ka2_angstrom, 6)} Å` : ""}${rad.ka2_to_ka1_intensity_ratio != null ? `, <i>I</i>(K<i>α</i><sub>2</sub>)/<i>I</i>(K<i>α</i><sub>1</sub>) = ${num(rad.ka2_to_ka1_intensity_ratio, 3)}` : ""}`;
     const part = (v) => esc(String(v).replace(/\.+$/, ""));
@@ -268,16 +270,17 @@
 
     const phaseList = phases.map((ph) => `${formula(ph.component.formula)} (${spaceGroup(ph.component.space_group)})`).join(", ");
     const itemName = esc(input.file_name || "the item");
-    const dbPhrase = isPowcod ? "reference patterns calculated from the Crystallography Open Database" : "a demonstration reference set";
+    const dbPhrase = "reference patterns calculated from the Crystallography Open Database";
     const abstract = phases.length
-      ? `The powder X-ray diffraction pattern of ${itemName} was compared with ${dbPhrase}${elements ? `, restricted to the elements ${esc(elements)}` : ""}. The best-supported phase set is ${phaseList} (decision: ${decisionText.toLowerCase()}${pinned.length ? "; one phase fixed by the operator" : ""}).${unexplained ? ` ${unexplained} detected peak${unexplained > 1 ? "s are" : " is"} not explained by these phases.` : ""} The identification is qualitative: no phase quantities, lattice parameters or Rietveld refinement are reported.`
-      : `The powder X-ray diffraction pattern of ${itemName} was compared with ${dbPhrase}. No phase set explained the pattern well enough to be reported (decision: ${decisionText.toLowerCase()}).`;
+      ? `The powder X-ray diffraction pattern of ${itemName} was compared with ${dbPhrase}${elements ? `, restricted to the elements ${chem ? `of the stated precursor and target formulas (${esc(chem)}): ` : ""}${esc(elements)}` : ""}. The best-supported phase set is ${phaseList} (decision: ${decisionText.toLowerCase()}${pinned.length ? "; one phase fixed by the operator" : ""}).${unexplained ? ` ${unexplained} detected peak${unexplained > 1 ? "s are" : " is"} not explained by these phases.` : ""} The identification is qualitative: no phase quantities, lattice parameters or Rietveld refinement are reported.`
+      : `The powder X-ray diffraction pattern of ${itemName} was compared with ${dbPhrase}${elements ? `, restricted to the elements ${chem ? `of the stated precursor and target formulas (${esc(chem)}): ` : ""}${esc(elements)}` : ""}. No phase set explained the pattern well enough to be reported (decision: ${decisionText.toLowerCase()}).`;
     const conclusion = phases.length
       ? `${phaseList} ${phases.length > 1 ? "are" : "is"} identified as ${r.decision === "supported" ? "present (supported)" : "the most plausible phase set; the identification is tentative and must be confirmed by an analyst"}. No further conclusion should be drawn from this report without review.`
       : "No phase is identified. The scan quality, the stated chemistry and the presence of the expected phases in the reference database should be checked.";
 
     // Experimental section, written from the measurement file where it records the conditions.
     const unit = (v) => esc(String(v || "").replace(/ seconds$/, " s").replace(/ deg$/, "°"));
+    const radius = acq.goniometer_radius ? unit(acq.goniometer_radius) : ins.goniometer_radius_mm ? `${num(ins.goniometer_radius_mm, 1)} mm` : "";
     const sentence = (parts) => parts.filter(Boolean).join(" ");
     const measured = acq.measured_start ? (() => {
       const [d0, t0] = String(acq.measured_start).split("T"), t1 = acq.measured_end ? String(acq.measured_end).split("T")[1] : "";
@@ -286,7 +289,7 @@
       return `on ${esc(d0)} between ${clock(t0)} and ${clock(t1)}${zone ? ` (UTC${zone[0] === "Z" ? "" : zone[0].replace("-", "−")})` : ""}`;
     })() : "";
     const experimental1 = sentence([
-      `The pattern (file ${itemName}) was recorded${acq.sample_mode ? ` in ${esc(acq.sample_mode.toLowerCase())} geometry` : ""}${acq.instrument_id || acq.instrument_software ? ` on a diffractometer (${[acq.instrument_id && `instrument ${esc(acq.instrument_id)}`, acq.instrument_software && `control software ${esc(acq.instrument_software)}`].filter(Boolean).join(", ")})` : ""}${acq.goniometer_radius ? ` with a goniometer radius of ${unit(acq.goniometer_radius)}` : ""}, using ${esc(r.radiation?.label || "the stated")} radiation${lambda ? ` (${lambda})` : ""}${acq.tube ? ` from a ${esc(acq.tube)} tube${acq.tube_voltage && acq.tube_current ? ` operated at ${unit(acq.tube_voltage)} and ${unit(acq.tube_current)}` : ""}` : ""}.`,
+      `The pattern (file ${itemName}) was recorded${acq.sample_mode ? ` in ${esc(acq.sample_mode.toLowerCase())} geometry` : ""}${insName || acq.instrument_id || acq.instrument_software ? ` on a ${insName ? `${insName} ` : ""}diffractometer${acq.instrument_id || acq.instrument_software ? ` (${[acq.instrument_id && `instrument ${esc(acq.instrument_id)}`, acq.instrument_software && `control software ${esc(acq.instrument_software)}`].filter(Boolean).join(", ")})` : ""}` : ""}${radius ? ` with a goniometer radius of ${radius}` : ""}, using ${esc(r.radiation?.label || "the stated")} radiation${lambda ? ` (${lambda})` : ""}${acq.tube ? ` from a ${esc(acq.tube)} tube${acq.tube_voltage && acq.tube_current ? ` operated at ${unit(acq.tube_voltage)} and ${unit(acq.tube_current)}` : ""}` : ""}.`,
       filters ? `K<i>β</i> radiation was suppressed with: ${filters}.` : "",
       slits ? `Beam optics: ${slits}.` : "",
       acq.detector ? `Intensities were recorded with a ${esc(acq.detector)}${acq.detector_mode ? ` in ${esc(acq.detector_mode.toLowerCase())} mode` : ""}.` : "",
@@ -434,6 +437,8 @@ ${alternativesFigure(r) ? `<div class="span">${alternativesFigure(r)}</div>` : "
     ${row("Location of measurement, if different", blank)}
     ${row("Customer (name, contact)", blank)}
     ${row("Item description and condition", blank)}
+    ${row("Sample chemistry (precursor and target formulas)", chem ? esc(chem) : blank)}
+    ${row("Instrument", insName || radius ? [insName, radius && `goniometer radius ${radius}`].filter(Boolean).join(", ") : acq.instrument_id ? esc(acq.instrument_id) : blank)}
     ${row("Item identification", acq.sample_id || acq.sample_name ? esc(acq.sample_id || acq.sample_name) : blank)}
     ${row("Date of receipt", blank)}
     ${row("Date of measurement", acq.measured_start ? esc(String(acq.measured_start).slice(0, 10)) : blank)}
@@ -445,6 +450,7 @@ ${alternativesFigure(r) ? `<div class="span">${alternativesFigure(r)}</div>` : "
     ${row("Analysis identifier", `<span class="mono">${esc(r.analysis_id)}</span>`)}
     ${row("Measurement file SHA-256", `<span class="mono">${esc(input.sha256)}</span>`)}
     ${row("Software", `<span class="mono">${esc(p.algorithm_version)}; ${esc(r.mixture?.algorithm_version || "")}</span>`)}
+    ${opts.folder ? row("Records stored in", `<span class="mono">${esc(opts.folder)}</span>`) : ""}
     ${row("Reference database SHA-256", `<span class="mono">${esc(p.powcod_database_sha256 || "—")}</span>`)}
   </tbody>
 </table>

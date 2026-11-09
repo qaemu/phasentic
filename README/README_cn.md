@@ -28,9 +28,9 @@
 Phasentic 读取粉末XRD扫描数据（`.xy`、`.xrdml` 或 ASCII `.raw`），检测衍射峰，检索基于 [Crystallography Open Database](https://www.crystallography.net/cod/) 构建的参考数据库（或 CNR 的 [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/)），并对最多五个物相的混合物进行拟合。它给出经排序的物相假设，并将全部设置、哈希值和警告记录在 JSON 报告中。软件在本地运行，可通过浏览器或命令行使用。
 
 <p align="center">
-  <img src="../docs/images/interface.png" alt="Phasentic 界面：ZrO2 与 LiOH·H2O 的暂定结果，附拟合图和竞争假设" width="900">
+  <img src="../docs/images/interface.png" alt="Phasentic 界面：ZrO2 的暂定结果，附拟合图、竞争假设和各物相备选" width="900">
   <br>
-  <sub>随机选取的一条开发集扫描，来自 Precursor Genome 数据集（PG_2452，Cu Kα）。Phasentic 识别出 ZrO₂ 和 LiOH·H₂O；经人工 Rietveld 精修确定的标注中还含有 Li₂CO₃，本次运行未能检出。残余信号可在 <i>Evidence per phase</i>（各物相证据）中看到。</sub>
+  <sub>随机选取的一条开发集扫描，来自 Precursor Genome 数据集（PG_2452，Cu Kα）。Phasentic 选定 ZrO₂。经人工精修的标注中还含有两个次要物相：LiOH·H₂O 仅出现在竞争假设中（ZrO₂ + LiH₃O₂），Li₂CO₃ 则未被本次运行检出。</sub>
 </p>
 
 <a name="how-accurate-is-it"></a>

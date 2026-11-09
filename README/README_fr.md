@@ -34,9 +34,9 @@ classées, et consigne dans un rapport JSON chaque paramètre, chaque empreinte
 ligne de commande.
 
 <p align="center">
-  <img src="../docs/images/interface.png" alt="Interface de Phasentic : un résultat provisoire avec ZrO2 et LiOH·H2O, le graphique d’ajustement et les hypothèses concurrentes" width="900">
+  <img src="../docs/images/interface.png" alt="Interface de Phasentic : un résultat provisoire avec ZrO2, le graphique d’ajustement, les hypothèses concurrentes et les alternatives par phase" width="900">
   <br>
-  <sub>Un diffractogramme de développement du jeu de données Precursor Genome (PG_2452, Cu Kα), tiré au hasard. Phasentic trouve ZrO₂ et LiOH·H₂O ; l’étiquette affinée par un expert humain contient aussi Li₂CO₃, que cette analyse ne détecte pas. Le signal résiduel est visible sous <i>Evidence per phase</i> (éléments probants par phase).</sub>
+  <sub>Un diffractogramme de développement du jeu de données Precursor Genome (PG_2452, Cu Kα), tiré au hasard. Phasentic retient ZrO₂. L’étiquette affinée par un expert contient aussi deux phases minoritaires : LiOH·H₂O, qui n’apparaît que dans les hypothèses concurrentes (ZrO₂ + LiH₃O₂), et Li₂CO₃, que cette analyse ne détecte pas.</sub>
 </p>
 
 <a name="how-accurate-is-it"></a>

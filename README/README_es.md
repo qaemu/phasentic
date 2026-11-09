@@ -33,9 +33,9 @@ registra en un informe JSON todos los parámetros, hashes y advertencias. Se
 ejecuta en local, desde el navegador o desde la línea de comandos.
 
 <p align="center">
-  <img src="../docs/images/interface.png" alt="Interfaz de Phasentic: un resultado provisional de ZrO2 y LiOH·H2O con la gráfica del ajuste y las hipótesis alternativas" width="900">
+  <img src="../docs/images/interface.png" alt="Interfaz de Phasentic: un resultado provisional de ZrO2 con la gráfica del ajuste, las hipótesis alternativas y las alternativas por fase" width="900">
   <br>
-  <sub>Un difractograma de desarrollo del conjunto de datos Precursor Genome (PG_2452, Cu Kα), elegido al azar. Phasentic encuentra ZrO₂ y LiOH·H₂O; la etiqueta refinada manualmente también incluye Li₂CO₃, que esta ejecución no detecta. La señal residual puede verse en <i>Evidencia por fase</i>.</sub>
+  <sub>Un difractograma de desarrollo del conjunto de datos Precursor Genome (PG_2452, Cu Kα), elegido al azar. Phasentic selecciona ZrO₂. La etiqueta refinada manualmente contiene además dos fases minoritarias: LiOH·H₂O, que aparece solo en las hipótesis alternativas (ZrO₂ + LiH₃O₂), y Li₂CO₃, que esta ejecución no detecta.</sub>
 </p>
 
 <a name="how-accurate-is-it"></a>

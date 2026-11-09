@@ -1,17 +1,17 @@
 const translations = {
   en: {
     lede: "Powder X-ray diffraction phase identification",
-    sample: "Sample", file: "Pattern file", fileHint: ".xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.",
-    chemistry: "Precursor and target formulas", chemistryHint: "Candidates are limited to these elements plus H, C and O.",
-    method: "Method", validatedPreset: "Validated method", validatedHint: "The settings tested on 200 sealed test scans. Needs Cu Kα and the formulas above.",
+    sample: "Sample", file: "Pattern file", fileHint: ".xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.", chooseFiles: "Choose files", noFile: "No file chosen", nFiles: (n) => `${n} files`,
+    chemistry: "Precursor and target formulas", chemistryHint: "Candidates are limited to these elements plus H, C and O. With formulas and Cu Kα, the validated method is used.",
+    method: "Method",
     radiation: "Anode", reference: "Reference database", customSettings: "Search settings",
     tolerance: "Peak tolerance (° 2θ)", maxPhases: "Maximum phases",
     customHint: "Validated values: 0.10° and 5 phases. Other values are not validated.",
     optional: "Instrument", vendor: "Vendor", model: "Model", radius: "Goniometer radius (mm)",
     instrumentPair: "Give both instrument vendor and model, or leave both blank.",
     analyze: "Analyze", running: "Analysing…", done: "Done. Read the result as a ranked hypothesis.",
-    emptyTitle: "No analysis yet",
-    emptyText: "Choose a scan, type the precursor and target formulas, keep the validated method selected and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.",
+    emptyTitle: "Drop pattern files here", emptyNext: "Then type the precursor and target formulas and press Analyze. The fit, the competing hypotheses, the quality checks and the reports appear here.", metaFile: "File", metaRadiation: "Radiation", metaId: "Analysis",
+    emptyText: "or click to choose .xy, .xrdml or ASCII .raw files",
     decisionLabel: "Decision", selected: "Selected phases", noMixture: "No mixture selected",
     downloadReport: "Formal report", download: "JSON",
     hypotheses: "Phase hypotheses", phaseEvidence: "Evidence per phase", candidates: "Single-phase candidates", diagnostics: "Quality and provenance",
@@ -29,8 +29,8 @@ const translations = {
     mixtureQueryCandidatePool: "Candidate pool", mixtureQueryRequeries: "Residual re-queries", mixtureQueryMaxFitAttempts: "Max fit attempts",
     mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
     mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
-    autoPdf: "Export analysis’ PDF", autoPdfHint: "Several files: one ZIP with a PDF per file.", pdfFailed: (m) => `PDF not created: ${m}`,
-    reportsTitle: "Reports", laboratory: "Laboratory name and address", reportFolder: "Save every report to this folder",
+    autoPdf: "Export analysis’ PDF", pdfFailed: (m) => `PDF not created: ${m}`,
+    reportsTitle: "Reports", reportSettings: "Laboratory and folder", laboratory: "Laboratory name and address", reportFolder: "Save every report to this folder",
     reportFolderHint: "Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.",
     chooseFolder: "Choose folder…", saveSettings: "Save", settingsSaved: "Saved.", autoSaveOff: "Reports are not saved automatically.", autoSaveOn: (f) => `Reports are saved to ${f}.`,
     reportSaved: (f) => `Report saved to ${f}.`, reportNotSaved: (m) => `Report not saved: ${m}`,
@@ -42,22 +42,21 @@ const translations = {
     altIntro: "How well each entry fits in a phase's place (100% = perfect fit), with the other materials within 80% of the best one; other entries of the same material are left out. Choosing one fixes it and searches the smaller phases again.",
     altFit: "Fit", altUse: "Use this", altNone: "No other material fits within 80% of the best.", altSelected: "selected",
     pinned: "Fixed by you:", unpin: "Clear and analyze again",
-    stale: "A setting changed, so the previous result was cleared.",
     footerAi: "Open source (MIT).",
   },
   es: {
     lede: "Identificación de fases por difracción de rayos X de polvo",
-    sample: "Muestra", file: "Archivo del patrón", fileHint: ".xy, .xrdml o .raw ASCII, hasta 10 MB. Seleccione varios para un lote.",
-    chemistry: "Fórmulas de precursores y objetivo", chemistryHint: "Los candidatos se limitan a estos elementos más H, C y O.",
-    method: "Método", validatedPreset: "Método validado", validatedHint: "La configuración probada en 200 escaneos de prueba sellados. Requiere Cu Kα y las fórmulas de arriba.",
+    sample: "Muestra", file: "Archivo del patrón", fileHint: ".xy, .xrdml o .raw ASCII, hasta 10 MB. Seleccione varios para un lote.", chooseFiles: "Elegir archivos", noFile: "Ningún archivo elegido", nFiles: (n) => `${n} archivos`,
+    chemistry: "Fórmulas de precursores y objetivo", chemistryHint: "Los candidatos se limitan a estos elementos más H, C y O. Con fórmulas y Cu Kα se usa el método validado.",
+    method: "Método",
     radiation: "Ánodo", reference: "Base de referencias", customSettings: "Ajustes de búsqueda",
     tolerance: "Tolerancia de pico (° 2θ)", maxPhases: "Máximo de fases",
     customHint: "Valores validados: 0,10° y 5 fases. Otros valores no están validados.",
     optional: "Instrumento", vendor: "Fabricante", model: "Modelo", radius: "Radio del goniómetro (mm)",
     instrumentPair: "Indique fabricante y modelo, o deje ambos vacíos.",
     analyze: "Analizar", running: "Analizando…", done: "Listo. Lea el resultado como una hipótesis ordenada.",
-    emptyTitle: "Todavía no hay análisis",
-    emptyText: "Elija un escaneo, escriba las fórmulas de precursores y objetivo, mantenga el método validado y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y un informe imprimible aparecerán aquí.",
+    emptyTitle: "Suelte aquí los archivos de patrón", emptyNext: "Luego escriba las fórmulas de precursores y objetivo y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y los informes aparecen aquí.", metaFile: "Archivo", metaRadiation: "Radiación", metaId: "Análisis",
+    emptyText: "o haga clic para elegir archivos .xy, .xrdml o .raw ASCII",
     decisionLabel: "Decisión", selected: "Fases seleccionadas", noMixture: "No se seleccionó una mezcla",
     downloadReport: "Informe formal", download: "JSON",
     hypotheses: "Hipótesis de fases", phaseEvidence: "Evidencia por fase", candidates: "Candidatos de una sola fase", diagnostics: "Calidad y procedencia",
@@ -75,8 +74,8 @@ const translations = {
     mixtureQueryCandidatePool: "Conjunto de candidatos", mixtureQueryRequeries: "Nuevas consultas por residual", mixtureQueryMaxFitAttempts: "Máximo de intentos de ajuste",
     mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
     mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
-    autoPdf: "Exportar PDF del análisis", autoPdfHint: "Varios archivos: un ZIP con un PDF por archivo.", pdfFailed: (m) => `PDF no creado: ${m}`,
-    reportsTitle: "Informes", laboratory: "Nombre y dirección del laboratorio", reportFolder: "Guardar cada informe en esta carpeta",
+    autoPdf: "Exportar PDF del análisis", pdfFailed: (m) => `PDF no creado: ${m}`,
+    reportsTitle: "Informes", reportSettings: "Laboratorio y carpeta", laboratory: "Nombre y dirección del laboratorio", reportFolder: "Guardar cada informe en esta carpeta",
     reportFolderHint: "Ruta completa. Cada análisis guarda un informe PDF, un CIF de polvo (.cif), los datos (.json) y una copia del escaneo. Déjela vacía para desactivarlo.",
     chooseFolder: "Elegir carpeta…", saveSettings: "Guardar", settingsSaved: "Guardado.", autoSaveOff: "Los informes no se guardan automáticamente.", autoSaveOn: (f) => `Los informes se guardan en ${f}.`,
     reportSaved: (f) => `Informe guardado en ${f}.`, reportNotSaved: (m) => `Informe no guardado: ${m}`,
@@ -88,7 +87,6 @@ const translations = {
     altIntro: "Qué tan bien ajusta cada entrada en el lugar de una fase (100% = ajuste perfecto), con los otros materiales dentro del 80% del mejor; se omiten otras entradas del mismo material. Elegir una la fija y vuelve a buscar las fases menores.",
     altFit: "Ajuste", altUse: "Usar esta", altNone: "Ningún otro material ajusta dentro del 80% del mejor.", altSelected: "seleccionada",
     pinned: "Fijadas por usted:", unpin: "Quitar y analizar de nuevo",
-    stale: "Cambió una configuración, así que se borró el resultado anterior.",
     footerAi: "Código abierto (MIT).",
   },
 };
@@ -116,6 +114,7 @@ function setLanguage(language) {
     const text = translations[language][element.dataset.i18n];
     if (typeof text === "string") element.textContent = text;
   });
+  if ($("file-name")) showFileName();
 }
 
 function appendKeyValueList(parent, entries, className = "provenance-list") {
@@ -269,7 +268,7 @@ function renderDiagnostics(parent, report) {
     [L.factSn, Number.isFinite(sn) ? sn.toFixed(0) : "—"],
     [L.factBaseline, Number.isFinite(base) ? `${(base * 100).toFixed(0)}%` : "—"],
     [L.factCalibration, q.calibration_status || "—"],
-    [L.factReference, p.reference_source === "pow_cod" ? databaseLabel(p.powcod_release) : "demo"],
+    [L.factReference, databaseLabel(p.powcod_release)],
     [L.factPeaks, (report.peaks || []).length],
     [L.factDisplacement, Number.isFinite(disp) ? `${disp.toFixed(3)}°` : "—"],
     [L.factPoints, input.point_count ?? "—"],
@@ -337,10 +336,11 @@ function renderReport(report) {
   const sel = selectedHypothesis(report);
   const colors = R().PHASE_COLORS;
   setHTML($("phase-summary"), sel && (sel.components || []).length
-    ? sel.components.map((c, i) => `<span><i style="background:${colors[i % colors.length]}"></i>${R().formula(c.formula)}<em>${R().spaceGroup(c.space_group)}</em></span>`).join("")
+    ? sel.components.map((c, i) => `<span><i class="swatch" style="background:${colors[i % colors.length]}"></i>${R().formula(c.formula)}<em>${R().spaceGroup(c.space_group)}</em></span>`).join("")
     : `<span><em>${esc(L.noMixture)}</em></span>`);
   const input = report.input || {};
-  $("analysis-id").textContent = `${report.analysis_id || ""} · ${input.file_name || ""} · ${report.radiation?.label || ""}`;
+  setHTML($("analysis-id"), [[L.metaFile, input.file_name], [L.metaRadiation, report.radiation?.label], [L.metaId, report.analysis_id]]
+    .filter(([, v]) => v).map(([k, v]) => `<span><span class="k">${esc(k)}</span> <span class="v">${esc(v)}</span></span>`).join(""));
   drawFit(report);
   const evidence = sel ? R().figures.phases(report) : "";
   setHTML($("phase-evidence"), evidence);
@@ -358,7 +358,7 @@ function clearRenderedReport() {
   $("decision").textContent = "—"; $("analysis-id").textContent = "";
 }
 
-function invalidateAnalysis(message = translations[$("language").value].stale) {
+function invalidateAnalysis(message = "") {
   pinnedIds = []; currentFile = null; batchRows = []; $("batch").hidden = true;
   analysisRequest += 1;
   if (activeAnalysisController) activeAnalysisController.abort();
@@ -458,16 +458,28 @@ $("radiation").addEventListener("change", () => {
 
 // A file dropped anywhere is selected instead of being opened, which would
 // replace Phasentic (and the results) in the browser tab or app window.
+let dragDepth = 0;  // highlights the drop zone while a file is dragged over the window
+document.addEventListener("dragenter", () => { dragDepth += 1; document.body.classList.add("dragging"); });
+document.addEventListener("dragleave", () => { dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) document.body.classList.remove("dragging"); });
 document.addEventListener("dragover", (event) => event.preventDefault());
 document.addEventListener("drop", (event) => {
   event.preventDefault();
+  dragDepth = 0; document.body.classList.remove("dragging");
   const files = event.dataTransfer && event.dataTransfer.files;
   if (!files || !files.length) return;
   const input = event.target.matches && event.target.matches("input[type=file]") ? event.target : $("file");
   input.files = files;
   input.dispatchEvent(new Event("change", { bubbles: true }));
 });
+// The native file input shows the operating system's language; a button and label follow the app's.
+function showFileName() {
+  const files = $("file").files, L = currentLanguage();
+  $("file-name").textContent = !files.length ? L.noFile : files.length === 1 ? files[0].name : L.nFiles(files.length);
+}
+$("file-button").addEventListener("click", () => $("file").click());
+$("empty-drop").addEventListener("click", () => $("file").click());
 $("file").addEventListener("change", () => {
+  showFileName();
   invalidateAnalysis();
 });
 
@@ -475,7 +487,6 @@ $("file").addEventListener("change", () => {
   "tolerance",
   "max-phases",
   "chemistry",
-  "validated-preset",
   "instrument-vendor",
   "instrument-model",
   "instrument-radius",
@@ -483,16 +494,9 @@ $("file").addEventListener("change", () => {
   invalidateAnalysis();
 }));
 
-$("reference-source").addEventListener("change", () => {
-  invalidateAnalysis();
-  if ($("reference-source").value === "pow_cod" && $("reference-source").selectedOptions[0].disabled) {
-    $("reference-source").value = "demo";
-    $("form-status").textContent = "No reference database is installed.";
-  }
-});
 
 function reportOptions() {
-  return { version: appVersion, preset: $("validated-preset").checked && !Object.keys(searchOverrides()).length ? "validated" : null, laboratory: reportSettings.laboratory };
+  return { version: appVersion, preset: usesValidatedMethod() && !Object.keys(searchOverrides()).length ? "validated" : null, laboratory: reportSettings.laboratory, folder: reportSettings.report_folder };
 }
 
 // After each finished analysis: report (.html), powder CIF and JSON into the chosen folder, if one is set.
@@ -571,10 +575,15 @@ function formSettings() {
     if (Number.isFinite(radius) && radius > 0) instrument.goniometer_radius_mm = radius;
   }
   const chemistry = $("chemistry").value.trim();
-  const common = { radiation: $("radiation").value, reference_source: $("reference-source").value, ...(chemistry ? { chemistry } : {}), ...(Object.keys(instrument).length ? { instrument } : {}) };
-  return $("validated-preset").checked
+  const common = { radiation: $("radiation").value, reference_source: "pow_cod", ...(chemistry ? { chemistry } : {}), ...(Object.keys(instrument).length ? { instrument } : {}) };
+  return usesValidatedMethod()
     ? { ...common, preset: "validated", ...searchOverrides() }
     : { ...common, ...searchValues(), analysis_mode: "full_mixture" };
+}
+
+// The validated method is used whenever the formulas are given and the anode is Cu (as tested).
+function usesValidatedMethod() {
+  return Boolean($("chemistry").value.trim()) && $("radiation").value === "Cu Ka";
 }
 
 // Peak tolerance and maximum phases of the validated method; other values are custom.
@@ -702,6 +711,7 @@ function batchPhases(report) {
 
 function renderBatch() {
   const L = currentLanguage();
+  $("empty-state").hidden = true;
   const rows = batchRows.map((row, i) => {
     const phases = batchPhases(row.report).map((c) => R().formula(c.formula)).join(" + ");
     const decision = row.report ? esc((L.decisions && L.decisions[row.report.decision]) || row.report.decision) : "";
@@ -735,7 +745,7 @@ $("cancel-button").addEventListener("click", () => {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const files = Array.from($("file").files);
-  if (!files.length) return;
+  if (!files.length) { $("form-status").textContent = currentLanguage().noFile; return; }
   if (files.length > 1) void analyzeBatch(files);
   else { $("batch").hidden = true; batchRows = []; void analyzeSingle(files[0]); }
 });
@@ -767,18 +777,12 @@ fetch("/api/v1/reference-sources")
   .then((response) => fetchJsonOrThrow(response, "Reference-source status unavailable"))
   .then((payload) => {
     const data = payload.data && typeof payload.data === "object" && !Array.isArray(payload.data) ? payload.data : {};
-    const selector = $("reference-source");
-    const powCod = selector.querySelector('option[value="pow_cod"]');
     const sources = data.sources && typeof data.sources === "object" && !Array.isArray(data.sources) ? data.sources : {};
     const powCodInfo = sources.pow_cod && typeof sources.pow_cod === "object" ? sources.pow_cod : {};
-    if (powCod) {
-      powCod.disabled = powCodInfo.available !== true;
-      powCod.textContent = powCodInfo.available === true ? databaseLabel(powCodInfo.release) : "Reference database (not installed)";
-    }
-    if (data.selected === "pow_cod" && powCodInfo.available === true) selector.value = "pow_cod";
     $("reference-status").textContent = powCodInfo.available === true
       ? databaseLabel(powCodInfo.release)
-      : "No reference database installed; run the install command again (see README).";
+      : "Not installed. Run the install command again (see README).";
+    $("reference-status").classList.toggle("missing", powCodInfo.available !== true);
   })
-  .catch(() => { $("reference-status").textContent = "Reference-source status unavailable; demo subset remains active."; });
+  .catch(() => { $("reference-status").textContent = "Could not read the reference database status."; });
 

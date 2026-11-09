@@ -81,6 +81,7 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
         "peak_min_relative_prominence",
         "reference_limit",
         "allowed_elements",
+        "sample_chemistry",
         "instrument",
         "calibration",
         "analysis_mode",
@@ -124,12 +125,13 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
     chemistry = payload.pop("chemistry", None)
     if chemistry:
         payload["allowed_elements"] = list(chemistry_elements(chemistry))
+        payload["sample_chemistry"] = str(chemistry).strip()[:400]
     if preset is not None:
         if preset != "validated":
             raise ValueError("preset must be 'validated'")
         if not payload.get("allowed_elements"):
             raise ValueError("the validated preset needs the sample chemistry (precursor and target formulas)")
-        kept = {"radiation", "angle_unit", "reference_source", "allowed_elements", "instrument", "calibration", "pinned_reference_ids",
+        kept = {"radiation", "angle_unit", "reference_source", "allowed_elements", "sample_chemistry", "instrument", "calibration", "pinned_reference_ids",
                 "peak_tolerance_deg", "max_phases"}  # the operator may change these two
         payload = {**validated_preset(), **{key: value for key, value in payload.items() if key in kept}}
     unknown = set(payload) - allowed
@@ -142,8 +144,8 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
             values["angle_unit"] = AngleUnit(str(values["angle_unit"]))
         except ValueError as exc:
             raise ValueError("Unsupported angle unit") from exc
-    if "reference_source" in values and values["reference_source"] not in {"demo", "pow_cod"}:
-        raise ValueError("reference_source must be 'demo' or 'pow_cod'")
+    if "reference_source" in values and values["reference_source"] != "pow_cod":
+        raise ValueError("reference_source must be 'pow_cod'")
     if "analysis_mode" in values:
         try:
             internal_mode, residual_queries = analysis_mode_controls(values["analysis_mode"])

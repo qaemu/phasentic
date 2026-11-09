@@ -45,7 +45,6 @@ def build_parser() -> argparse.ArgumentParser:
         "--chemistry",
         help='precursor and target formulas, e.g. "Ag2O BaCO3 Ba2Ag2C2O7"; restricts candidates to their elements plus H, C and O',
     )
-    analyze.add_argument("--reference-source", choices=["demo", "pow_cod"], help="default: POW_COD when installed, else demo")
     analyze.add_argument("--powcod-db", type=Path, help="Trusted POW_COD SQLite database when --reference-source=pow_cod")
     analyze.add_argument("--powcod-cache", type=Path, help="Normalized POW_COD sidecar cache")
     analyze.add_argument("--powcod-equivalence", type=Path, help="Curated POW_COD equivalence sidecar")
@@ -309,7 +308,7 @@ def _setup() -> int:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "analyze":
-        reference_source = args.reference_source or default_reference_source()
+        reference_source = default_reference_source()
         try:
             allowed = chemistry_elements(args.chemistry) if args.chemistry else None
         except ValueError as exc:
@@ -323,6 +322,7 @@ def main(argv: list[str] | None = None) -> int:
                 angle_unit=AngleUnit(args.angle_unit),
                 reference_source=reference_source,
                 allowed_elements=allowed,
+                sample_chemistry=args.chemistry,
             )
             payload = analyze_file(
                 args.file,
@@ -339,6 +339,7 @@ def main(argv: list[str] | None = None) -> int:
             angle_unit=AngleUnit(args.angle_unit),
             reference_source=reference_source,
             allowed_elements=allowed,
+            sample_chemistry=args.chemistry or "",
             analysis_mode=analysis_mode,
             residual_candidate_queries=residual_candidate_queries,
             max_phases=args.max_phases,

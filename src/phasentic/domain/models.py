@@ -386,6 +386,8 @@ class AnalysisSettings:
     # Optional sample-context chemistry constraint: reference phases containing
     # any other element are excluded before ranking. ``None`` disables it.
     allowed_elements: tuple[str, ...] | None = None
+    # The precursor and target formulas as the operator typed them (for the report only).
+    sample_chemistry: str = ""
     # Synthesis heated in air: oxygen-free phases need a noble metal (or are
     # graphite). Applied together with ``allowed_elements``.
     oxidizing_synthesis: bool = False
@@ -394,7 +396,7 @@ class AnalysisSettings:
     missing_intensity_max: float = 1.0
     instrument: InstrumentMetadata | None = None
     calibration: CalibrationResult | None = None
-    reference_source: str = "demo"
+    reference_source: str = "pow_cod"
     # Optional benchmark/evaluation window.  ``None`` preserves the indexed
     # reference range used by ordinary application analyses.
     matching_two_theta_max_deg: float | None = None
@@ -481,8 +483,8 @@ class AnalysisSettings:
         return self.candidate_pool if self.candidate_lookup_budget is None else self.candidate_lookup_budget
 
     def validate(self) -> None:
-        if not isinstance(self.reference_source, str) or self.reference_source not in {"demo", "pow_cod"}:
-            raise ValueError("reference_source must be 'demo', 'pow_cod', or 'cod'")
+        if self.reference_source != "pow_cod":
+            raise ValueError("reference_source must be 'pow_cod' (the installed reference database)")
         if not isinstance(self.radiation, str) or not self.radiation.strip():
             raise ValueError("radiation must be a non-empty string")
         if not isinstance(self.angle_unit, AngleUnit):
@@ -513,6 +515,8 @@ class AnalysisSettings:
             raise ValueError("background_window_points must be odd and at least 5")
         if isinstance(self.missing_intensity_max, bool) or not isinstance(self.missing_intensity_max, (int, float)) or not 0.0 <= float(self.missing_intensity_max) <= 1.0:
             raise ValueError("missing_intensity_max must be between 0 and 1")
+        if not isinstance(self.sample_chemistry, str) or len(self.sample_chemistry) > 400:
+            raise ValueError("sample_chemistry must be text of at most 400 characters")
         if not isinstance(self.oxidizing_synthesis, bool):
             raise ValueError("oxidizing_synthesis must be a boolean")
         for name, low, high in (("lattice_change_penalty", 0.0, 100.0), ("entry_count_prior", 0.0, 1.0)):
@@ -677,7 +681,7 @@ class ReferencePhase:
     name: str
     space_group: str
     lines: tuple[ReferenceLine, ...]
-    source: str = "demo"
+    source: str = "cod"
     cod_entry_url: str | None = None
     cod_entry_id: str | None = None
     cod_block_id: str | None = None

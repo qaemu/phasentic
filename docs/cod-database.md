@@ -100,8 +100,7 @@ The source databases are opened read-only and fully integrity-checked by this
 command. If their size or modification identity changes after cache creation,
 verification fails with `POWCOD_SOURCE_CHANGED` and the cache must be rebuilt.
 A missing cache fails with
-`POWCOD_CACHE_NOT_FOUND`; the application never falls back to the demo source
-after a POW_COD request.
+`POWCOD_CACHE_NOT_FOUND`; there is no fallback database.
 
 ## Runtime selection
 

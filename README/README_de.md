@@ -34,9 +34,9 @@ JSON-Bericht festgehalten. Phasentic läuft lokal, im Browser oder auf der
 Kommandozeile.
 
 <p align="center">
-  <img src="../docs/images/interface.png" alt="Phasentic-Oberfläche: ein vorläufiges Ergebnis aus ZrO2 und LiOH·H2O mit dem Anpassungsplot und den konkurrierenden Hypothesen" width="900">
+  <img src="../docs/images/interface.png" alt="Phasentic-Oberfläche: ein vorläufiges ZrO2-Ergebnis mit dem Anpassungsplot, den konkurrierenden Hypothesen und den Alternativen je Phase" width="900">
   <br>
-  <sub>Ein zufällig ausgewählter Entwicklungsscan aus dem Datensatz Precursor Genome (PG_2452, Cu Kα). Phasentic findet ZrO₂ und LiOH·H₂O; die manuell verfeinerte Referenzzuordnung enthält zusätzlich Li₂CO₃, das in diesem Lauf übersehen wird. Das verbleibende Signal ist unter <i>Evidence per phase</i> (Belege je Phase) sichtbar.</sub>
+  <sub>Ein zufällig ausgewählter Entwicklungsscan aus dem Datensatz Precursor Genome (PG_2452, Cu Kα). Phasentic wählt ZrO₂. Die manuell verfeinerte Referenzzuordnung enthält zusätzlich zwei Nebenphasen: LiOH·H₂O, das nur in den konkurrierenden Hypothesen erscheint (ZrO₂ + LiH₃O₂), und Li₂CO₃, das dieser Lauf übersieht.</sub>
 </p>
 
 <a name="how-accurate-is-it"></a>
