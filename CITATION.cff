@@ -2,8 +2,8 @@ cff-version: 1.2.0
 title: Phasentic
 message: "If you use Phasentic, please cite the release you used, and also POW_COD and the Crystallography Open Database."
 type: software
-version: 0.1.0
-date-released: 2026-10-01
+version: 1.0.0
+date-released: 2026-11-09
 license: MIT
 repository-code: "https://github.com/qaemu/phasentic"
 abstract: >-
