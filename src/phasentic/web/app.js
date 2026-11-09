@@ -10,7 +10,7 @@ const translations = {
     optional: "Instrument", vendor: "Vendor", model: "Model", radius: "Goniometer radius (mm)",
     instrumentPair: "Give both instrument vendor and model, or leave both blank.",
     analyze: "Analyze", running: "Analysing…", done: "Done. Read the result as a ranked hypothesis.",
-    emptyTitle: "No analysis yet",
+    emptyTitle: "Drop a scan to begin",
     emptyText: "Choose a scan, type the precursor and target formulas and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.",
     decisionLabel: "Decision", selected: "Selected phases", noMixture: "No mixture selected",
     downloadReport: "Formal report", download: "JSON",
@@ -30,7 +30,7 @@ const translations = {
     mixtureQueryRetainedBranches: "Retained branches", mixtureQueryFitAttempts: "Fit attempts", mixtureQueryTolerance: "Peak tolerance",
     mixtureQueryBackground: "Background model", mixtureQueryStop: "Stopping reason",
     autoPdf: "Export analysis’ PDF", pdfFailed: (m) => `PDF not created: ${m}`,
-    reportsTitle: "Reports", laboratory: "Laboratory name and address", reportFolder: "Save every report to this folder",
+    reportsTitle: "Reports", reportSettings: "Laboratory and folder", laboratory: "Laboratory name and address", reportFolder: "Save every report to this folder",
     reportFolderHint: "Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.",
     chooseFolder: "Choose folder…", saveSettings: "Save", settingsSaved: "Saved.", autoSaveOff: "Reports are not saved automatically.", autoSaveOn: (f) => `Reports are saved to ${f}.`,
     reportSaved: (f) => `Report saved to ${f}.`, reportNotSaved: (m) => `Report not saved: ${m}`,
@@ -55,7 +55,7 @@ const translations = {
     optional: "Instrumento", vendor: "Fabricante", model: "Modelo", radius: "Radio del goniómetro (mm)",
     instrumentPair: "Indique fabricante y modelo, o deje ambos vacíos.",
     analyze: "Analizar", running: "Analizando…", done: "Listo. Lea el resultado como una hipótesis ordenada.",
-    emptyTitle: "Todavía no hay análisis",
+    emptyTitle: "Suelte un escaneo para empezar",
     emptyText: "Elija un escaneo, escriba las fórmulas de precursores y objetivo y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y un informe imprimible aparecerán aquí.",
     decisionLabel: "Decisión", selected: "Fases seleccionadas", noMixture: "No se seleccionó una mezcla",
     downloadReport: "Informe formal", download: "JSON",
@@ -75,7 +75,7 @@ const translations = {
     mixtureQueryRetainedBranches: "Ramas retenidas", mixtureQueryFitAttempts: "Intentos de ajuste", mixtureQueryTolerance: "Tolerancia de pico",
     mixtureQueryBackground: "Modelo de fondo", mixtureQueryStop: "Razón de parada",
     autoPdf: "Exportar PDF del análisis", pdfFailed: (m) => `PDF no creado: ${m}`,
-    reportsTitle: "Informes", laboratory: "Nombre y dirección del laboratorio", reportFolder: "Guardar cada informe en esta carpeta",
+    reportsTitle: "Informes", reportSettings: "Laboratorio y carpeta", laboratory: "Nombre y dirección del laboratorio", reportFolder: "Guardar cada informe en esta carpeta",
     reportFolderHint: "Ruta completa. Cada análisis guarda un informe PDF, un CIF de polvo (.cif), los datos (.json) y una copia del escaneo. Déjela vacía para desactivarlo.",
     chooseFolder: "Elegir carpeta…", saveSettings: "Guardar", settingsSaved: "Guardado.", autoSaveOff: "Los informes no se guardan automáticamente.", autoSaveOn: (f) => `Los informes se guardan en ${f}.`,
     reportSaved: (f) => `Informe guardado en ${f}.`, reportNotSaved: (m) => `Informe no guardado: ${m}`,
@@ -336,7 +336,7 @@ function renderReport(report) {
   const sel = selectedHypothesis(report);
   const colors = R().PHASE_COLORS;
   setHTML($("phase-summary"), sel && (sel.components || []).length
-    ? sel.components.map((c, i) => `<span><i style="background:${colors[i % colors.length]}"></i>${R().formula(c.formula)}<em>${R().spaceGroup(c.space_group)}</em></span>`).join("")
+    ? sel.components.map((c, i) => `<span><i class="swatch" style="background:${colors[i % colors.length]}"></i>${R().formula(c.formula)}<em>${R().spaceGroup(c.space_group)}</em></span>`).join("")
     : `<span><em>${esc(L.noMixture)}</em></span>`);
   const input = report.input || {};
   $("analysis-id").textContent = `${report.analysis_id || ""} · ${input.file_name || ""} · ${report.radiation?.label || ""}`;
@@ -457,9 +457,13 @@ $("radiation").addEventListener("change", () => {
 
 // A file dropped anywhere is selected instead of being opened, which would
 // replace Phasentic (and the results) in the browser tab or app window.
+let dragDepth = 0;  // highlights the drop zone while a file is dragged over the window
+document.addEventListener("dragenter", () => { dragDepth += 1; document.body.classList.add("dragging"); });
+document.addEventListener("dragleave", () => { dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) document.body.classList.remove("dragging"); });
 document.addEventListener("dragover", (event) => event.preventDefault());
 document.addEventListener("drop", (event) => {
   event.preventDefault();
+  dragDepth = 0; document.body.classList.remove("dragging");
   const files = event.dataTransfer && event.dataTransfer.files;
   if (!files || !files.length) return;
   const input = event.target.matches && event.target.matches("input[type=file]") ? event.target : $("file");
@@ -712,6 +716,7 @@ function batchPhases(report) {
 
 function renderBatch() {
   const L = currentLanguage();
+  $("empty-state").hidden = true;
   const rows = batchRows.map((row, i) => {
     const phases = batchPhases(row.report).map((c) => R().formula(c.formula)).join(" + ");
     const decision = row.report ? esc((L.decisions && L.decisions[row.report.decision]) || row.report.decision) : "";

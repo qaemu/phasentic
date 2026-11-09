@@ -10,13 +10,15 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="/"><img src="/static/logo-mark.svg" alt="" width="26" height="26" /><span>Phasentic</span></a>
+      <a class="brand" href="/"><img src="/static/logo-mark.svg" alt="" width="24" height="24" /><span>Phasentic</span></a>
       <p class="tagline" data-i18n="lede">Powder X-ray diffraction phase identification</p>
       <nav class="topnav">
-        <select id="language" aria-label="Language">
-          <option value="en">English</option>
-          <option value="es">Español</option>
-        </select>
+        <label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>
+          <select id="language" aria-label="Language">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </label>
         <a href="https://github.com/qaemu/phasentic">Source</a>
       </nav>
     </header>
@@ -25,9 +27,14 @@
       <form id="analysis-form" class="rail" novalidate>
         <section class="block">
           <h2 data-i18n="sample">Sample</h2>
-          <div class="field"><span data-i18n="file">Pattern file</span>
+          <div class="field">
+            <span data-i18n="file">Pattern file</span>
             <input id="file" name="file" type="file" accept=".xy,.xrdml,.raw" multiple hidden />
-            <div class="file-pick"><button id="file-button" class="secondary" type="button" data-i18n="chooseFiles">Choose files</button><span id="file-name">No file chosen</span></div>
+            <div class="dropzone" id="dropzone">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l4-6 3 4 3-9 4 8 4-3"/><path d="M3 21h18"/></svg>
+              <button id="file-button" class="secondary" type="button" data-i18n="chooseFiles">Choose files</button>
+              <span id="file-name">No file chosen</span>
+            </div>
             <small data-i18n="fileHint">.xy, .xrdml or ASCII .raw, up to 10 MB. Select several for a batch.</small>
           </div>
           <label class="field"><span data-i18n="chemistry">Precursor and target formulas</span>
@@ -70,60 +77,62 @@
               <p class="note" data-i18n="customHint">Validated values: 0.10° and 5 phases. Other values are not validated.</p>
             </div>
           </details>
-        </section>
-
-        <details class="fold block">
-          <summary data-i18n="optional">Instrument</summary>
-          <div class="fold-body">
-            <div class="pair">
-              <label class="field"><span data-i18n="vendor">Vendor</span>
-                <input id="instrument-vendor" type="text" maxlength="120" placeholder="Rigaku" />
-              </label>
-              <label class="field"><span data-i18n="model">Model</span>
-                <input id="instrument-model" type="text" maxlength="120" placeholder="SmartLab" />
+          <details class="fold">
+            <summary data-i18n="optional">Instrument</summary>
+            <div class="fold-body">
+              <div class="pair">
+                <label class="field"><span data-i18n="vendor">Vendor</span>
+                  <input id="instrument-vendor" type="text" maxlength="120" placeholder="Rigaku" />
+                </label>
+                <label class="field"><span data-i18n="model">Model</span>
+                  <input id="instrument-model" type="text" maxlength="120" placeholder="SmartLab" />
+                </label>
+              </div>
+              <label class="field"><span data-i18n="radius">Goniometer radius (mm)</span>
+                <input id="instrument-radius" type="number" min="0.001" max="1000" step="0.1" />
               </label>
             </div>
-            <label class="field"><span data-i18n="radius">Goniometer radius (mm)</span>
-              <input id="instrument-radius" type="number" min="0.001" max="1000" step="0.1" />
-            </label>
-          </div>
-        </details>
+          </details>
+        </section>
+
+        <section class="block">
+          <h2 data-i18n="reportsTitle">Reports</h2>
+          <details id="reports-fold" class="fold">
+            <summary data-i18n="reportSettings">Laboratory and folder</summary>
+            <div class="fold-body">
+              <label class="field"><span data-i18n="laboratory">Laboratory name and address</span>
+                <textarea id="laboratory" rows="2" maxlength="500"></textarea>
+              </label>
+              <label class="field"><span data-i18n="reportFolder">Save every report to this folder</span>
+                <input id="report-folder" type="text" maxlength="1000" placeholder="C:\Users\you\Documents\XRD reports" autocomplete="off" spellcheck="false" />
+                <small data-i18n="reportFolderHint">Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.</small>
+              </label>
+              <div class="pair">
+                <button id="choose-folder" class="secondary" type="button" data-i18n="chooseFolder" hidden>Choose folder…</button>
+                <button id="save-report-settings" class="secondary" type="button" data-i18n="saveSettings">Save</button>
+              </div>
+              <p id="report-settings-status" class="note" aria-live="polite"></p>
+            </div>
+          </details>
+          <details id="history-fold" class="fold">
+            <summary data-i18n="history">Recent analyses</summary>
+            <div id="history-list" class="fold-body"></div>
+          </details>
+        </section>
 
         <div class="submit">
           <button type="submit" class="primary" data-i18n="analyze">Analyze</button>
           <button id="cancel-button" type="button" class="secondary" data-i18n="cancel" hidden>Cancel</button>
-          <label class="choice auto-pdf"><input id="auto-pdf" type="checkbox" />
-            <span><b data-i18n="autoPdf">Export analysis’ PDF</b></span>
+          <label class="check auto-pdf"><input id="auto-pdf" type="checkbox" />
+            <span data-i18n="autoPdf">Export analysis’ PDF</span>
           </label>
           <p id="form-status" class="status" aria-live="polite"></p>
         </div>
-
-        <details id="reports-fold" class="fold block">
-          <summary data-i18n="reportsTitle">Reports</summary>
-          <div class="fold-body">
-            <label class="field"><span data-i18n="laboratory">Laboratory name and address</span>
-              <textarea id="laboratory" rows="2" maxlength="500"></textarea>
-            </label>
-            <label class="field"><span data-i18n="reportFolder">Save every report to this folder</span>
-              <input id="report-folder" type="text" maxlength="1000" placeholder="C:\Users\you\Documents\XRD reports" autocomplete="off" spellcheck="false" />
-              <small data-i18n="reportFolderHint">Full path. Each analysis saves a PDF report, a powder CIF (.cif), the data (.json) and a copy of the scan. Leave empty to turn off.</small>
-            </label>
-            <div class="pair">
-              <button id="choose-folder" class="secondary" type="button" data-i18n="chooseFolder" hidden>Choose folder…</button>
-              <button id="save-report-settings" class="secondary" type="button" data-i18n="saveSettings">Save</button>
-            </div>
-            <p id="report-settings-status" class="note" aria-live="polite"></p>
-          </div>
-        </details>
-
-        <details id="history-fold" class="fold block">
-          <summary data-i18n="history">Recent analyses</summary>
-          <div id="history-list" class="fold-body"></div>
-        </details>
       </form>
 
       <main class="work">
         <section id="empty-state" class="empty">
+          <svg class="trace" viewBox="0 -4 760 224" aria-hidden="true" focusable="false"><path class="trace-line" d="M0.0,154.7 L2.0,155.0 L4.0,153.9 L6.0,153.6 L8.0,155.0 L10.0,155.9 L12.0,155.1 L14.0,154.3 L16.0,155.1 L18.0,156.5 L20.0,156.3 L22.0,155.1 L24.0,155.4 L26.0,156.9 L28.0,157.3 L30.0,156.2 L32.0,155.7 L34.0,157.0 L36.0,158.1 L38.0,157.4 L40.0,156.4 L42.0,157.1 L44.0,158.5 L46.0,158.4 L48.0,157.2 L50.0,157.3 L52.0,158.7 L54.0,159.3 L56.0,158.2 L58.0,157.6 L60.0,158.7 L62.0,159.9 L64.0,159.3 L66.0,158.2 L68.0,158.8 L70.0,160.2 L72.0,160.3 L74.0,159.1 L76.0,158.9 L78.0,159.6 L80.0,155.4 L82.0,140.4 L84.0,128.7 L86.0,138.9 L88.0,154.8 L90.0,160.1 L92.0,159.8 L94.0,160.2 L96.0,161.7 L98.0,161.9 L100.0,160.7 L102.0,160.3 L104.0,161.7 L106.0,162.5 L108.0,161.6 L110.0,160.7 L112.0,161.5 L114.0,162.8 L116.0,162.5 L118.0,161.3 L120.0,161.5 L122.0,162.9 L124.0,163.3 L126.0,162.1 L128.0,161.6 L130.0,162.8 L132.0,163.8 L134.0,163.0 L136.0,161.9 L138.0,162.7 L140.0,164.0 L142.0,163.8 L144.0,162.5 L146.0,162.6 L148.0,164.0 L150.0,164.5 L152.0,163.3 L154.0,162.7 L156.0,163.8 L158.0,164.9 L160.0,164.2 L162.0,163.1 L164.0,163.6 L166.0,165.0 L168.0,164.9 L170.0,163.7 L172.0,163.5 L174.0,164.9 L176.0,165.5 L178.0,164.4 L180.0,162.1 L182.0,148.8 L184.0,91.1 L186.0,7.4 L188.0,14.9 L190.0,101.4 L192.0,153.9 L194.0,164.9 L196.0,164.6 L198.0,164.3 L200.0,165.6 L202.0,166.4 L204.0,165.4 L206.0,164.5 L208.0,165.0 L210.0,163.0 L212.0,149.4 L214.0,130.0 L216.0,132.6 L218.0,152.9 L220.0,164.2 L222.0,165.3 L224.0,165.0 L226.0,166.2 L228.0,165.7 L230.0,155.1 L232.0,126.7 L234.0,106.5 L236.0,126.2 L238.0,154.3 L240.0,163.9 L242.0,165.6 L244.0,167.1 L246.0,167.5 L248.0,166.3 L250.0,165.7 L252.0,166.8 L254.0,167.8 L256.0,167.0 L258.0,165.9 L260.0,166.5 L262.0,167.7 L264.0,166.7 L266.0,160.6 L268.0,150.2 L270.0,147.6 L272.0,157.0 L274.0,164.2 L276.0,165.9 L278.0,167.2 L280.0,168.3 L282.0,167.7 L284.0,166.5 L286.0,166.9 L288.0,168.3 L290.0,168.3 L292.0,167.0 L294.0,166.7 L296.0,168.0 L298.0,168.7 L300.0,167.6 L302.0,166.7 L304.0,167.6 L306.0,168.6 L308.0,166.5 L310.0,157.5 L312.0,144.8 L314.0,145.1 L316.0,157.8 L318.0,165.2 L320.0,166.9 L322.0,168.3 L324.0,169.1 L326.0,168.2 L328.0,167.2 L330.0,167.9 L332.0,169.2 L334.0,168.8 L336.0,167.5 L338.0,167.6 L340.0,169.0 L342.0,169.3 L344.0,168.0 L346.0,167.5 L348.0,168.6 L350.0,169.5 L352.0,168.7 L354.0,167.6 L356.0,168.2 L358.0,169.5 L360.0,169.3 L362.0,168.0 L364.0,167.9 L366.0,169.2 L368.0,169.7 L370.0,168.3 L372.0,164.9 L374.0,147.3 L376.0,98.6 L378.0,63.7 L380.0,98.2 L382.0,147.8 L384.0,167.0 L386.0,169.5 L388.0,168.3 L390.0,168.1 L392.0,169.4 L394.0,169.9 L396.0,166.9 L398.0,156.5 L400.0,140.1 L402.0,137.8 L404.0,153.4 L406.0,164.7 L408.0,168.2 L410.0,169.9 L412.0,170.0 L414.0,168.7 L416.0,168.3 L418.0,169.6 L420.0,170.3 L422.0,169.3 L424.0,168.3 L426.0,169.1 L428.0,170.3 L430.0,169.9 L432.0,168.6 L434.0,168.7 L436.0,170.1 L438.0,170.3 L440.0,168.7 L442.0,164.2 L444.0,149.0 L446.0,126.5 L448.0,127.7 L450.0,150.7 L452.0,165.8 L454.0,170.2 L456.0,170.2 L458.0,168.9 L460.0,168.5 L462.0,165.7 L464.0,146.7 L466.0,112.8 L468.0,108.7 L470.0,141.3 L472.0,164.7 L474.0,169.4 L476.0,168.8 L478.0,169.3 L480.0,170.6 L482.0,170.5 L484.0,169.1 L486.0,169.0 L488.0,170.3 L490.0,170.8 L492.0,169.7 L494.0,168.8 L496.0,169.8 L498.0,170.9 L500.0,170.2 L502.0,169.0 L504.0,169.3 L506.0,170.7 L508.0,170.7 L510.0,169.4 L512.0,169.1 L514.0,170.3 L516.0,171.0 L518.0,169.9 L520.0,169.0 L522.0,169.8 L524.0,171.0 L526.0,170.0 L528.0,165.8 L530.0,158.0 L532.0,153.8 L534.0,159.6 L536.0,166.2 L538.0,168.7 L540.0,170.3 L542.0,171.1 L544.0,170.2 L546.0,169.1 L548.0,169.8 L550.0,171.1 L552.0,170.7 L554.0,169.4 L556.0,169.4 L558.0,170.8 L560.0,171.1 L562.0,169.9 L564.0,169.2 L566.0,170.3 L568.0,171.3 L570.0,170.4 L572.0,169.3 L574.0,169.8 L576.0,171.1 L578.0,170.9 L580.0,169.6 L582.0,169.5 L584.0,170.8 L586.0,171.3 L588.0,170.1 L590.0,169.3 L592.0,170.1 L594.0,169.2 L596.0,160.3 L598.0,147.4 L600.0,148.8 L602.0,162.2 L604.0,169.4 L606.0,169.6 L608.0,169.5 L610.0,170.8 L612.0,171.4 L614.0,170.3 L616.0,169.4 L618.0,170.3 L620.0,171.4 L622.0,170.9 L624.0,169.6 L626.0,169.8 L628.0,171.2 L630.0,171.3 L632.0,170.0 L634.0,169.5 L636.0,170.7 L638.0,171.5 L640.0,170.5 L642.0,169.5 L644.0,170.2 L646.0,171.4 L648.0,171.0 L650.0,169.7 L652.0,169.8 L654.0,171.1 L656.0,171.4 L658.0,170.2 L660.0,169.6 L662.0,170.7 L664.0,171.6 L666.0,170.4 L668.0,166.4 L670.0,155.2 L672.0,139.9 L674.0,141.4 L676.0,157.3 L678.0,167.4 L680.0,170.9 L682.0,171.5 L684.0,170.3 L686.0,169.6 L688.0,170.6 L690.0,171.6 L692.0,170.8 L694.0,168.8 L696.0,165.3 L698.0,159.7 L700.0,158.6 L702.0,163.8 L704.0,168.4 L706.0,170.9 L708.0,171.6 L710.0,170.5 L712.0,169.6 L714.0,170.5 L716.0,171.7 L718.0,171.0 L720.0,169.8 L722.0,170.1 L724.0,171.4 L726.0,171.5 L728.0,170.2 L730.0,169.8 L732.0,171.0 L734.0,171.7 L736.0,170.7 L738.0,169.7 L740.0,170.5 L742.0,171.7 L744.0,171.2 L746.0,169.9 L748.0,170.0 L750.0,171.4 L752.0,171.6 L754.0,170.3 L756.0,169.8 L758.0,170.9 L760.0,171.8"/><g class="trace-ticks"><line x1="84.1" x2="84.1" y1="206" y2="216"/><line x1="186.9" x2="186.9" y1="206" y2="216"/><line x1="214.8" x2="214.8" y1="206" y2="216"/><line x1="234.1" x2="234.1" y1="206" y2="216"/><line x1="269.5" x2="269.5" y1="206" y2="216"/><line x1="313.1" x2="313.1" y1="206" y2="216"/><line x1="378.0" x2="378.0" y1="206" y2="216"/><line x1="401.3" x2="401.3" y1="206" y2="216"/><line x1="446.9" x2="446.9" y1="206" y2="216"/><line x1="467.1" x2="467.1" y1="206" y2="216"/><line x1="532.0" x2="532.0" y1="206" y2="216"/><line x1="598.9" x2="598.9" y1="206" y2="216"/><line x1="672.9" x2="672.9" y1="206" y2="216"/><line x1="699.2" x2="699.2" y1="206" y2="216"/></g></svg>
           <h2 data-i18n="emptyTitle">No analysis yet</h2>
           <p data-i18n="emptyText">Choose a scan, type the precursor and target formulas and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.</p>
         </section>
@@ -146,17 +155,19 @@
               <span class="eyebrow" data-i18n="selected">Selected phases</span>
               <div id="phase-summary" class="phase-summary"></div>
             </div>
-            <div class="actions">
-              <button id="download-pdf" class="primary" type="button">PDF</button>
-              <button id="download-pdf-report" class="secondary" type="button" data-i18n="downloadReport">Formal report</button>
+            <div class="actions" role="group" aria-label="Export">
+              <button id="download-pdf" class="primary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg>PDF</button>
+              <button id="download-pdf-report" class="secondary" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg><span data-i18n="downloadReport">Formal report</span></button>
               <button id="download-cif" class="secondary" type="button">CIF</button>
               <button id="download-report" class="secondary" type="button" data-i18n="download">JSON</button>
             </div>
           </div>
           <p id="analysis-id" class="note mono"></p>
 
-          <div id="plot" class="fig"></div>
-          <p class="note" data-i18n="zoomHint">Drag over the graph to zoom; double-click to reset.</p>
+          <div class="plot-card">
+            <div id="plot" class="fig"></div>
+            <p class="note" data-i18n="zoomHint">Drag over the graph to zoom; double-click to reset.</p>
+          </div>
 
           <section class="part">
             <h2 data-i18n="hypotheses">Phase hypotheses</h2>
