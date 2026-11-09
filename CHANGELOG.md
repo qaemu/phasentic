@@ -4,7 +4,7 @@ All notable changes are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [semantic versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.0.0] - 2026-11-09
 
 ### Changed
 - New interface: neutral greys with one blue accent, IBM Plex type bundled for
@@ -19,6 +19,8 @@ All notable changes are listed here. The format follows
 
 ### Removed
 - The demo reference subset; the installed reference database is the only source.
+- Line-position calibration in the interface; results are therefore at most
+  `tentative` (`phasentic calibrate` still checks a standard scan).
 - Reference database PXRD_COD 2026.11 (new Zenodo version): 23,611 Materials
   Project structures of experimentally known phases missing from COD, and
   hydrogen restored in 9,437 COD formulas. Published on Zenodo,

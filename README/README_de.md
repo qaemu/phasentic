@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  Phasenidentifizierung aus Pulver-Röntgenbeugungsdaten mit einer validierten, reproduzierbaren Methode.
+  Phasenidentifizierung mittels Pulver-Röntgendiffraktometrie mit einer validierten, reproduzierbaren Methode.
 </p>
 
 <p align="center">
@@ -25,13 +25,12 @@
   <a href="../docs/">Dokumentation</a>
 </p>
 
-Phasentic liest einen Pulver-XRD-Scan (`.xy`, `.xrdml` oder ASCII-`.raw`) ein,
-detektiert die Reflexe, durchsucht eine aus der
-[Crystallography Open Database](https://www.crystallography.net/cod/) erstellte Referenzdatenbank (oder [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) des CNR) und passt Gemische
-aus bis zu fünf Phasen an. Als Ergebnis liefert es eine Rangliste von
-Phasenhypothesen; jede Einstellung, jeder Hash und jede Warnung wird in einem
-JSON-Bericht festgehalten. Phasentic läuft lokal, im Browser oder auf der
-Kommandozeile.
+Phasentic liest einen Pulverdiffraktogramm-Scan (`.xy`, `.xrdml` oder ASCII-`.raw`),
+erkennt die Reflexe, durchsucht eine Referenzdatenbank auf Grundlage der
+[Crystallography Open Database](https://www.crystallography.net/cod/) (oder [POW_COD](https://www.ba.ic.cnr.it/softwareic/qualx/) des CNR)
+und passt Gemische aus bis zu fünf Phasen an. Es liefert eine Rangfolge von
+Phasenhypothesen und hält alle Einstellungen, Hashwerte und Warnungen in einem
+JSON-Bericht fest. Es läuft lokal, im Browser oder auf der Kommandozeile.
 
 <p align="center">
   <img src="../docs/images/interface.png" alt="Phasentic-Oberfläche: ein vorläufiges ZrO2-Ergebnis mit dem Anpassungsplot, den konkurrierenden Hypothesen und den Alternativen je Phase" width="900">
@@ -40,93 +39,87 @@ Kommandozeile.
 </p>
 
 <a name="how-accurate-is-it"></a>
+## Wie genau ist es
 
-## Wie genau ist die Methode?
+Die Einstellungen wurden an 485 Scans aus Precursor Genome (manuell verfeinerte
+Zuordnungen) abgestimmt und dann auf 200 gesperrte Scans angewendet, die bei der
+Abstimmung nie verwendet wurden, mit der Datenbank PXRD_COD 2026.11 (aus COD,
+ergänzt um Materials Project). Enthaltungen zählen als Fehler.
 
-Die Methode wurde vor dem Test zusammen mit einem vorab festgelegten Zielwert
-eingefroren und einmalig auf 200 Scans angewendet, die sie nie zuvor gesehen
-hatte (Precursor Genome, manuell verfeinerte Referenzzuordnungen). Fälle ohne
-Ergebnis (Enthaltungen) zählen als Fehlschläge.
-
-| Ebene | Korrekt | Trefferquote | 95%-Intervall (Wilson) | Festgelegter Zielwert |
-|---|---|---|---|---|
-| Richtige Verbindungen und Kristallstrukturen (strict) | 85 / 200 | 42.5% | 35.9–49.4% | ≥ 35% |
-| Richtige Verbindungen, beliebiges Polymorph (family) | 104 / 200 | 52.0% | 45.1–58.8% | ≥ 45% |
-
-Beide Punktschätzungen erreichen ihren Zielwert; beide Untergrenzen liegen darunter.
-Die Genauigkeit hängt stark von der Anzahl der Phasen ab:
-
-| Phasen in der Probe | Scans | Korrekt auf Familienebene (family) |
+| Ebene | Richtig | Quote |
 |---|---|---|
-| 1 | 8 | 3 |
-| 2 | 125 | 87 (70%) |
-| 3 oder mehr | 67 | 9 (13%) |
+| Richtige Verbindungen und Kristallstrukturen (streng) | 85 / 200 | 42,5 % |
+| Richtige Verbindungen, beliebiges Polymorph (Familie) | 104 / 200 | 52,0 % |
 
-Das Protokoll, der frühere Lauf auf einem zurückgehaltenen Testdatensatz
-(32% / 42% für die Vorgängerversion), die Fehleranalyse und die Nachweise
-stehen in [docs/validation.md](../docs/validation.md). Diese Zahlen gelten für
-die validierte Konfiguration (Preset) mit POW_COD, Cu Kα und der
-Präkursorchemie der Probe; andere Einstellungen wurden nicht getestet.
-Sie wurden mit einem Fenster von 0–100° gemessen; das aktuelle Preset nutzt 0–90° und ist noch nicht erneut validiert (siehe [CHANGELOG.md](../CHANGELOG.md)).
+Dies ist der zweite Lauf auf diesen 200 Scans. Der erste (72 und 99) verwendete
+die reine COD-Datenbank; die Datenbankergänzung, die wiederhergestellten
+Wasserstoff-Formeln und die Bevorzugung der Beschreibung höchster Symmetrie
+eines Materials wurden ausschließlich an den 485 Abstimmungs-Scans entwickelt.
+Die nicht abgestimmte Methode erreichte 71 und 96. Diese Zahlen gelten für das
+validierte Preset mit PXRD_COD 2026.11, Cu Kα und der Precursor-Chemie der
+Probe; andere Einstellungen sind nicht getestet.
 
 <a name="install"></a>
-
 ## Installation
 
-Ein einziger Befehl installiert Python 3.12, Phasentic und die
-Referenzdatenbank (ein Download von 8.6 GB von Zenodo; etwa 10 GB freier
-Speicher nötig). Administratorrechte sind nicht erforderlich.
+Die Installation richtet Python 3.12, Phasentic und die Referenzdatenbank ein
+(ein Download von 8,6 GB von Zenodo; etwa 10 GB frei halten).
+Administratorrechte sind nicht nötig.
 
-Windows (PowerShell):
+Windows: diese vier Zeilen in PowerShell einfügen (die erste ist der offizielle
+Installer von [uv](https://docs.astral.sh/uv/), der Python installiert):
 
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 $env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
-uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
+uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/tags/v1.0.0.zip
 phasentic setup
 ```
 
 macOS und Linux:
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/v1.0.0/install.sh | sh
 ```
 
-Unter Windows legt er außerdem eine **Phasentic**-Verknüpfung auf dem Desktop
-und im Startmenü an und öffnet Phasentic in einem eigenen Fenster. Unter macOS trägt er es
-unter Programme ein, unter Linux ins Anwendungsmenü. Bricht der Download ab, einfach
-denselben Befehl erneut ausführen; er setzt dort fort.
+Unter Windows lädt `phasentic setup` die Datenbank herunter, legt eine
+Verknüpfung **Phasentic** auf dem Desktop und im Startmenü an und öffnet
+Phasentic in einem eigenen Fenster; vor einer Neuinstallation Phasentic
+schließen. Unter macOS fügt der Installer Phasentic zu den Programmen hinzu,
+unter Linux zum Anwendungsmenü. Wird der Download unterbrochen, dieselben
+Befehle erneut ausführen; er wird fortgesetzt.
 
-### Stattdessen POW_COD verwenden
+### POW_COD stattdessen verwenden
 
 Wer **POW_COD 2205 (FULL)** von der
-[Download-Seite des CNR](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/)
-hat, installiert sie mit dem folgenden Befehl; Phasentic verwendet sie dann
-anstelle der COD-Datenbank. Die veröffentlichten Genauigkeitswerte wurden mit
-POW_COD gemessen.
+[CNR-Downloadseite](https://www.ba.ic.cnr.it/softwareic/qualx/download/powcod-2205/)
+hat, installiert es mit dem folgenden Befehl; Phasentic verwendet es dann statt
+der COD-Datenbank. Die veröffentlichten Genauigkeitswerte wurden mit der
+COD-Datenbank gemessen, nicht mit POW_COD.
 
 ```bash
 phasentic setup-powcod ~/Downloads/powcod-2205.zip
 ```
 
 <a name="quick-start"></a>
-
 ## Schnellstart
 
-Phasentic über die Verknüpfung öffnen oder `phasentic-app` ausführen. Für den
-Browser stattdessen den Befehl unten ausführen und <http://127.0.0.1:8000> öffnen:
+Phasentic über die Verknüpfung öffnen oder `phasentic-app` ausführen. Für die
+Nutzung im Browser den folgenden Befehl ausführen und <http://127.0.0.1:8000>
+öffnen:
 
 ```bash
 phasentic serve
 ```
 
-Einen Scan auswählen, die Formeln der Präkursoren und des Zielprodukts
-eingeben, *Validated method* (validierte Methode) ausgewählt lassen (Standard)
-und auf *Analyze* (Analysieren) klicken. *Download report* (Bericht
-herunterladen) erzeugt einen druckbaren zweiseitigen Bericht (Anpassungsplot,
-Belege je Phase, konkurrierende Hypothesen, Methode und Rückverfolgbarkeit),
-der sich als PDF speichern lässt; *JSON* liefert den vollständigen
-maschinenlesbaren Gesamtdatensatz.
+Einen Scan auf das Fenster ziehen (oder auswählen), die Formeln der Precursoren
+und Zielphasen eingeben und *Analyze* drücken. Mit Formeln und Cu Kα wird die
+validierte Methode verwendet; Reflextoleranz und maximale Phasenzahl lassen sich
+unter *Search settings* ändern, andere Werte sind nicht validiert. *PDF*
+speichert einen einfachen Bericht der gemessenen und berechneten Werte; *Formal
+report* öffnet einen druckbaren Bericht (Anpassungsplot, Belege je Phase,
+konkurrierende Hypothesen, Methode und Rückverfolgbarkeit); *CIF* und *JSON*
+liefern die Daten. Die Oberfläche ist auf Englisch und Spanisch verfügbar.
 
 Auf der Kommandozeile dieselbe validierte Methode:
 
@@ -134,53 +127,51 @@ Auf der Kommandozeile dieselbe validierte Methode:
 phasentic analyze scan.xrdml --preset validated --chemistry "Ag2O BaCO3 Ba2Ag2C2O7" --output report.json
 ```
 
-`--chemistry` beschränkt die Kandidaten auf die Elemente dieser Formeln sowie
-H, C und O (Carbonate, Hydroxide, Hydrate). Ohne `--preset` lässt sich jede
-Analyseeinstellung über Flags anpassen (`phasentic analyze --help`); diese
+`--chemistry` beschränkt die Kandidaten auf die Elemente dieser Formeln sowie H,
+C und O (Carbonate, Hydroxide, Hydrate). Ohne `--preset` lässt sich jede
+Analyseeinstellung über Optionen anpassen (`phasentic analyze --help`); diese
 Kombinationen sind nicht validiert.
 
-Eine Entscheidung `supported` erfordert zusätzlich eine Kalibrierung der
-Reflexlagen mit dem Scan einer Referenzprobe (standardmäßig Silicium
-NIST SRM 640g): `phasentic calibrate standard.xy`.
+Ergebnisse sind höchstens `tentative` (oder `ambiguous` / `unresolved`): eine
+Entscheidung `supported` bräuchte eine beigefügte Kalibrierung der
+Linienpositionen, die diese Version nicht anbietet. `phasentic calibrate
+standard.xy` prüft weiterhin die Linienpositionen eines Geräts anhand eines
+Standard-Scans (standardmäßig Silicium NIST SRM 640g).
 
-## Wann Phasentic nicht geeignet ist
+## Wann man es nicht verwenden sollte
 
-- **Als Nachweis, dass eine Phase vorliegt.** Die Ergebnisse sind Hypothesen in
-  Rangfolge, die von Fachleuten zu bestätigen sind, idealerweise durch
-  Rietveld-Verfeinerung.
-- **Für Phasenanteile.** Die Skalierungsfaktoren der Anpassung sind
-  Screening-Amplituden, keine Gewichtsprozente.
-- **Für Proben mit drei oder mehr Phasen**, bei denen im Test nur in 13% der
-  Fälle alle Verbindungen identifiziert wurden.
-- **Für Neben- oder schwach streuende Phasen** (zum Beispiel Li-, B- oder
-  K-Salze neben Phasen schwerer Elemente), die häufig übersehen werden.
-- **Ohne Angabe der Probenchemie oder mit anderen Anoden als Cu**, da diese
-  nicht Teil der Validierung waren.
+- **Für Phasenanteile.** Die Skalenfaktoren der Anpassung sind
+  Screening-Amplituden, keine Massenanteile.
+- **Für Proben mit drei oder mehr Phasen**, bei denen es im Test nur in 11 %
+  der Fälle alle Verbindungen erkannte.
+- **Für Neben- oder schwach streuende Phasen** (etwa Li-, B- oder K-Salze neben
+  Phasen schwerer Elemente), die es oft übersieht.
 
 ## Funktionsweise
 
-1. Scan importieren, Untergrund schätzen, Reflexe detektieren (unter
-   Berücksichtigung des Rauschens).
-2. Kandidaten aus POW_COD abrufen, beschränkt auf die Elemente der Probe.
-3. Nichtnegative Gemische von Referenzprofilen anpassen, mit einer begrenzten
-   Strahlsuche (beam search), erneuten Abfragen anhand des Residuums und
-   Phasentausch; Phasen verwerfen, deren starke Reflexe im Scan fehlen.
-4. Hypothesen in eine Rangfolge bringen, Mehrdeutigkeiten ausweisen und die
-   Herkunft protokollieren (Eingabe-Hash, Einstellungen, Datenbankidentität,
-   Algorithmusversionen).
+1. Scan einlesen, Untergrund schätzen, Reflexe erkennen (rauschabhängig).
+2. Kandidaten aus der Referenzdatenbank abrufen, beschränkt auf die Elemente der Probe.
+3. Nichtnegative Gemische von Referenzprofilen mit einer begrenzten Strahlsuche,
+   erneuten Abfragen auf dem Residuum und Phasentausch anpassen; Phasen
+   verwerfen, deren starke Linien im Scan fehlen.
+4. Hypothesen ordnen, Mehrdeutigkeit melden und die Herkunft festhalten
+   (Eingabe-Hash, Einstellungen, Identität der Datenbank, Algorithmusversionen).
 
 Details: [docs/scientific-method.md](../docs/scientific-method.md) und
 [PARAMETERS.md](../PARAMETERS.md).
 
 ## Zitieren
 
-Wenn Phasentic zu Ihrer Arbeit beiträgt, bitte die verwendete Release-Version
-zitieren. Die GitHub-Schaltfläche *Cite this repository* (auf Basis von
-[CITATION.cff](../CITATION.cff)) liefert APA und BibTeX. Bitte zusätzlich POW_COD
-und die Crystallography Open Database zitieren.
+Wenn Phasentic zu Ihrer Arbeit beiträgt, zitieren Sie die verwendete Version.
+Die Schaltfläche *Cite this repository* auf GitHub (aus
+[CITATION.cff](../CITATION.cff)) liefert APA und BibTeX. Zitieren Sie außerdem
+die Referenzdatenbank, [PXRD_COD 2026.11](https://doi.org/10.5281/zenodo.24059658),
+und ihre Quellen: die Crystallography Open Database und das Materials Project
+(und POW_COD, falls Sie es stattdessen verwenden).
 
 ## Lizenz
 
-MIT für den Code. Die Daten von POW_COD, COD und Precursor Genome werden unter
-ihren eigenen Bedingungen verbreitet und sind nicht in diesem Repository
+MIT für den Code. Die Referenzdatenbank steht unter CC BY 4.0 (COD-Daten CC0,
+Materials-Project-Daten CC BY 4.0). Die Daten von POW_COD und Precursor Genome
+unterliegen ihren eigenen Bedingungen und sind nicht in diesem Repository
 enthalten.

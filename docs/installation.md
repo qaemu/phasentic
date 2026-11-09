@@ -11,13 +11,13 @@ from Zenodo; about 10 GB free disk needed). No admin rights needed.
 # Windows (PowerShell)
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 $env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
-uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
+uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/tags/v1.0.0.zip
 phasentic setup
 ```
 
 ```bash
 # macOS and Linux
-curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/v1.0.0/install.sh | sh
 ```
 
 Running it again resumes an interrupted download and leaves a correct

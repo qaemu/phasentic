@@ -1,12 +1,12 @@
 #!/bin/sh
 # Phasentic installer for macOS and Linux. Run:
-#   curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
+#   curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/v1.0.0/install.sh | sh
 # Installs uv (a Python installer, no admin rights needed), Python 3.12 and Phasentic,
 # downloads the COD reference database (8.6 GB, about 10 GB free disk needed)
 # and adds Phasentic to Applications (macOS) or the applications menu (Linux).
 set -eu
 
-assets=https://raw.githubusercontent.com/qaemu/phasentic/main/assets
+assets=https://raw.githubusercontent.com/qaemu/phasentic/v1.0.0/assets
 
 if ! command -v uv >/dev/null 2>&1; then
     echo "Installing uv..."
@@ -15,7 +15,7 @@ if ! command -v uv >/dev/null 2>&1; then
 fi
 
 echo "Installing Phasentic..."
-uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
+uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/tags/v1.0.0.zip
 uv tool update-shell >/dev/null 2>&1 || true
 phasentic="$(uv tool dir --bin)/phasentic"
 

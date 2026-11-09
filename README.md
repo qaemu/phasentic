@@ -68,14 +68,14 @@ installer of [uv](https://docs.astral.sh/uv/), which installs Python):
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 $env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
-uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/heads/main.zip
+uv tool install --force --python 3.12 https://github.com/qaemu/phasentic/archive/refs/tags/v1.0.0.zip
 phasentic setup
 ```
 
 macOS and Linux:
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/main/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/qaemu/phasentic/v1.0.0/install.sh | sh
 ```
 
 On Windows `phasentic setup` downloads the database, adds a **Phasentic**
@@ -105,8 +105,10 @@ instead, run the command below and open <http://127.0.0.1:8000>:
 phasentic serve
 ```
 
-Choose a scan, type the precursor and target formulas, keep *Validated method*
-selected (the default) and press *Analyze*. *PDF* saves a plain report of the
+Drop a scan on the window (or choose it), type the precursor and target
+formulas and press *Analyze*. With formulas and Cu Kα, the validated method is
+used; peak tolerance and maximum phases can be changed under *Search settings*,
+and other values are not validated. *PDF* saves a plain report of the
 measured and calculated values; *Formal report* opens a printable report (fit
 plot, per-phase evidence, competing hypotheses, method and traceability);
 *CIF* and *JSON* give the data.
@@ -122,8 +124,10 @@ and O (carbonates, hydroxides, hydrates). Without `--preset`, every analysis
 setting can be tuned by flags (`phasentic analyze --help`); those
 combinations are not validated.
 
-A `supported` decision additionally requires a line-position calibration with
-a standard scan (NIST SRM 640g silicon by default): `phasentic calibrate standard.xy`.
+Results are `tentative` (or `ambiguous` / `unresolved`) at most: a `supported`
+decision would need an attached line-position calibration, which this release
+does not offer. `phasentic calibrate standard.xy` still checks an instrument's
+line positions against a standard scan (NIST SRM 640g silicon by default).
 
 ## When not to use it
 
@@ -151,9 +155,13 @@ Details: [docs/scientific-method.md](docs/scientific-method.md) and
 
 If Phasentic contributes to your work, cite the release you used. GitHub's
 *Cite this repository* button (from [CITATION.cff](CITATION.cff)) gives APA
-and BibTeX. Also cite POW_COD and the Crystallography Open Database.
+and BibTeX. Also cite the reference database,
+[PXRD_COD 2026.11](https://doi.org/10.5281/zenodo.24059658), and the sources it
+is built from: the Crystallography Open Database and the Materials Project
+(and POW_COD if you use it instead).
 
 ## License
 
-MIT for the code. POW_COD, COD and Precursor Genome data are distributed under
+MIT for the code. The reference database is CC BY 4.0 (COD data CC0, Materials
+Project data CC BY 4.0). POW_COD and Precursor Genome data are distributed under
 their own terms and are not included in this repository.
