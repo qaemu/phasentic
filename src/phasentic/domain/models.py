@@ -396,7 +396,7 @@ class AnalysisSettings:
     missing_intensity_max: float = 1.0
     instrument: InstrumentMetadata | None = None
     calibration: CalibrationResult | None = None
-    reference_source: str = "demo"
+    reference_source: str = "pow_cod"
     # Optional benchmark/evaluation window.  ``None`` preserves the indexed
     # reference range used by ordinary application analyses.
     matching_two_theta_max_deg: float | None = None
@@ -483,8 +483,8 @@ class AnalysisSettings:
         return self.candidate_pool if self.candidate_lookup_budget is None else self.candidate_lookup_budget
 
     def validate(self) -> None:
-        if not isinstance(self.reference_source, str) or self.reference_source not in {"demo", "pow_cod"}:
-            raise ValueError("reference_source must be 'demo', 'pow_cod', or 'cod'")
+        if self.reference_source != "pow_cod":
+            raise ValueError("reference_source must be 'pow_cod' (the installed reference database)")
         if not isinstance(self.radiation, str) or not self.radiation.strip():
             raise ValueError("radiation must be a non-empty string")
         if not isinstance(self.angle_unit, AngleUnit):
@@ -681,7 +681,7 @@ class ReferencePhase:
     name: str
     space_group: str
     lines: tuple[ReferenceLine, ...]
-    source: str = "demo"
+    source: str = "cod"
     cod_entry_url: str | None = None
     cod_entry_id: str | None = None
     cod_block_id: str | None = None

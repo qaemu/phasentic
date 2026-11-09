@@ -6,7 +6,7 @@
 (function (root) {
   "use strict";
 
-  const PHASE_COLORS = ["#0072b2", "#d55e00", "#009e73", "#cc79a7", "#e69f00"]; // validated, light surface
+  const PHASE_COLORS = ["#0072b2", "#009e73", "#cc79a7", "#56b4e9", "#6b4c9a"]; // validated, light surface
   const INK = "#1d2430", MUTED = "#5d6673", RULE = "#d6d9de", OBS = "#9aa1ab", MODEL = "#1d2430";
 
   const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -219,14 +219,13 @@
     const missing = sel ? (sel.missing_expected_lines || []).length : 0;
     const unexplained = sel ? (sel.unexplained_peak_positions || []).length : 0;
     const altClose = (() => { const hs = (r.mixture?.hypotheses || []).filter((h) => h !== sel && Number.isFinite(h.selection_score)); if (!sel || !hs.length) return null; const best = Math.min(...hs.map((h) => h.selection_score)); return (best - sel.selection_score) / sel.selection_score; })();
-    const isPowcod = (p.reference_source || s.reference_source) === "pow_cod";
+    const isPowcod = true;  // the only reference source
     const preset = isPowcod && opts.preset === "validated";
     const elements = (s.allowed_elements || []).join(", ");
     const release = String(p.powcod_release || "");
     const isPowcodRelease = isPowcod && !release.includes("COD");
     const dbShort = release.includes("COD") ? esc(release) : `POW_COD ${esc(release)}`;
-    const dbName = !isPowcod ? "the built-in demo subset (three phases; not for real samples)"
-      : release.includes("COD") ? `${dbShort}, powder patterns calculated from the Crystallography Open Database [2]` : `${dbShort} (CNR) [3], from the Crystallography Open Database [2]`;
+    const dbName = release.includes("COD") ? `${dbShort}, powder patterns calculated from the Crystallography Open Database [2]` : `${dbShort} (CNR) [3], from the Crystallography Open Database [2]`;
     const pct = (v, d = 1) => (Number.isFinite(Number(v)) ? `${Number(v).toFixed(d)}&#8201;%` : "—");  // ISO 80000: space before %
     const pinned = Array.isArray(s.pinned_reference_ids) ? s.pinned_reference_ids : [];
     const mq = (r.mixture && r.mixture.query) || {};
@@ -271,7 +270,7 @@
 
     const phaseList = phases.map((ph) => `${formula(ph.component.formula)} (${spaceGroup(ph.component.space_group)})`).join(", ");
     const itemName = esc(input.file_name || "the item");
-    const dbPhrase = isPowcod ? "reference patterns calculated from the Crystallography Open Database" : "a demonstration reference set";
+    const dbPhrase = "reference patterns calculated from the Crystallography Open Database";
     const abstract = phases.length
       ? `The powder X-ray diffraction pattern of ${itemName} was compared with ${dbPhrase}${elements ? `, restricted to the elements ${chem ? `of the stated precursor and target formulas (${esc(chem)}): ` : ""}${esc(elements)}` : ""}. The best-supported phase set is ${phaseList} (decision: ${decisionText.toLowerCase()}${pinned.length ? "; one phase fixed by the operator" : ""}).${unexplained ? ` ${unexplained} detected peak${unexplained > 1 ? "s are" : " is"} not explained by these phases.` : ""} The identification is qualitative: no phase quantities, lattice parameters or Rietveld refinement are reported.`
       : `The powder X-ray diffraction pattern of ${itemName} was compared with ${dbPhrase}${elements ? `, restricted to the elements ${chem ? `of the stated precursor and target formulas (${esc(chem)}): ` : ""}${esc(elements)}` : ""}. No phase set explained the pattern well enough to be reported (decision: ${decisionText.toLowerCase()}).`;

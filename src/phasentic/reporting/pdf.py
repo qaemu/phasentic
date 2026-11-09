@@ -11,7 +11,7 @@ from phasentic import __version__
 
 A4 = (8.27, 11.69)  # inches
 LEFT, RIGHT, TOP, BOTTOM = 0.07, 0.93, 0.95, 0.05
-COLORS = ["#0072b2", "#d55e00", "#009e73", "#cc79a7", "#e69f00"]
+COLORS = ["#0072b2", "#009e73", "#cc79a7", "#56b4e9", "#6b4c9a"]  # same order as report.js
 LINE = 0.0135  # text line height, figure fraction
 
 

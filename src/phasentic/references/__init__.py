@@ -1,11 +1,9 @@
-"""Reference phase stores: the offline demo subset and POW_COD."""
+"""Reference phase store: the installed PXRD_COD (or CNR POW_COD) database."""
 
-from .demo import DemoReferenceStore
 from .powcod import PowCodError, PowCodReferenceStore
 from .equivalence import EquivalenceError, EquivalenceSidecar
 
 __all__ = [
-    "DemoReferenceStore",
     "PowCodError",
     "PowCodReferenceStore",
     "EquivalenceError",

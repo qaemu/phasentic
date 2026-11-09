@@ -4,5 +4,5 @@
     <g opacity=".25"><circle cx="32" cy="32" r="14"/><circle cx="32" cy="32" r="26"/></g>
     <g clip-path="url(#band)"><circle cx="32" cy="32" r="14"/><circle cx="32" cy="32" r="26"/></g>
   </g>
-  <circle cx="32" cy="32" r="4.5" fill="#e07a1f"/>
+  <circle cx="32" cy="32" r="4.5" fill="#ffffff"/>
 </svg>

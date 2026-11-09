@@ -1,4 +1,4 @@
-"""Explicit selection of the demo subset or POW_COD."""
+"""Opening the installed reference database (PXRD_COD, or CNR POW_COD)."""
 
 from __future__ import annotations
 
@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Mapping
 
 from phasentic.domain.models import AnalysisSettings
-from phasentic.references.demo import DemoReferenceStore
 from phasentic.references.powcod import PowCodError, PowCodReferenceStore
 
 
@@ -34,15 +33,9 @@ def _installed(name: str, environment: Mapping[str, str] | None, folder: str = "
 
 
 def default_reference_source(environment: Mapping[str, str] | None = None) -> str:
-    """``PHASENTIC_REFERENCE_SOURCE`` if set, else POW_COD/COD when installed, else the demo subset."""
+    """The only reference source: the installed database."""
 
-    values = environment if environment is not None else os.environ
-    selected = values.get("PHASENTIC_REFERENCE_SOURCE", "").strip()
-    if selected in {"demo", "pow_cod"}:
-        return selected
-    if configured_powcod_cache_path(environment=values):
-        return "pow_cod"
-    return "demo"
+    return "pow_cod"
 
 
 def configured_powcod_path(
@@ -88,13 +81,11 @@ def open_reference_store(
     powcod_cache_path: Path | str | None = None,
     powcod_equivalence_path: Path | str | None = None,
     environment: Mapping[str, str] | None = None,
-) -> DemoReferenceStore | PowCodReferenceStore:
+) -> PowCodReferenceStore:
     """Open exactly the requested source; never fall back to another one."""
 
     settings.validate()
     source = settings.reference_source
-    if source == "demo":
-        return DemoReferenceStore()
     if source == "pow_cod":
         database = configured_powcod_path(powcod_path, environment=environment)
         cache = configured_powcod_cache_path(powcod_cache_path, environment=environment)
@@ -146,7 +137,6 @@ def reference_source_status(*, environment: Mapping[str, str] | None = None) -> 
     return {
         "selected": selected,
         "sources": {
-            "demo": {"available": True, "label": "Offline demo subset"},
             "pow_cod": {"label": "POW_COD 2205", **powcod},
         },
     }

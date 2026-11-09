@@ -10,8 +10,8 @@ const translations = {
     optional: "Instrument", vendor: "Vendor", model: "Model", radius: "Goniometer radius (mm)",
     instrumentPair: "Give both instrument vendor and model, or leave both blank.",
     analyze: "Analyze", running: "Analysing…", done: "Done. Read the result as a ranked hypothesis.",
-    emptyTitle: "Drop a scan to begin",
-    emptyText: "Choose a scan, type the precursor and target formulas and press Analyze. The fit, the competing hypotheses, the quality checks and a printable report appear here.",
+    emptyTitle: "Drop pattern files here", emptyNext: "Then type the precursor and target formulas and press Analyze. The fit, the competing hypotheses, the quality checks and the reports appear here.", metaFile: "File", metaRadiation: "Radiation", metaId: "Analysis",
+    emptyText: "or click to choose .xy, .xrdml or ASCII .raw files",
     decisionLabel: "Decision", selected: "Selected phases", noMixture: "No mixture selected",
     downloadReport: "Formal report", download: "JSON",
     hypotheses: "Phase hypotheses", phaseEvidence: "Evidence per phase", candidates: "Single-phase candidates", diagnostics: "Quality and provenance",
@@ -55,8 +55,8 @@ const translations = {
     optional: "Instrumento", vendor: "Fabricante", model: "Modelo", radius: "Radio del goniómetro (mm)",
     instrumentPair: "Indique fabricante y modelo, o deje ambos vacíos.",
     analyze: "Analizar", running: "Analizando…", done: "Listo. Lea el resultado como una hipótesis ordenada.",
-    emptyTitle: "Suelte un escaneo para empezar",
-    emptyText: "Elija un escaneo, escriba las fórmulas de precursores y objetivo y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y un informe imprimible aparecerán aquí.",
+    emptyTitle: "Suelte aquí los archivos de patrón", emptyNext: "Luego escriba las fórmulas de precursores y objetivo y pulse Analizar. El ajuste, las hipótesis en competencia, los controles de calidad y los informes aparecen aquí.", metaFile: "Archivo", metaRadiation: "Radiación", metaId: "Análisis",
+    emptyText: "o haga clic para elegir archivos .xy, .xrdml o .raw ASCII",
     decisionLabel: "Decisión", selected: "Fases seleccionadas", noMixture: "No se seleccionó una mezcla",
     downloadReport: "Informe formal", download: "JSON",
     hypotheses: "Hipótesis de fases", phaseEvidence: "Evidencia por fase", candidates: "Candidatos de una sola fase", diagnostics: "Calidad y procedencia",
@@ -268,7 +268,7 @@ function renderDiagnostics(parent, report) {
     [L.factSn, Number.isFinite(sn) ? sn.toFixed(0) : "—"],
     [L.factBaseline, Number.isFinite(base) ? `${(base * 100).toFixed(0)}%` : "—"],
     [L.factCalibration, q.calibration_status || "—"],
-    [L.factReference, p.reference_source === "pow_cod" ? databaseLabel(p.powcod_release) : "demo"],
+    [L.factReference, databaseLabel(p.powcod_release)],
     [L.factPeaks, (report.peaks || []).length],
     [L.factDisplacement, Number.isFinite(disp) ? `${disp.toFixed(3)}°` : "—"],
     [L.factPoints, input.point_count ?? "—"],
@@ -339,7 +339,8 @@ function renderReport(report) {
     ? sel.components.map((c, i) => `<span><i class="swatch" style="background:${colors[i % colors.length]}"></i>${R().formula(c.formula)}<em>${R().spaceGroup(c.space_group)}</em></span>`).join("")
     : `<span><em>${esc(L.noMixture)}</em></span>`);
   const input = report.input || {};
-  $("analysis-id").textContent = `${report.analysis_id || ""} · ${input.file_name || ""} · ${report.radiation?.label || ""}`;
+  setHTML($("analysis-id"), [[L.metaFile, input.file_name], [L.metaRadiation, report.radiation?.label], [L.metaId, report.analysis_id]]
+    .filter(([, v]) => v).map(([k, v]) => `<span><span class="k">${esc(k)}</span> <span class="v">${esc(v)}</span></span>`).join(""));
   drawFit(report);
   const evidence = sel ? R().figures.phases(report) : "";
   setHTML($("phase-evidence"), evidence);
@@ -476,6 +477,7 @@ function showFileName() {
   $("file-name").textContent = !files.length ? L.noFile : files.length === 1 ? files[0].name : L.nFiles(files.length);
 }
 $("file-button").addEventListener("click", () => $("file").click());
+$("empty-drop").addEventListener("click", () => $("file").click());
 $("file").addEventListener("change", () => {
   showFileName();
   invalidateAnalysis();
@@ -492,13 +494,6 @@ $("file").addEventListener("change", () => {
   invalidateAnalysis();
 }));
 
-$("reference-source").addEventListener("change", () => {
-  invalidateAnalysis();
-  if ($("reference-source").value === "pow_cod" && $("reference-source").selectedOptions[0].disabled) {
-    $("reference-source").value = "demo";
-    $("form-status").textContent = "No reference database is installed.";
-  }
-});
 
 function reportOptions() {
   return { version: appVersion, preset: usesValidatedMethod() && !Object.keys(searchOverrides()).length ? "validated" : null, laboratory: reportSettings.laboratory, folder: reportSettings.report_folder };
@@ -580,7 +575,7 @@ function formSettings() {
     if (Number.isFinite(radius) && radius > 0) instrument.goniometer_radius_mm = radius;
   }
   const chemistry = $("chemistry").value.trim();
-  const common = { radiation: $("radiation").value, reference_source: $("reference-source").value, ...(chemistry ? { chemistry } : {}), ...(Object.keys(instrument).length ? { instrument } : {}) };
+  const common = { radiation: $("radiation").value, reference_source: "pow_cod", ...(chemistry ? { chemistry } : {}), ...(Object.keys(instrument).length ? { instrument } : {}) };
   return usesValidatedMethod()
     ? { ...common, preset: "validated", ...searchOverrides() }
     : { ...common, ...searchValues(), analysis_mode: "full_mixture" };
@@ -782,18 +777,12 @@ fetch("/api/v1/reference-sources")
   .then((response) => fetchJsonOrThrow(response, "Reference-source status unavailable"))
   .then((payload) => {
     const data = payload.data && typeof payload.data === "object" && !Array.isArray(payload.data) ? payload.data : {};
-    const selector = $("reference-source");
-    const powCod = selector.querySelector('option[value="pow_cod"]');
     const sources = data.sources && typeof data.sources === "object" && !Array.isArray(data.sources) ? data.sources : {};
     const powCodInfo = sources.pow_cod && typeof sources.pow_cod === "object" ? sources.pow_cod : {};
-    if (powCod) {
-      powCod.disabled = powCodInfo.available !== true;
-      powCod.textContent = powCodInfo.available === true ? databaseLabel(powCodInfo.release) : "Reference database (not installed)";
-    }
-    if (data.selected === "pow_cod" && powCodInfo.available === true) selector.value = "pow_cod";
     $("reference-status").textContent = powCodInfo.available === true
       ? databaseLabel(powCodInfo.release)
-      : "No reference database installed; run the install command again (see README).";
+      : "Not installed. Run the install command again (see README).";
+    $("reference-status").classList.toggle("missing", powCodInfo.available !== true);
   })
-  .catch(() => { $("reference-status").textContent = "Reference-source status unavailable; demo subset remains active."; });
+  .catch(() => { $("reference-status").textContent = "Could not read the reference database status."; });
 

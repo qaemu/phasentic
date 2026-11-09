@@ -98,7 +98,7 @@ def _analysis_intensity_policy(store: object, radiation: Radiation) -> dict[str,
 
     Non-Cu intensity comparison is permanently outside the supported alpha
     contract.  Enforce that at the reporting boundary for every reference
-    store, including demo and legacy stores that do not expose a policy method.
+    store, including legacy stores that do not expose a policy method.
     """
 
     if radiation.key != "cu_ka":
@@ -550,14 +550,7 @@ def analyze_file(
         powcod_cache_path=powcod_cache_path,
         powcod_equivalence_path=powcod_equivalence_path,
     )
-    store_provenance = (
-        store.provenance()
-        if callable(getattr(store, "provenance", None))
-        else {
-            "reference_source": "demo",
-            "reference_database": "COD-derived teaching subset; complete reference database not configured",
-        }
-    )
+    store_provenance = store.provenance() if callable(getattr(store, "provenance", None)) else {"reference_source": "custom"}
     mixture = None
     residual_candidates: dict[str, ReferencePhase] = {}
     candidate_source_phases: dict[str, ReferencePhase] = {}

@@ -144,8 +144,8 @@ def settings_from_payload(payload: Mapping[str, Any]) -> AnalysisSettings:
             values["angle_unit"] = AngleUnit(str(values["angle_unit"]))
         except ValueError as exc:
             raise ValueError("Unsupported angle unit") from exc
-    if "reference_source" in values and values["reference_source"] not in {"demo", "pow_cod"}:
-        raise ValueError("reference_source must be 'demo' or 'pow_cod'")
+    if "reference_source" in values and values["reference_source"] != "pow_cod":
+        raise ValueError("reference_source must be 'pow_cod'")
     if "analysis_mode" in values:
         try:
             internal_mode, residual_queries = analysis_mode_controls(values["analysis_mode"])
