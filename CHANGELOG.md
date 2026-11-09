@@ -7,6 +7,18 @@ All notable changes are listed here. The format follows
 ## [Unreleased]
 
 ### Changed
+- New interface: neutral greys with one blue accent, IBM Plex type bundled for
+  offline use, a drop target for scans, flat sections instead of cards, and an
+  English file picker that follows the language menu.
+- The validated method is used automatically when formulas are given with Cu Kα
+  (no checkbox); peak tolerance and maximum phases stay editable.
+- Reports include the typed formulas, instrument vendor, model and goniometer
+  radius, the laboratory and the report folder.
+- Windows install: uv's installer, `uv tool install`, then `phasentic setup`
+  (install.ps1 removed after Defender flagged its command line).
+
+### Removed
+- The demo reference subset; the installed reference database is the only source.
 - Reference database PXRD_COD 2026.11 (new Zenodo version): 23,611 Materials
   Project structures of experimentally known phases missing from COD, and
   hydrogen restored in 9,437 COD formulas. Published on Zenodo,

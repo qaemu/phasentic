@@ -31,9 +31,9 @@
 في تقرير بصيغة JSON. ويعمل محليًا، في المتصفح أو من سطر الأوامر.
 
 <p align="center">
-  <img src="../docs/images/interface.png" alt="واجهة Phasentic: نتيجة مبدئية تضم ZrO2 وLiOH·H2O مع مخطط المطابقة والفرضيات المنافسة" width="900">
+  <img src="../docs/images/interface.png" alt="واجهة Phasentic: نتيجة مبدئية لـ ZrO2 مع مخطط المطابقة والفرضيات المنافسة والبدائل لكل طور" width="900">
   <br>
-  <sub>مسح تطويري من مجموعة بيانات Precursor Genome (PG_2452، Cu Kα)، اختير عشوائيًا. يتعرّف Phasentic على ZrO₂ وLiOH·H₂O؛ أما الوسم المرجعي المستخلَص من تنقيح Rietveld بشري فيتضمن أيضًا Li₂CO₃، الذي يفوته هذا التشغيل. وتظهر الإشارة المتبقية تحت <i>Evidence per phase</i> (الأدلة لكل طور).</sub>
+  <sub>مسح تطويري من مجموعة بيانات Precursor Genome (PG_2452، Cu Kα)، اختير عشوائيًا. يختار Phasentic الطور ZrO₂. ويتضمن الوسم المرجعي المنقَّح يدويًا طورين ثانويين آخرين: LiOH·H₂O الذي يظهر فقط ضمن الفرضيات المنافسة (ZrO₂ + LiH₃O₂)، وLi₂CO₃ الذي يفوته هذا التشغيل.</sub>
 </p>
 
 <a name="how-accurate-is-it"></a>
